@@ -130,7 +130,7 @@
           <el-input v-model="reset.password"/>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" align="center">
         <el-button @click="dialogResetPassword = false">{{ $t('table.cancel') }}</el-button>
         <el-button type="danger" @click="updatePassword()">Сменить!!!</el-button>
       </div>

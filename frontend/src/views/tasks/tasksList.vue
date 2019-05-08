@@ -38,7 +38,7 @@
           <span v-if="scope.row.data_perenosa" class="alert">{{ scope.row.data_perenosa | formatDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Задача" min-width="100px">
+      <el-table-column label="Задача" min-width="320px">
         <template slot-scope="scope">
           <div :class="scope.row.execution | statusFilter">
             <span :title="scope.row.text" class="link-type" @click="getTaskInfo(scope.row)">{{ scope.row.number }} {{ scope.row.text | cutString(120) }}</span>
@@ -55,7 +55,7 @@
           <span :title="scope.row.last_report">{{ scope.row.last_report | cutString(50) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="10px">
+      <el-table-column label="" align="center" min-width="80px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.execution | statusFilter">{{ scope.row.execution }}%</el-tag>
         </template>

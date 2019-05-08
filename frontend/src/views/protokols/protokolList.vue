@@ -27,17 +27,17 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.title')" min-width="100px">
+      <el-table-column label="Протокол" min-width="200px">
         <template slot-scope="scope">
           <span class="link-type" @click="getProtokolInfo(scope.row)">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Дата" align="center" min-width="30px">
+      <el-table-column label="Дата" align="center" min-width="200px">
         <template slot-scope="scope">
           <span>{{ scope.row.descriptions.region }} {{ scope.row.descriptions.date }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="" align="center" width="100px">
+      <el-table-column label="%" align="center" width="80px">
         <template slot-scope="scope">
           <el-tag :type="scope.row.PercentComplete | statusFilter">{{ scope.row.PercentComplete }} % </el-tag>
         </template>

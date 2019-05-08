@@ -18,13 +18,13 @@
                 <span>{{ scope.row.id }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Протокол" align="center" width="120px">
+            <el-table-column label="Номер" align="center" width="120px">
               <template slot-scope="scope">
                 <div>{{ scope.row.protokol.nomer }}</div>
                 <span v-if="scope.row.data_perenosa" class="alert">перенесено с {{ scope.row.data_ispoln }}</span>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('table.title')" min-width="100px">
+            <el-table-column label="Протокол" min-width="200px">
               <template slot-scope="scope">
                 <div :class="scope.row.execution | statusFilter">
                   <span :title="scope.row.text" class="link-type" @click="getTaskInfo(scope.row)">{{ scope.row.text | cutString(120) }}</span>
@@ -36,7 +36,7 @@
                 <span>{{ scope.row.executor }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="" align="center" min-width="10px">
+            <el-table-column label="%" align="center" min-width="60px">
               <template slot-scope="scope">
                 <el-tag :type="scope.row.execution | statusFilter">{{ scope.row.execution }}%</el-tag>
               </template>

@@ -89,9 +89,11 @@ export default {
         defaultView: 'month',
         locale: 'ru',
         firstDay: '1',
-        changeMonth: function(event, element) {
-          console.log(event)
-        }
+        height: 950
+
+        // changeMonth: function(event, element) {
+        //   console.log(event)
+        // }
       }
     }
   },
@@ -101,13 +103,13 @@ export default {
     },
     next() {
       this.$refs.calendar.fireMethod('next')
-      console.log('next')
+      // console.log('next')
     },
     eventSelected(event) {
       this.showForm = true
       this.task = Object.assign({}, {}, event)
-      console.log(event)
-      console.log(event.e)
+      // console.log(event)
+      // console.log(event.e)
     }
   }
 }
