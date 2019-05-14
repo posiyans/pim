@@ -73,7 +73,7 @@ export default {
   components: { },
   filters: {
     taskArchiv(value) {
-      if (value){
+      if (value) {
         return 'disable'
       }
       return ''

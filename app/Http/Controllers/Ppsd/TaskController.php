@@ -232,6 +232,10 @@ class TaskController extends Controller
                 } else {
                     $task->data_perenosa = date('Y-m-d', strtotime($request_task['time_transfer']));
                 }
+                $hist = $task->history;
+                $today = date('Y-m-d H:m:s');
+                $text = '<i>' . $today . '</i> ' . $user->name . ' перенес дату исполнения на'.$task->data_perenosa.'<br>';
+                $task->history = $hist.$text;
                 $task->save();
                 Log::saveDiff($task, $task_old, 'Task transfer Date');
             }

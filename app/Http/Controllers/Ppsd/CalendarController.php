@@ -47,6 +47,11 @@ class CalendarController extends Controller
             if ($task->data_perenosa != null){
                 $task->color = '#FF1493';
                 $task->start = $task->data_perenosa;
+                $p = substr_count($task->history, 'перенес');
+                if ($p > 1) {
+                  $task->title = $task->title.' ('.$p.' переноса)';
+                  $task->color = '#FF0000';
+                }
             }
             $json[] = [$tasks];
         }

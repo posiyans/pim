@@ -372,10 +372,10 @@ export default {
     padding-top: 20px;
   }
   .link{
-    color: #00f7ff;
+    color: #000089;
   }
   .link:hover{
-    color: #81fff2;
+    color: #4d4489;
     cursor: pointer;
   }
   .ispolnp{
