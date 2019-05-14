@@ -36,9 +36,11 @@
       <div v-if="partition.task">
         <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
         <div v-for="task in partition.task" :key="task.id" class="task-text">
-          <span :class="done(task)" >{{ task.number }}.</span> {{ task.executor }}
-          <b>{{ task.data_ispoln }}</b> {{ task.text }}
-          <span class="link" @click="taskShow(task)">---></span>
+          <div :class="task.arxiv | taskArchiv">
+            <span :class="done(task)" >{{ task.number }}.</span> {{ task.executor }}
+            <b>{{ task.data_ispoln }}</b> {{ task.text }}
+            <span class="link" @click="taskShow(task)">---></span>
+          </div>
         </div>
       </div>
     </div>
@@ -70,6 +72,12 @@ export default {
   name: 'ComplexTable',
   components: { },
   filters: {
+    taskArchiv(value) {
+      if (value){
+        return 'disable'
+      }
+      return ''
+    },
     ArxivFilter(arxiv) {
       if (arxiv) {
         return 'arxiv'
@@ -193,5 +201,8 @@ export default {
   .dialog{
     background-color: #ffeaea;
     color: green;
+  }
+  .disable{
+    color: #c0c0c0;
   }
 </style>
