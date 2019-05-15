@@ -6,6 +6,7 @@ use App\Http\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Models\VievReport;
 
 class CalendarController extends Controller
 {
@@ -16,9 +17,18 @@ class CalendarController extends Controller
      */
     public function index(Request $request)
     {
+        $user= Auth::user();
         $query = Task::query();
-        $start = $request->start;
-        $end = $request->end;
+        $start = str_replace('"', '', $request->start);
+        $end = str_replace('"', '',$request->end);
+        if (!$user->hasRole('admin')){
+
+            $executor = $user->aliases;
+            array_push($executor, $user->id);
+            $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
+            $query->whereIn('id', $task);
+
+        }
         $query->where(function ($query) use ($start) {
             $query->where('data_ispoln','>=',$start)
                 ->orWhere('data_perenosa','>=',$start);
@@ -28,7 +38,6 @@ class CalendarController extends Controller
                 ->orWhere('data_perenosa','<',$end);
         });
         $tasks = $query->get();
-        $json = [];
         $today = date('Y-m-d');
         foreach ($tasks as $task){
             $task->protokol;
@@ -53,9 +62,8 @@ class CalendarController extends Controller
                   $task->color = '#FF0000';
                 }
             }
-            $json[] = [$tasks];
         }
-        return $this->response($tasks);
+        return $this->response(['data'=>$tasks]);
     }
 
     /**

@@ -4,12 +4,17 @@ namespace App\Http\Models;
 
 use App\MyModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Task extends MyModel
 {
     //
     public $remove = false;
 
+    /**
+     * отношения с отчетами текущие и удаленные
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function report()
     {
         if ($this->remove){
@@ -20,28 +25,37 @@ class Task extends MyModel
         }
     }
 
+    /**
+     * отношения с разделами
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function partition()
     {
         return $this->hasOne('App\Http\Models\Partition', 'id', 'partition_id');
     }
 
+    /**
+     * отношения с протоколами
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function protokol()
     {
         return $this->hasOne('App\Http\Models\Protokol', 'id', 'protokol_id');
     }
 
+    /**
+     * отношения с просмотром отчетов
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function viewReport()
     {
         return $this->hasMany('App\Http\Models\VievReport', 'task_id', 'id');
     }
 
-//    public function getDataIspolnAttribute($value)
-//    {
-//        if ($value) {
-//            return Carbon::createFromFormat('Y-m-d', $value)->format('d-m-Y');
-//        }
-//    }
-
+    /**
+     * возвращает исполнителей для задачи
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getExecutor(){
         $executors = VievReport::where('executor', 1)->where('task_id',$this->id)->get();
         foreach ($executors as $executor){
@@ -50,6 +64,10 @@ class Task extends MyModel
         return $executors;
     }
 
+    /**
+     * добавляет к задаче отченты
+     * @return $this
+     */
     public function reportAndUser()
     {
         foreach ($this->report as $report){
@@ -59,6 +77,10 @@ class Task extends MyModel
         return $this;
     }
 
+    /**
+     * добавляет к задаче отчеты и удаленные отчеты
+     * @return $this
+     */
     public function allReportAndUser()
     {
         $this->remove = true;
@@ -69,6 +91,10 @@ class Task extends MyModel
         return $this;
     }
 
+    /**
+     * возврящает процент выполнения задачи
+     * @return float|int
+     */
     public function getPercentComplete(){
         $complete = 0;
         $reports = $this->viewReport;
@@ -82,4 +108,22 @@ class Task extends MyModel
         return $complete;
     }
 
+    /**
+     * проверка доступа к задаче
+     * @return bool
+     */
+    public function isAccess() {
+        $access = false;
+        $user=Auth::user();
+        if ($user->hasRole('admin')) {
+            $access = true;
+        }
+        $executor = $user->aliases;
+        array_push($executor, $user->id);
+        $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->where('task_id', $this->id)->pluck('task_id')->toArray();
+        if (count($task)>0) {
+            $access = true;
+        }
+        return $access;
+    }
 }

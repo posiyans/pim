@@ -88,7 +88,8 @@ class TaskController extends Controller
         if ($id){
             $id = (int)$id;
             $task=Task::find($id);
-            if (isset($task)){
+
+            if (isset($task) and $task->isAccess()){
                 $task->protokol;
                 $task->partition;
                 if ($request->showdeleted == 'true') {

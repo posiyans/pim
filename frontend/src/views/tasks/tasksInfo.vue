@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="content">
-      <div class="container-fluid">
+      <div v-if="access" class="container-fluid">
         <div class="row">
           <div class="col-md-8">
             <div class="card">
@@ -36,7 +36,7 @@
                 <div v-else class="ispolnp">
                   <el-tag type="success">Тезис</el-tag>
                 </div>
-                <div v-if="task.data_ispoln">
+                <div v-if="roles.includes('admin') && task.data_ispoln">
                   <el-button class="tag-item" @click="showPerenos = !showPerenos">Перенести</el-button>
                 </div>
                 <div v-if="showPerenos" class="time-container">
@@ -143,6 +143,16 @@
         </div>
         <el-button class="btn btn-primary" @click="$router.go(-1)">назад</el-button>
       </div>
+      <div v-else>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" style="color: #890000">
+              <i class="fa fa-tasks"/>
+              Задачи не существует или у вас нет доступа
+            </h3>
+          </div>
+        </div>
+      </div>
     </section>
     <el-dialog :visible.sync="showFormStatus" title="Отправить задачу в Архив???">
       <div slot="footer" class="dialog-footer">
@@ -186,6 +196,7 @@ export default {
   },
   data() {
     return {
+      access: false,
       showdeleted: false,
       historyShow: false,
       showPerenos: false,
@@ -324,6 +335,11 @@ export default {
     getTask() {
       this.listLoading = true
       fetchTask(this.$route.params.taskId, this.listQuery).then(response => {
+        if (response.data) {
+          this.access = true
+        } else {
+          this.access = false
+        }
         this.task = response.data
         if (this.task.data_perenosa) {
           this.time = this.task.data_perenosa

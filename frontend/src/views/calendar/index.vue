@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="app-container">
-      <FullCalendar ref="calendar" :events="events" :config="config" :header="header" @event-selected="eventSelected" />
+      <FullCalendar ref="calendar" :event-sources="eventSources" :config="config" :header="header" @event-selected="eventSelected" />
     </div>
     <div>
       <el-dialog :visible.sync="showForm" title="Задача">
@@ -44,6 +44,7 @@
 // Vue.use(FullCalendar)
 import { FullCalendar } from 'vue-full-calendar'
 import moment from 'moment'
+import request from '@/utils/request'
 // Vue.use(FullCalendar)
 export default {
   components: {
@@ -77,14 +78,20 @@ export default {
       header: {
         left: 'title',
         center: 'prevYear, prev, today, next, nextYear',
-        right: ''
+        right: 'month,agendaWeek,agendaDay'
       },
-      events: {
-        url: process.env.BASE_API + '/calendar'
-        // failure: function() {
-        //   document.getElementById('script-warning').style.display = 'block'
-        // }
-      },
+      // events: {
+      //   url: process.env.BASE_API + '/calendar'
+      // },
+      eventSources: [
+        {
+          events(start, end, timezone, callback) {
+            request.get(`/calendar`, {params: { start: start, end: end }}).then(response => {
+              callback(response.data.data)
+            })
+          }
+        }
+      ],
       config: {
         defaultView: 'month',
         locale: 'ru',

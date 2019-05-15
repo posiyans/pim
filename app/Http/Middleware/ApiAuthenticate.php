@@ -41,7 +41,7 @@ class ApiAuthenticate
             Auth::login($userToken->user);
             return $next($request);
         }
-        return $next($request);
+        //return $next($request);
         return $this->response('api', 401);
     }
 
