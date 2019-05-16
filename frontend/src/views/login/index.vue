@@ -43,7 +43,7 @@
 
       <el-dialog :title="titleSmsDialod" :visible.sync="showDialog">
         <el-form-item>
-          <span class="svg-container">
+          <span v-if="device!=='mobile'" class="svg-container">
             <svg-icon icon-class="email" />
           </span>
           <el-input
@@ -55,10 +55,11 @@
             auto-complete="on"
             @keyup.enter.native="handleLogin"
           />
-          <el-button :loading="loading" class="thirdparty-button" type="primary" style="width:100px;" @click.native.prevent="handleLogin">
-            Ok
-          </el-button>
+
         </el-form-item>
+        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+          Ok
+        </el-button>
       </el-dialog>
     </el-form>
   </div>
@@ -110,6 +111,11 @@ export default {
       showDialog: false,
       redirect: undefined,
       titleSmsDialod: ''
+    }
+  },
+  computed: {
+    device() {
+      return this.$store.state.app.device
     }
   },
   watch: {
