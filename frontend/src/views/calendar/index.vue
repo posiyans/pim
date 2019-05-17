@@ -86,7 +86,7 @@ export default {
       eventSources: [
         {
           events(start, end, timezone, callback) {
-            request.get(`/calendar`, {params: { start: start, end: end }}).then(response => {
+            request.get(`/calendar`, { params: { start: start, end: end }}).then(response => {
               callback(response.data.data)
             })
           }

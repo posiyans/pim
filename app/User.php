@@ -61,7 +61,11 @@ class User extends Authenticatable
             if ($sms->status == "OK") {
                 $this->sms = $data->text;
                 $this->save();
-                return ['status' => 'send', 'natation' => 'Sms отправлено на номер ' . $data->to . '/'. $data->text];
+                if(env('SMS_TEST')) {
+                    return ['status' => 'send', 'natation' => 'Sms отправлено на номер ' . $data->to . '/' . $data->text];
+                }else{
+                    return ['status' => 'send', 'natation' => 'Sms отправлено на номер ' . $data->to];
+                }
             } else {
                 return false;
             }

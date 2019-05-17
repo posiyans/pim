@@ -43,7 +43,7 @@
 
       <el-dialog :title="titleSmsDialod" :visible.sync="showDialog">
         <el-form-item>
-          <span v-if="device!=='mobile'" class="svg-container">
+          <span v-if="device==='desktop'" class="svg-container">
             <svg-icon icon-class="email" />
           </span>
           <el-input
@@ -153,6 +153,7 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then((respons, error) => {
             if (respons.status === 'send') {
               this.titleSmsDialod = respons.natation
+              console.log(this.device)
               this.showDialog = true
               this.$nextTick(() => {
                 document.getElementById('typeBox').focus()

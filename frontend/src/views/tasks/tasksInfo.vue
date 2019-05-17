@@ -15,31 +15,29 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <dl>
-                  <dt>Протокол:</dt> <dd>{{ task.protokol.nomer }}</dd>
-                  <dt>От:</dt><dd>{{ task.protokol.descriptions.date }}</dd>
-                  <dt>Доклад:</dt><dd> {{ task.partition.speaker }}</dd>
-                  <dt>Тема:</dt><dd> {{ task.partition.text }}</dd>
-                </dl>
+                <div>
+                  <p><b>Протокол:</b> {{ task.protokol.nomer }}</p>
+                  <p><b>От:</b>{{ task.protokol.descriptions.date }}</p>
+                  <p><b>Доклад:</b> {{ task.partition.speaker }}</p>
+                  <p><b>Тема:</b> {{ task.partition.text }}</p>
+                </div>
                 <h6 v-if="task.arxiv" class="text-danger" v-html="task.arxiv"/>
                 <p class="text-primary" >
                   {{ task.number }}. {{ task.text }}
                 </p>
-                <div class="li">
-                  <p>
-                    Исполнители: {{ task.executor }}
-                  </p>
+                <div>
+                  Исполнители: {{ task.executor }}
                 </div>
-                <div v-if="task.data_ispoln" class="ispolnp">
+                <div v-if="task.data_ispoln" class="li">
                   Выполнить до: {{ task.data_ispoln | formatDate }}
                 </div>
-                <div v-else class="ispolnp">
+                <div v-else class="li">
                   <el-tag type="success">Тезис</el-tag>
                 </div>
-                <div v-if="roles.includes('admin') && task.data_ispoln">
+                <div v-if="roles.includes('admin') && task.data_ispoln" class="li">
                   <el-button class="tag-item" @click="showPerenos = !showPerenos">Перенести</el-button>
                 </div>
-                <div v-if="showPerenos" class="time-container">
+                <div v-if="showPerenos" class="time-container li">
                   <el-date-picker v-model="time" type="datetime" format="dd-MM-yyyy" placeholder="Укажите дату"/>
                   <el-button class="tag-item small" @click="savePerenos">Сохранить</el-button>
                 </div>
@@ -404,5 +402,8 @@ export default {
     color: #9d9d9d !important;
     background: #f2e9ff !important;
     border-color: #f2e9ff !important;
+  }
+  .li{
+    padding: 10px 0 0 0 ;
   }
 </style>
