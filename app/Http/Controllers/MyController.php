@@ -12,13 +12,13 @@ class MyController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function response($var = [], $code = 200)
-    {
-        return response($var, $code)->header('Access-Control-Allow-Origin', '*')->header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, S-Token, U-Token ')->header(
-            'Access-Control-Allow-Methods',
-            'GET,HEAD,OPTIONS,POST,PUT'
-        );
-    }
+//    protected function response($var = [], $code = 200)
+//    {
+//        return response($var, $code)->header('Access-Control-Allow-Origin', '*')->header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, S-Token, U-Token ')->header(
+//            'Access-Control-Allow-Methods',
+//            'GET,HEAD,OPTIONS,POST,PUT'
+//        );
+//    }
 
     public function md5_file($file)
     {

@@ -1,22 +1,17 @@
 <template>
   <div class="">
-    xcvxcv
     <div class="filter-container">
       <el-input v-model="listQuery.title" placeholder="Найти..." style="width: 200px;" clearable class="filter-item" @click="handleFilter" />
-      <el-select v-model="listQuery.executor" placeholder="Исполнитель" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in allExecutor" :key="item.key" :label="item.display_name" :value="item.key" />
+      <el-select v-model="listQuery.executor" placeholder="Исполнитель" clearable style="width: 150px" class="filter-item" @update:model-value="handleFilter">
+        <el-option v-for="item in allExecutor"
+                   :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @update:value-model="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">Найти</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">Скачать</el-button>
+      <el-button class="filter-item" type="primary" @click="handleFilter">Найти</el-button>
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" @click="handleDownload">Скачать</el-button>
       <el-checkbox v-if="roles.includes('admin')" v-model="listQuery.archiv" class="filter-item" style="margin-left:15px;" @change="handleFilter">Архив</el-checkbox>
     </div>
 
-
     <el-table
-      v-loading="listLoading"
       :key="tableKey"
       :data="list"
       border
@@ -24,14 +19,14 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('table.id')" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column label="id" prop="id" sortable="custom" align="center" width="65">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Протокол" width="120px">
         <template #default="scope">
-          <span @click="getProtokolInfo(scope.row.protokol.id)">{{ scope.row.protokol.nomer }}</span>
+          <div class="text-no-wrap" @click="getProtokolInfo(scope.row.protokol_id)"> {{ scope.row.protokol.nomer }}</div>
         </template>
       </el-table-column>
       <el-table-column label="Дата исполнения" width="100px">
@@ -43,7 +38,7 @@
       <el-table-column label="Задача" min-width="320px">
         <template #default="scope">
           <div :class="statusFilter(scope.row.execution)">
-            <span :title="scope.row.text" class="link-type" @click="getTaskInfo(scope.row)">{{ scope.row.number }} {{ cutString(scope.row.text, 120) }}</span>
+            <span :title="scope.row.text" class="link-type ellipsis no-wrap" @click="getTaskInfo(scope.row)">{{ scope.row.number }} {{ scope.row.text }}</span>
           </div>
         </template>
       </el-table-column>
@@ -54,12 +49,14 @@
       </el-table-column>
       <el-table-column label="Ход исполнения" width="150px">
         <template #default="scope">
-          <span :title="scope.row.last_report">{{ cutString(scope.row.last_report, 50) }}</span>
+          <div class="ellipsis" style="font-size: .8em;">
+            {{ scope.row.last_report }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="" align="center" min-width="80px">
         <template #default="scope">
-          <el-tag :type="statusFilter(scope.row.execution)">{{ scope.row.execution }}%</el-tag>
+          <el-tag :type="scope.row.execution === 100 ? 'success' : 'danger'">{{ scope.row.execution }}%</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -71,7 +68,6 @@
 <script>
 import { fetchList } from 'src/Modules/Task/api/task.js'
 import { fetchExecutors } from 'src/Modules/User/api/user.js'
-import { mapGetters } from 'vuex'
 import LoadMore from 'src/components/LoadMore/index.vue'
 
 const calendarTypeOptions = [
@@ -98,7 +94,7 @@ export default {
       key: 1,
       func: fetchList,
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -152,12 +148,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'roles'
-    ])
+    user() {
+      return this.$store.state.user.info
+    },
+    roles() {
+      return this.user.roles
+    }
   },
-  created() {
-    this.getList()
+  mounted() {
+    // this.getList()
     this.getExecutors()
   },
   methods: {
@@ -187,6 +186,8 @@ export default {
       }
     },
     setList(val) {
+      console.log('load list')
+      console.log(val)
       this.list = val
     },
     getList() {
@@ -199,23 +200,17 @@ export default {
       })
     },
     getExecutors() {
-      fetchExecutors().then(response => {
-        var users = []
-        for (const user of response.data.user) {
-          var item = {}
-          item.key = user.key
-          item.display_name = user.display_name
-          users.push(item)
-        }
-        this.allExecutor = Object.assign({}, this.allExecutor, users)
-      })
+      fetchExecutors()
+        .then(response => {
+          this.allExecutor = response.data
+        })
     },
     getProtokolInfo(id) {
       this.$router.push({ name: 'ProtokolInfo', params: { protokolId: id } })
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.getList()
+      this.key++
     },
     handleModifyStatus(row, status) {
       this.$message({

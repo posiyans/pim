@@ -10,9 +10,11 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     const token = LocalStorage.getItem('UserToken') || ''
-    config.headers.Authorization = 'Bearer ' + token
-    config.headers['X-Requested-With'] = 'XMLHttpRequest'
-    config.headers['X-CSRF-TOKEN'] = LocalStorage.has('UserToken') ? LocalStorage.getItem('UserToken') : ''
+    if (token) {
+      config.headers.Authorization = 'Bearer ' + token
+    }
+    // config.headers['X-Requested-With'] = 'XMLHttpRequest'
+    // config.headers['X-CSRF-TOKEN'] = LocalStorage.has('UserToken') ? LocalStorage.getItem('UserToken') : ''
     return config
   },
   error => {

@@ -34,8 +34,9 @@ class ApiAuthController extends MyController
                 $log->type = 'ok';
                 $user->log()->save($log);
                 $user->save();
+                $user->roles = ['user', 'admin'];
                 $token = $user->createToken('primary');
-                return $this->response(['token' => $token->plainTextToken, 'user' => $user]);
+                return response(['token' => $token->plainTextToken, 'user' => $user]);
             } else {
                 $log = new Log();
                 $log->description = 'bad_sms';
@@ -43,7 +44,7 @@ class ApiAuthController extends MyController
                 $log->value = $credentials;
                 $log->type = 'alert';
                 $log->save();
-                return $this->response(['sms' => 'bad_sms']);
+                return response(['sms' => 'bad_sms']);
             }
         } else {
             // нет смс проверям логин и пароль
@@ -55,9 +56,9 @@ class ApiAuthController extends MyController
                         $sms = (new SendSms($user))->code()->run();
                         $user->sms = $sms;
                         $user->save();
-                        return $this->response(['sms' => 'send', 't' => $sms]);
+                        return response(['sms' => 'send', 't' => $sms]);
                     } catch (\Exception $e) {
-                        return $this->response(['error' => $e->getMessage()], 401);
+                        return response(['error' => $e->getMessage()], 401);
                     }
                 }
 //                $token = $request->header('u-token');
@@ -82,7 +83,8 @@ class ApiAuthController extends MyController
                 $user->log()->save($log);
                 Auth::login($user, true);
                 $token = $user->createToken('primary');
-                return $this->response(['token' => $token->plainTextToken, 'user' => $user]);
+                $user->roles = ['user', 'admin'];
+                return response(['token' => $token->plainTextToken, 'user' => $user]);
             }
         }
         $log = new Log();
@@ -90,7 +92,7 @@ class ApiAuthController extends MyController
         $log->value = $credentials;
         $log->type = 'alert';
         $log->save();
-        return $this->response(['error' => 'Не верный логин или пароль'], 401);
+        return response(['error' => 'Не верный логин или пароль'], 401);
     }
 
     public function logout(Request $request)
@@ -107,6 +109,6 @@ class ApiAuthController extends MyController
             Auth::logout();
         }
         //$userToken->runSoftDelete();
-        return $this->response('');
+        return response('');
     }
 }

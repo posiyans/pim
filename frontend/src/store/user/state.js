@@ -1,5 +1,7 @@
 export default function () {
   return {
-    info: {}
+    info: {
+      role: ''
+    }
   }
 }

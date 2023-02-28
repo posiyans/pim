@@ -21,7 +21,7 @@ class ReportController extends Controller
     public function index()
     {
         //
-        return $this->response('index');
+        return response('index');
     }
 
     /**
@@ -37,7 +37,7 @@ class ReportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -60,13 +60,13 @@ class ReportController extends Controller
                 $report->file()->save($file);
             }
         }
-        return $this->response([$report]);
+        return response([$report]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id, Request $request)
@@ -77,7 +77,7 @@ class ReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,8 +88,8 @@ class ReportController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -115,13 +115,13 @@ class ReportController extends Controller
                 $report->save();
             }
         }
-        return $this->response([]);
+        return response([]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -148,6 +148,6 @@ class ReportController extends Controller
                 $report->log()->save($log);
             }
         }
-        return $this->response([$id]);
+        return response([$id]);
     }
 }

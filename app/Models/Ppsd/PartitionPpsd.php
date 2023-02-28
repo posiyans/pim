@@ -3,8 +3,8 @@
 namespace App\Models\Ppsd;
 
 use App\Models\File;
-use App\Models\Partition;
-use App\Models\Protokol;
+use App\Modules\Protocol\Models\Partition;
+use App\Modules\Protocol\Models\Protokol;
 use Illuminate\Database\Eloquent\Model;
 
 class PartitionPpsd extends Model
@@ -13,9 +13,6 @@ class PartitionPpsd extends Model
     protected $connection = 'mysql_ppsd';
     protected $table = 'toping';
     public $timestamps = false;
-
-
-
 
 
     public static function PartitionMigrate()
@@ -34,7 +31,7 @@ class PartitionPpsd extends Model
             dump('Partition no migrate');
         } else {
             //$pr=[];
-            $i=0;
+            $i = 0;
             foreach (PartitionPpsd::all() as $item) {
                 //dump($item->tema);
                 $part = new Partition();
@@ -44,15 +41,14 @@ class PartitionPpsd extends Model
                 $part->speaker = $item->kto;
                 $part->save();
                 if ($item->file_md5) {
-                    $file = New File();
+                    $file = new File();
                     $file->name = $item->file_name;
                     $file->hash = $item->file_md5;
                     $part->file()->save($file);
                 }
                 $i++;
             }
-            dump('Partition count: '.$i);
-
+            dump('Partition count: ' . $i);
         }
     }
 

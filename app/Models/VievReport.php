@@ -15,6 +15,6 @@ class VievReport extends MyModel
 
     public function task()
     {
-        return $this->hasOne('App\Models\Task', 'id', 'task_id');
+        return $this->hasOne('App\Modules\Task\Models\Task', 'id', 'task_id');
     }
 }

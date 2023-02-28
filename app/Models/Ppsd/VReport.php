@@ -2,8 +2,8 @@
 
 namespace App\Models\Ppsd;
 
-use App\Models\Task;
 use App\Models\VievReport;
+use App\Modules\Task\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 
 class VReport extends Model
@@ -15,11 +15,9 @@ class VReport extends Model
 
     public static function VreportMigrate()
     {
-
         if (count(VievReport::all()) > 0) {
             dump('Report no migrate');
         } else {
-
             foreach (Task::all() as $task) {
                 $countReport[$task->id] = $task->report->count();
             }
@@ -55,10 +53,8 @@ class VReport extends Model
                     $i++;
                 }
             }
-            dump('View count:'.$i);
+            dump('View count:' . $i);
         }
-
-
     }
 
 

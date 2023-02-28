@@ -1,5 +1,6 @@
 import Auth from './modules/auth'
 import Tasks from './modules/task.js'
+import Protocol from './modules/protocol.js'
 
 const routes = [
   {
@@ -17,7 +18,8 @@ const routes = [
     component: () => import('pages/ErrorNotFound.vue')
   },
   Auth,
-  Tasks
+  Tasks,
+  Protocol
 ]
 
 export default routes

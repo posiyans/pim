@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Задачник
         </q-toolbar-title>
 
         <MyInfo />
@@ -30,7 +30,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="q-px-md">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -60,7 +60,7 @@ const linksList = [
   {
     title: 'Протоколы',
     icon: 'record_voice_over',
-    link: '/protokol'
+    link: '/protocol/list'
   },
   {
     title: 'Пользователи',

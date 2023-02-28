@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Task\Models;
 
+use App\Models\VievReport;
 use App\MyModel;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,10 +17,10 @@ class Task extends MyModel
      */
     public function report()
     {
-        if ($this->remove){
+        if ($this->remove) {
             $this->remove = false;
             return $this->hasMany('App\Models\Report')->withTrashed();
-        }else{
+        } else {
             return $this->hasMany('App\Models\Report');
         }
     }
@@ -30,7 +31,7 @@ class Task extends MyModel
      */
     public function partition()
     {
-        return $this->hasOne('App\Models\Partition', 'id', 'partition_id');
+        return $this->hasOne('App\Modules\Protocol\Models\Partition', 'id', 'partition_id');
     }
 
     /**
@@ -39,7 +40,7 @@ class Task extends MyModel
      */
     public function protokol()
     {
-        return $this->hasOne('App\Models\Protokol', 'id', 'protokol_id');
+        return $this->hasOne('App\Modules\Protocol\Models\Protokol', 'id', 'protokol_id');
     }
 
     /**
@@ -55,9 +56,10 @@ class Task extends MyModel
      * возвращает исполнителей для задачи
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getExecutor(){
-        $executors = VievReport::where('executor', 1)->where('task_id',$this->id)->get();
-        foreach ($executors as $executor){
+    public function getExecutor()
+    {
+        $executors = VievReport::where('executor', 1)->where('task_id', $this->id)->get();
+        foreach ($executors as $executor) {
             $executor->user;
         }
         return $executors;
@@ -69,7 +71,7 @@ class Task extends MyModel
      */
     public function reportAndUser()
     {
-        foreach ($this->report as $report){
+        foreach ($this->report as $report) {
             $report->user;
             $report->file;
         }
@@ -83,7 +85,7 @@ class Task extends MyModel
     public function allReportAndUser()
     {
         $this->remove = true;
-        foreach ($this->report as $report){
+        foreach ($this->report as $report) {
             $report->user;
             $report->file;
         }
@@ -94,13 +96,14 @@ class Task extends MyModel
      * возврящает процент выполнения задачи
      * @return float|int
      */
-    public function getPercentComplete(){
+    public function getPercentComplete()
+    {
         $complete = 0;
         $reports = $this->viewReport;
         if ($reports) {
             $total_work = $reports->where('executor', 1)->count();
             $in_work = $reports->where('executor', 1)->where('done', null)->count();
-            if ($total_work != 0){
+            if ($total_work != 0) {
                 $complete = round(100 * ($total_work - $in_work) / $total_work, 0);
             }
         }
@@ -111,16 +114,17 @@ class Task extends MyModel
      * проверка доступа к задаче
      * @return bool
      */
-    public function isAccess() {
+    public function isAccess()
+    {
         $access = false;
-        $user=Auth::user();
+        $user = Auth::user();
         if ($user->hasRole('admin')) {
             $access = true;
         }
         $executor = $user->aliases;
         array_push($executor, $user->id);
         $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->where('task_id', $this->id)->pluck('task_id')->toArray();
-        if (count($task)>0) {
+        if (count($task) > 0) {
             $access = true;
         }
         return $access;

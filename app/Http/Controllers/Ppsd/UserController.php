@@ -16,46 +16,47 @@ class UserController extends MyController
     /**
      * вывод списка пользователя по полученному шаблону
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return mixed
      */
     public function getList(Request $request)
     {
         $data = [];
         $fields = [];
-        if ($request->field) {
-            $list = $request->field;
-            $list = str_replace('"', '', $list);
-            $list = str_replace('{', '', $list);
-            $list = str_replace('}', '', $list);
-            foreach (explode(',', $list) as $value) {
-                $i = explode(':', $value);
-                $fields[$i[0]] = $i[1];
-            }
-        } else {
-            $fields['name'] = 'name';
-            $fields['login'] = 'login';
-            $fields['full_name'] = 'full_name';
-            $fields['email'] = 'email';
-            $fields['avatar'] = 'avatar';
-        }
+//        if ($request->field) {
+//            $list = $request->field;
+//            $list = str_replace('"', '', $list);
+//            $list = str_replace('{', '', $list);
+//            $list = str_replace('}', '', $list);
+//            foreach (explode(',', $list) as $value) {
+//                $i = explode(':', $value);
+//                $fields[$i[0]] = $i[1];
+//            }
+//        } else {
+        $fields['id'] = 'id';
+        $fields['name'] = 'name';
+        $fields['login'] = 'login';
+        $fields['full_name'] = 'full_name';
+//        $fields['email'] = 'email';
+//        $fields['avatar'] = 'avatar';
+//        }
         $user = Auth::user();
 //        if (!$user->hasRole('admin')) {
         $executor = $user->aliases;
         array_push($executor, $user->id);
-        $users = User::where('hide', null)->whereIn('id', $executor)->get();
+//        $users = User::where('hide', null)->whereIn('id', $executor)->get();
 //        } else {
-//            $users = User::where('hide', null)->get();
+        $users = User::where('hide', null)->get();
 //        }
-
-//        foreach ($users as $user) {
-//            $item = [];
-//            foreach ($fields as $key => $value) {
-//                $item[$key] = $user->{$value};
-//            }
-//            $data[] = $item;
-//        }
-        return $this->response(['user' => $users]);
+        $data = [];
+        foreach ($users as $user) {
+            $item = [];
+            foreach ($fields as $key => $value) {
+                $item[$key] = $user->{$value};
+            }
+            $data[] = $item;
+        }
+        return response($data);
     }
 
     public function show($id = false, Request $request)
@@ -80,9 +81,9 @@ class UserController extends MyController
 
         if ($user) {
             $user->roles_json = $user->getRoleNames()->toArray();
-            return $this->response($user);
+            return response($user);
         } else {
-            return $this->response(['error']);
+            return response(['error']);
         }
     }
 
@@ -126,10 +127,10 @@ class UserController extends MyController
                     $type = pathinfo($path, PATHINFO_EXTENSION);
                     $data = file_get_contents($path);
                     $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                    return $this->response(['files' => ['avatar' => $base64]]);
+                    return response(['files' => ['avatar' => $base64]]);
                     // return response()->download($path,$user->avatar);
                 } else {
-                    return $this->response(['error'], 500);
+                    return response(['error'], 500);
                 }
             }
         }
@@ -154,14 +155,14 @@ class UserController extends MyController
         $users->each(function ($user) {
             $user->roles_json = str_replace(',', ", ", $user->getRoleNames()->toArray());
         });
-        return $this->response(['total' => $total, 'items' => $users]);
+        return response(['total' => $total, 'items' => $users]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -193,16 +194,16 @@ class UserController extends MyController
             }
         }
         if ($resp) {
-            return $this->response(['ok']);
+            return response(['ok']);
         } else {
-            return $this->response(400, ['error']);
+            return response(400, ['error']);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -222,9 +223,9 @@ class UserController extends MyController
             $newUser->roles = $data['roles'];
             $newUser->aliases = $data['aliases'];
             $newUser->save();
-            return $this->response(['ok', $newUser]);
+            return response(['ok', $newUser]);
         }
-        return $this->response(['error'], 403);
+        return response(['error'], 403);
     }
 
 }

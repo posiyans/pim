@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\Controller;
 use App\Models\File;
-use App\Models\Partition;
-use App\Models\Protokol;
-use App\Models\Task;
 use App\Models\VievReport;
 use App\Modules\Log\Models\Log;
+use App\Modules\Protocol\Models\Partition;
+use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +48,7 @@ class ProtokolController extends Controller
             }
             $data[] = $item;
         }
-        return $this->response(['items' => $data, 'protokol' => $protokol]);
+        return response(['items' => $data, 'protokol' => $protokol]);
     }
 
     /**
@@ -94,7 +94,7 @@ class ProtokolController extends Controller
             $item['PercentComplete'] = $protokol->getPercentComplete();
             $data[] = $item;
         }
-        return $this->response(['total' => $total, 'items' => ['data' => $data]]);
+        return response(['total' => $total, 'items' => ['data' => $data]]);
     }
 
     /**
@@ -110,7 +110,7 @@ class ProtokolController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store_old(Request $request)
@@ -142,13 +142,13 @@ class ProtokolController extends Controller
             }
             $data[] = $item;
         }
-        return $this->response(['items' => $data, 'protokol' => $protokol]);
+        return response(['items' => $data, 'protokol' => $protokol]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -237,11 +237,11 @@ class ProtokolController extends Controller
                 $log->value = $protokol->toArray();
                 $log->save();
                 DB::commit();
-                return $this->response([$protokol]);
+                return response([$protokol]);
             } catch (\Exception $e) {
                 DB::rollback();
                 $text = 'При сохранении произошла ошибка, проверте данные протокола. ' . $e->getMessage();
-                return $this->response(['message' => $text], 400);
+                return response(['message' => $text], 400);
             }
         }
     }
@@ -250,20 +250,20 @@ class ProtokolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id, Request $request)
     {
         //
         $protokol = Protokol::with('partition.task.viewReport')->find($id);
-        return $this->response(['protokol' => $protokol]);
+        return response(['protokol' => $protokol]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -274,8 +274,8 @@ class ProtokolController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update($id, Request $request)
@@ -297,9 +297,9 @@ class ProtokolController extends Controller
                         $task->arxiv = $text;
                         $task->save();
                     }
-                    return $this->response('ok');
+                    return response('ok');
                 }
-                return $this->response(['protokolToArchiv']);
+                return response(['protokolToArchiv']);
             }
             if ($action == 'protokolUpdate') {
                 $protokol = Protokol::with('partition.task.viewreport')->find($id);
@@ -325,9 +325,9 @@ class ProtokolController extends Controller
                     }
                     $protokol = Protokol::with('partition.task.viewreport')->find($id);
                     Log::saveDiff($protokol, $protokol_old);
-                    return $this->response([$request->protokol]);
+                    return response([$request->protokol]);
                 }
-                return $this->response(['error-id']);
+                return response(['error-id']);
             }
         }
     }
@@ -335,7 +335,7 @@ class ProtokolController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -358,7 +358,7 @@ class ProtokolController extends Controller
                 $path = '../storage/app/file/ppsd/pr/' . substr($md5, 0, 2) . '/' . $md5;
                 return response()->download($path, $name, $headers = ['filename' => $name]);
             }
-            return $this->response(['export', $id]);
+            return response(['export', $id]);
         }
     }
 

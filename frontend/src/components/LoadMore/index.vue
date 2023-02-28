@@ -112,17 +112,10 @@ export default defineComponent({
       this.listLoading = true
       this.func(this.listQuery)
         .then(response => {
-          if (response.data.status || this.new) {
-            this.total = response.data.total || 0
-            this.offset = response.data.offset || 0
-            this.list = response.data.data || response.data
-          } else {
-            this.total = 0
-            this.offset = 0
-            this.list = []
-            const errorMessage = response.data.error || response.data.data
-            this.$emit('error', errorMessage)
-          }
+          this.total = response.data.total || 0
+          this.offset = response.data.offset || 0
+          this.list = response.data.data || response.data
+
           this.showCount = this.listQuery.page * this.listQuery.limit
           this.$emit('setList', this.list)
           this.$emit('setOffset', this.offset)

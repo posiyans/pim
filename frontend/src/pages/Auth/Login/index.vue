@@ -67,8 +67,8 @@ export default {
     return {
       showSms: false,
       loginForm: {
-        username: 'ps',
-        password: '12345',
+        username: '',
+        password: '',
         sms: ''
       },
       loading: false,
@@ -123,6 +123,8 @@ export default {
                   message: 'Не верный код'
                 })
               } else {
+                console.log('login')
+                console.log(this.$store.state.user.info)
                 this.$router.push('/')
               }
             })

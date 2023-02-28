@@ -29,14 +29,11 @@ export function getInfo({ commit }) {
           reject('Ошибка попробуйте позже')
         }
         console.log(data)
-        data.role = 'user'
+        data.roles = ['user', 'admin']
         commit('setInfo', data)
         resolve(data)
       })
       .catch(() => {
-        commit('setInfo', {
-          role: 'guest'
-        })
         resolve({ role: 'guest' })
       })
   })

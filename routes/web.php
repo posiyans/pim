@@ -24,10 +24,10 @@ Route::get('/', function () {
 
 //Route::get('/', 'HomeMyController@index');
 
-Route::match(['get'], '/user/avatar/{id?}', 'Ppsd\UserController@userAvatar');
+Route::match(['get'], '/user/avatar/{id?}', [\App\Http\Controllers\Ppsd\UserController::class, 'userAvatar']);
 
 //Auth::routes();
 
 //Route::get('/home', 'HomeMyController@index')->name('home');
-Route::get('/migrate', 'PpsdMigrateMyController@migrate');
+//Route::get('/migrate', 'PpsdMigrateMyController@migrate');
 

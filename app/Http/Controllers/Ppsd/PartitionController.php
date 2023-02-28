@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\Controller;
-use App\Models\Partition;
 use App\Modules\Log\Models\Log;
+use App\Modules\Protocol\Models\Partition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -34,7 +34,7 @@ class PartitionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,15 +51,15 @@ class PartitionController extends Controller
             $partition->file_name = $file->getClientOriginalName();
             $partition->save();
             Log::saveDiff($partition, $partition_old);
-            return $this->response(['ok']);
+            return response(['ok']);
         }
-        return $this->response(['error'], 401);
+        return response(['error'], 401);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -70,7 +70,7 @@ class PartitionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -81,8 +81,8 @@ class PartitionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -91,17 +91,17 @@ class PartitionController extends Controller
         $file = Input::file('file');
         //$name= $file->getClientOriginalName();
         $name = '';
-        return $this->response(['store', $file, $name, $request->file('file')]);
+        return response(['store', $file, $name, $request->file('file')]);
 //        $file = Input::file('file');
 //        //$name= $file->getClientOriginalName();
 //        $name= '';
-//        return $this->response(['update'=>'', 'file'=>$name, 'reg'=>$request]);
+//        return response(['update'=>'', 'file'=>$name, 'reg'=>$request]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

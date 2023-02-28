@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\MyController;
-use App\Models\Task;
 use App\Models\VievReport;
 use App\Modules\Log\Models\Log;
+use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -77,7 +77,7 @@ class TaskController extends MyController
             $task->execution = $task->getPercentComplete();
         }
 
-        return $this->response(['total' => $total, 'items' => $tasks]);
+        return response(['total' => $total, 'items' => $tasks]);
     }
 
     public function getTaskInfo($id = false, Request $request)
@@ -101,7 +101,7 @@ class TaskController extends MyController
         }
 
 
-        return $this->response($data);
+        return response($data);
     }
 
     public function getTasksStatistic()
@@ -153,15 +153,15 @@ class TaskController extends MyController
         foreach ($data as $item) {
             $legend[] = $item['name'];
         }
-        return $this->response(['data' => $data, 'legend' => $legend]);
+        return response(['data' => $data, 'legend' => $legend]);
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -178,9 +178,9 @@ class TaskController extends MyController
                     $task->arxiv = $text;
                     $task->save();
                     Log::saveDiff($task, $task_old, 'task to archiv');
-                    return $this->response('ok');
+                    return response('ok');
                 }
-                return $this->response(['taskToArchiv']);
+                return response(['taskToArchiv']);
             }
             if ($action == 'updateTask') {
                 $task = Task::find($id);
@@ -216,7 +216,7 @@ class TaskController extends MyController
                     }
                 }
                 Log::saveDiff($task, $task_old);
-                return $this->response(['user' => $user, 'task' => $task]);
+                return response(['user' => $user, 'task' => $task]);
             }
             if ($action == 'transferDate') {
                 $task = Task::find($id);
@@ -235,7 +235,7 @@ class TaskController extends MyController
                 Log::saveDiff($task, $task_old, 'Task transfer Date');
             }
         }
-        return $this->response([]);
+        return response([]);
     }
 
 

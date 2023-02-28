@@ -2,9 +2,9 @@
 
 namespace App\Models\Ppsd;
 
-use App\Models\Partition;
-use App\Models\Protokol;
-use App\Models\Task;
+use App\Modules\Protocol\Models\Partition;
+use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Task\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 
 class TaskPpsd extends Model
@@ -17,7 +17,6 @@ class TaskPpsd extends Model
 
     public static function TaskMigrate()
     {
-
         if (count(Task::all()) > 0) {
             dump('Task no migrate');
         } else {
@@ -28,7 +27,7 @@ class TaskPpsd extends Model
                 $pr[$item['nomer']] = $item['id'];
             }
             $taskPpsd = TaskPpsd::all();
-            $i=0;
+            $i = 0;
             foreach ($taskPpsd as $item) {
                 $task = new Task();
                 $task->id = $item->id;
@@ -36,7 +35,7 @@ class TaskPpsd extends Model
                 $partition = Partition::where('protokol_id', $pr[$item->protokol])->where('number', (int)$item->nomer)->first();
                 if ($partition) {
                     $task->partition_id = $partition->id;
-                }else{
+                } else {
                     $task->partition_id = 1;
                 }
                 $task->number = $item->nomer;
@@ -55,9 +54,7 @@ class TaskPpsd extends Model
                 $i++;
                 //dump($task);
             }
-            dump('Task count:'. $i);
+            dump('Task count:' . $i);
         }
-
-
     }
 }
