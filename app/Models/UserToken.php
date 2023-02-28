@@ -16,23 +16,22 @@ class UserToken extends MyModel
 
     public function user()
     {
-        return $this->hasOne('App\User','id', 'user_id');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 
-    public function __construct($request=false, array $attributes = [])
+    public function __construct($request = false, array $attributes = [])
     {
-
         parent::__construct($attributes);
         $this->user_id = Auth::id();
         $this->u_token = $this->randomString();
         $this->s_token = $this->randomString();
-        $this->time_live= date("Y-m-d H:i:s", strtotime("+1 month"));
+        $this->time_live = date("Y-m-d H:i:s", strtotime("+1 month"));
         if ($request) {
             $this->info = [$request->ip(), $request->header('User-Agent')];
         }
     }
 
-    public static function randomString($len=64)
+    public static function randomString($len = 64)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randstring = '';
@@ -42,14 +41,15 @@ class UserToken extends MyModel
         return $randstring;
     }
 
-    public function ReCreateSesionToken(){
+    public function ReCreateSesionToken()
+    {
         $this->s_token = $this->randomString();
         $this->save();
-        return ['user'=>$this->u_token, 'sesions'=> $this->s_token];
+        return ['user' => $this->u_token, 'sesions' => $this->s_token];
     }
 
-    public function sendAllTokens(){
-        return ['user'=>$this->u_token, 'sesions'=> $this->s_token];
-
+    public function sendAllTokens()
+    {
+        return ['user' => $this->u_token, 'sesions' => $this->s_token];
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
-class PartitionMyController extends Controller
+class PartitionController extends Controller
 {
     /**
      * Display a listing of the resource.

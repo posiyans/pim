@@ -31,6 +31,15 @@ return new class extends Migration {
             $table->rememberToken();
             $table->timestamps();
         });
+
+//        $user = User::create([
+//            'name' => 'ps',
+//            'login' => 'ps',
+//            'full_name' => 'ps',
+//            'phone' => '79119612747',
+//            'password' => Hash::make('12345')
+//        ]);
+//        $user->syncRoles(['user', 'admin', 'SuperAdmin']);
     }
 
     /**

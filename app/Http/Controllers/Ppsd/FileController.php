@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Ppsd;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FileMyController extends Controller
+class FileController extends Controller
 {
     /**
      * Display a listing of the resource.

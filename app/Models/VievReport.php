@@ -10,8 +10,9 @@ class VievReport extends MyModel
 
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
+
     public function task()
     {
         return $this->hasOne('App\Models\Task', 'id', 'task_id');

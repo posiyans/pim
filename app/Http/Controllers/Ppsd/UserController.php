@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Ppsd;
 
+use App\Http\Controllers\MyController;
 use App\Http\Controllers\Sms\Sms;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 
-class UserMyController extends Controller
+class UserController extends MyController
 {
     //
 
@@ -43,22 +40,22 @@ class UserMyController extends Controller
             $fields['avatar'] = 'avatar';
         }
         $user = Auth::user();
-        if (!$user->hasRole('admin')) {
-            $executor = $user->aliases;
-            array_push($executor, $user->id);
-            $users = User::where('hide', null)->whereIn('id', $executor)->get();
-        } else {
-            $users = User::where('hide', null)->get();
-        }
+//        if (!$user->hasRole('admin')) {
+        $executor = $user->aliases;
+        array_push($executor, $user->id);
+        $users = User::where('hide', null)->whereIn('id', $executor)->get();
+//        } else {
+//            $users = User::where('hide', null)->get();
+//        }
 
-        foreach ($users as $user) {
-            $item = [];
-            foreach ($fields as $key => $value) {
-                $item[$key] = $user->{$value};
-            }
-            $data[] = $item;
-        }
-        return $this->response(['user' => $data]);
+//        foreach ($users as $user) {
+//            $item = [];
+//            foreach ($fields as $key => $value) {
+//                $item[$key] = $user->{$value};
+//            }
+//            $data[] = $item;
+//        }
+        return $this->response(['user' => $users]);
     }
 
     public function show($id = false, Request $request)

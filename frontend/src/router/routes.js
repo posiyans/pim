@@ -1,4 +1,5 @@
 import Auth from './modules/auth'
+import Tasks from './modules/task.js'
 
 const routes = [
   {
@@ -15,7 +16,8 @@ const routes = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   },
-  Auth
+  Auth,
+  Tasks
 ]
 
 export default routes

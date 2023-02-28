@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Ppsd;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\MyController;
 use App\Models\Task;
 use App\Models\VievReport;
 use App\Modules\Log\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TaskMyController extends Controller
+class TaskController extends MyController
 {
     //
     public function getTasks(Request $request)
@@ -23,14 +23,12 @@ class TaskMyController extends Controller
         } else {
             $query->whereNull('arxiv');
         }
-
-
-        if (!$user->hasRole('admin')) {
-            $executor = $user->aliases;
-            array_push($executor, $user->id);
-            $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
-            $query->whereIn('id', $task);
-        }
+//        if (!$user->hasRole('admin')) {
+        $executor = $user->aliases;
+        array_push($executor, $user->id);
+        $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
+        $query->whereIn('id', $task);
+//        }
         if ($request->executor) {
             $executor = $request->executor;
             $task = VievReport::where('executor', 1)->where('user_id', $executor)->pluck('task_id')->toArray();

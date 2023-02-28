@@ -2,7 +2,7 @@
 
 namespace App\Models\Ppsd;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,9 +14,9 @@ class UserPpsd extends Model
 
     public static function userMigrate()
     {
-        if (count(User::all())> 0) {
+        if (count(User::all()) > 0) {
             dump('User no migrate');
-        }else{
+        } else {
             $userPpsd = UserPpsd::all();
             foreach ($userPpsd as $item) {
                 $user = new User();
@@ -32,20 +32,18 @@ class UserPpsd extends Model
                 $user->telegram = $item->telegram;
                 if (isset($item->dostup)) {
                     $user->aliases = explode(",", $item->dostup);
-                }else{
+                } else {
                     $user->aliases = [];
                 }
                 $user->password = Hash::make($item->user_password);
                 $user->save();
                 $user->syncRoles(['user']);
-                if ($user->id == 15){
+                if ($user->id == 15) {
                     $user->syncRoles(['user', 'admin', 'SuperAdmin']);
                 }
             }
             dump('User ok');
         }
-
-
     }
 
 }

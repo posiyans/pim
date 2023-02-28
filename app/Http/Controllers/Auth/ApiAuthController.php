@@ -9,7 +9,7 @@ use App\Modules\Sms\Classes\SendSms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ApiAuthMyController extends MyController
+class ApiAuthController extends MyController
 {
     //
     public function username()

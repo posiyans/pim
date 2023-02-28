@@ -50,7 +50,7 @@ const linksList = [
   {
     title: 'Задачи',
     icon: 'code',
-    link: '/task'
+    link: '/tasks/list'
   },
   {
     title: 'Календарь',

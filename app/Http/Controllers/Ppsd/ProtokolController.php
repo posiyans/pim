@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
-class ProtokolMyController extends Controller
+class ProtokolController extends Controller
 {
     //
 

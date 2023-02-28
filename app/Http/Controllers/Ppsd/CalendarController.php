@@ -8,7 +8,7 @@ use App\Models\VievReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CalendarMyController extends Controller
+class CalendarController extends Controller
 {
     /**
      * Display a listing of the resource.
