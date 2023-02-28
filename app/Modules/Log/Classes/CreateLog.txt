@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Modules\Log\Classes;
+
+
+class CreateLog
+{
+    public function __construct()
+    {
+    }
+
+}

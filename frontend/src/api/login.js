@@ -1,13 +1,8 @@
-import request from '@/utils/request'
+import request from 'src/utils/request'
 
-export function loginByUsername(username, password, sms) {
-  const data = {
-    username,
-    password,
-    sms
-  }
+export function loginByUsername(data) {
   return request({
-    url: '/login/login',
+    url: '/api/login/login',
     method: 'post',
     data
   })
@@ -15,15 +10,25 @@ export function loginByUsername(username, password, sms) {
 
 export function logout() {
   return request({
-    url: '/login/logout',
+    url: '/api/login/logout',
     method: 'post'
   })
 }
 
 export function getUserInfo(id) {
   return request({
-    url: '/user/' + id,
+    url: '/api/user/' + id,
     method: 'get'
   })
 }
+
+
+export function getMyInfo() {
+  return request({
+    url: '/api/my-user',
+    method: 'get'
+  })
+}
+
+
 

@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-use App\Http\Models\UserToken;
-use App\User;
+use App\Models\UserToken;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;

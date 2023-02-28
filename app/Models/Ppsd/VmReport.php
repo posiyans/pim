@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models\Ppsd;
+
+use Illuminate\Database\Eloquent\Model;
+
+class VmReport extends Model
+{
+    //
+    protected $connection = 'mysql_ppsd';
+    protected $table = 'contorl_moderat';
+    public $timestamps = false;
+
+}

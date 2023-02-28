@@ -11,10 +11,11 @@ class MyModel extends Model
      */
     public function log()
     {
-        return $this->morphMany('App\Http\Models\Log', 'commentable');
+        return $this->morphMany('App\Modules\Log\Models\Log', 'commentable');
     }
+
     public function file()
     {
-        return $this->morphMany('App\Http\Models\File', 'commentable');
+        return $this->morphMany('App\Models\File', 'commentable');
     }
 }
