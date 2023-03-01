@@ -28,7 +28,8 @@ module.exports = configure(function (ctx) {
     boot: [
       'element',
       'axios',
-      'main'
+      'main',
+      'quasar-defaults'
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -53,7 +54,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       env: {
-        API: ctx.dev ? 'http://pim.loc' : ''
+        API: ctx.dev ? 'http://localhost' : ''
       },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 

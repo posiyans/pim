@@ -34,7 +34,6 @@ class ApiAuthController extends MyController
                 $log->type = 'ok';
                 $user->log()->save($log);
                 $user->save();
-                $user->roles = ['user', 'admin'];
                 $token = $user->createToken('primary');
                 return response(['token' => $token->plainTextToken, 'user' => $user]);
             } else {
@@ -83,7 +82,6 @@ class ApiAuthController extends MyController
                 $user->log()->save($log);
                 Auth::login($user, true);
                 $token = $user->createToken('primary');
-                $user->roles = ['user', 'admin'];
                 return response(['token' => $token->plainTextToken, 'user' => $user]);
             }
         }

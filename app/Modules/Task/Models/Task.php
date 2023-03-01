@@ -118,7 +118,7 @@ class Task extends MyModel
     {
         $access = false;
         $user = Auth::user();
-        if ($user->hasRole('admin')) {
+        if ($user->moderator) {
             $access = true;
         }
         $executor = $user->aliases;

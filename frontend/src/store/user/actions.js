@@ -10,7 +10,12 @@ export function loginUser({ commit }, data) {
           resolve(data.sms)
         } else {
           LocalStorage.set('UserToken', data.token)
-          commit('setInfo', data.user)
+          const user = data.user
+          user.roles = ['user']
+          if (user.moderator) {
+            user.roles.push('admin')
+          }
+          commit('setInfo', user)
           resolve(data)
         }
       }).catch(error => {
@@ -29,7 +34,10 @@ export function getInfo({ commit }) {
           reject('Ошибка попробуйте позже')
         }
         console.log(data)
-        data.roles = ['user', 'admin']
+        data.roles = ['user']
+        if (data.moderator) {
+          data.roles.push('admin')
+        }
         commit('setInfo', data)
         resolve(data)
       })

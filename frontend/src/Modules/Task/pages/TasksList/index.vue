@@ -250,8 +250,7 @@ export default {
       this.dialogFormVisible = true
     },
     getTaskInfo(row) {
-      const task = Object.assign({}, row)
-      this.$router.push({ name: 'TaskInfo', params: { taskId: task.id } })
+      this.$router.push('/task/show/' + row.id)
     },
     handleDownload() {
       //   this.downloadLoading = true

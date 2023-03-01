@@ -1,5 +1,26 @@
 import request from 'src/utils/request'
 
+
+export function test(params) {
+  return request({
+    url: '/api/test',
+    method: 'get',
+    params
+  })
+}
+
+
+export function uploadProtocol(formData) {
+  return request.post(
+    '/api/test',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+}
+
 export function fetchList(params) {
   return request({
     url: '/api/protocol/list',
@@ -8,24 +29,26 @@ export function fetchList(params) {
   })
 }
 
-export function fetchProtokol(query) {
+export function fetchProtokol(params) {
   return request({
-    url: '/api/protokol/' + query,
-    method: 'get'
+    url: '/api/protocol/get',
+    method: 'get',
+    params
   })
 }
 
-export function downloadProtokol(query) {
+export function downloadProtocol(params) {
   return request({
-    url: '/api/protokol/export/' + query,
+    url: '/api/protocol/get-file',
     method: 'get',
+    params,
     responseType: 'blob'
   })
 }
 
 export function publishProtokol(data) {
   return request.post(
-    '/api/protokol',
+    '/api/protocol/create',
     data,
     {
       headers: {
@@ -42,17 +65,20 @@ export function fetchArticle(id) {
   })
 }
 
-export function protokolToArchiv(protokol) {
-  return request.put('/api/protokol/' + protokol,
-    { type: 'protokolToArchiv' })
+export function protokolToArchiv(data) {
+  return request({
+    url: '/api/protocol/move-to-archive',
+    method: 'post',
+    data
+  })
 }
 
-export function updateProtokol(protokol) {
-  return request.put('/api/protokol/' + protokol.id,
-    {
-      type: 'protokolUpdate',
-      protokol: protokol
-    })
+export function updateProtokol(data) {
+  return request({
+    url: '/api/protocol/update',
+    method: 'post',
+    data
+  })
 }
 
 export function uploadPartitionFile(id, formData) {

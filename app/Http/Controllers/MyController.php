@@ -12,19 +12,12 @@ class MyController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-//    protected function response($var = [], $code = 200)
-//    {
-//        return response($var, $code)->header('Access-Control-Allow-Origin', '*')->header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, S-Token, U-Token ')->header(
-//            'Access-Control-Allow-Methods',
-//            'GET,HEAD,OPTIONS,POST,PUT'
-//        );
-//    }
 
     public function md5_file($file)
     {
         $md5 = md5_file($file);
         $md5_sm = substr($md5, 0, 2);
-        $folder = config('filesystems.ppsd_file_folder');
+        $folder = env('STORAGE_FILE_FOLDER', '');
         if (!file_exists($folder . '/' . $md5_sm)) {
             mkdir($folder . '/' . $md5_sm, 0777, true);
         }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Sms\Contollers\GetSmsBalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +27,18 @@ Route::Post('/auth/login', [\App\Http\Controllers\Auth\ApiAuthController::class,
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/task/list', [\App\Modules\Task\Controllers\GetTasksListController::class, 'index']);
+    Route::Get('/task/get', [\App\Modules\Task\Controllers\GetTaskController::class, 'index']);
+
     Route::match(['get', 'options', 'post'], '/user/list', [\App\Http\Controllers\Ppsd\UserController::class, 'getList']);
     Route::Get('/protocol/list', [\App\Modules\Protocol\Controllers\GetProtocolListController::class, 'index']);
+    Route::Get('/protocol/get', [\App\Modules\Protocol\Controllers\GetProtocolController::class, 'index']);
+    Route::Post('/protocol/move-to-archive', [\App\Modules\Protocol\Controllers\MoveProtocolToArchiveController::class, 'index']);
+    Route::Post('/protocol/update', [\App\Modules\Protocol\Controllers\UpdateProtocolController::class, 'index']);
+    Route::Post('/protocol/create', [\App\Modules\Protocol\Controllers\CreateProtocolController::class, 'index']);
+    Route::Get('/protocol/get-file', [\App\Modules\Protocol\Controllers\GetProtocolFileController::class, 'index']);
+    Route::Post('/test', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
+    Route::Post('/report/create', [\App\Modules\Task\Controllers\CreateReportController::class, 'index']);
+    Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
 
 
 //    Route::match(['get', 'options', 'post'], '/login/logout', [\App\Http\Controllers\Auth\ApiAuthController::class, 'logout']);

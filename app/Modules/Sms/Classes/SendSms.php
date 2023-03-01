@@ -15,6 +15,14 @@ class SendSms
         $this->user = $user;
     }
 
+    public static function getBalance()
+    {
+        $apikey = env('SMS_API_KEY');
+        $smsru = new Sms($apikey);
+        $smsru->getBalance();
+    }
+
+
     public function text($text)
     {
         $this->tex = $text;

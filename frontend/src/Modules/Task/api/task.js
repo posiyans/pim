@@ -16,11 +16,11 @@ export function fetchListForToday(query) {
   })
 }
 
-export function fetchTask(id, query = false) {
+export function fetchTask(params) {
   return request({
-    url: '/api/task/info/' + id,
+    url: '/api/task/get',
     method: 'get',
-    params: query
+    params
   })
 }
 
@@ -34,7 +34,7 @@ export function fetchTaskStatistic() {
 
 export function addReport(formData) {
   return request.post(
-    '/api/report',
+    '/api/report/create',
     formData,
     {
       headers: {
