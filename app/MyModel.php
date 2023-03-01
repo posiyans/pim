@@ -16,6 +16,6 @@ class MyModel extends Model
 
     public function file()
     {
-        return $this->morphMany('App\Models\File', 'commentable');
+        return $this->morphMany('App\Modules\File\Models\File', 'commentable');
     }
 }

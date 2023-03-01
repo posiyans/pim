@@ -133,7 +133,8 @@ export default {
       }
       downloadProtocol(data)
         .then(response => {
-          exportFile(this.protokol.nomer + '.docx', response.data)
+          const fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0] || this.protokol.nomer + '.docx'
+          exportFile(fileName, response.data)
         })
         .catch(er => {
           this.$message({

@@ -3,8 +3,8 @@
 namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\File;
 use App\Models\VievReport;
+use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protokol;

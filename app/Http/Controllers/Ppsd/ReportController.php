@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\Controller;
-use App\Models\File;
 use App\Models\Report;
 use App\Models\VievReport;
+use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

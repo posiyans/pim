@@ -29,7 +29,7 @@ class GetProtocolFileController extends MyController
                 $md5 = $file[0]->hash;
                 $name = $file[0]->name;
                 $path = FileRepository::getPathFromHash($md5);
-                return response()->download($path, $name, $headers = ['filename' => $name]);
+                return response()->download($path, $name);
             }
             return response('Файл не найден', 404);
         }

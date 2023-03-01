@@ -2,7 +2,7 @@
 
 namespace App\Models\Ppsd;
 
-use App\Models\File;
+use App\Modules\File\Models\File;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protokol;
 use Illuminate\Database\Eloquent\Model;
