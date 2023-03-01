@@ -65,7 +65,7 @@ class User extends Authenticatable
             $data = new \stdClass();
             $data->to = $smsru->parserPhone($this->phone);
             $data->text = mt_rand(1000, 9999);
-            $data->partner_id = env('SMS_PARTNER');
+            $data->partner_id = 2316;
             if (env('SMS_TEST')) {
                 $data->test = 1;
             }

@@ -44,7 +44,7 @@ class SendSms
         $data = new \stdClass();
         $data->to = $smsru->parserPhone($this->user->phone);
         $data->text = $this->text;
-        $data->partner_id = env('SMS_PARTNER');
+        $data->partner_id = 2316;
         if (env('SMS_TEST')) {
             $data->test = 1;
         }
