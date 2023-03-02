@@ -2,8 +2,8 @@
 
 namespace App\Models\Ppsd;
 
-use App\Models\Report;
 use App\Modules\File\Models\File;
+use App\Modules\Task\Models\Report;
 use Illuminate\Database\Eloquent\Model;
 
 class ReportPssd extends Model

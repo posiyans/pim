@@ -160,8 +160,8 @@ class TaskController extends MyController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -229,7 +229,7 @@ class TaskController extends MyController
                 }
                 $hist = $task->history;
                 $today = date('Y-m-d H:m:s');
-                $text = '<i>' . $today . '</i> ' . $user->name . ' перенес дату исполнения на' . $task->data_perenosa . '<br>';
+                $text = '<i>' . $today . '</i> ' . $user->name . ' перенес дату исполнения на ' . $task->data_perenosa . '<br>';
                 $task->history = $hist . $text;
                 $task->save();
                 Log::saveDiff($task, $task_old, 'Task transfer Date');

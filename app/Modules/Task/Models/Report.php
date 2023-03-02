@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Task\Models;
 
 use App\MyModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,5 +17,11 @@ class Report extends MyModel
     {
         return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
+
+    public function task()
+    {
+        return $this->hasOne('App\Modules\Protocol\Models\Task', 'id', 'task_id');
+    }
+
 }
 

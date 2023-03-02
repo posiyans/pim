@@ -9,6 +9,10 @@ const Tasks = {
     {
       path: 'show/:id',
       component: () => import('src/Modules/Task/pages/ShowTask/index.vue')
+    },
+    {
+      path: 'edit/:id',
+      component: () => import('src/Modules/Task/pages/EditTask/index.vue')
     }
   ]
 }

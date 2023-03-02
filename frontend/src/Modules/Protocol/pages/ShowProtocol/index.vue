@@ -40,7 +40,7 @@
       <div v-if="partition.task">
         <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
         <div v-for="task in partition.task" :key="task.id" class="task-text">
-          <div :class="task.arxiv  ? 'text-grey-8' : ''">
+          <div :class="task.arxiv  ? 'text-grey-5' : ''">
             <span :class="done(task)">{{ task.number }}.</span> {{ task.executor }}
             <b>{{ task.data_ispoln }}</b> {{ task.text }}
             <span class="link" @click="taskShow(task)">---></span>

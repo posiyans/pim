@@ -80,7 +80,7 @@ class ApiAuthController extends MyController
                 $log->description = 'login by login, password';
                 $log->type = 'ok';
                 $user->log()->save($log);
-                Auth::login($user, true);
+//                Auth::login($user, true);
                 $token = $user->createToken('primary');
                 return response(['token' => $token->plainTextToken, 'user' => $user]);
             }

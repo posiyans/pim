@@ -1,5 +1,5 @@
-import { getMyInfo, loginByUsername } from 'src/api/login'
-import { LocalStorage } from 'quasar'
+import { getMyInfo, loginByUsername, logout } from 'src/api/login'
+import { SessionStorage } from 'quasar'
 
 export function loginUser({ commit }, data) {
   return new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ export function loginUser({ commit }, data) {
         if (data.sms) {
           resolve(data.sms)
         } else {
-          LocalStorage.set('UserToken', data.token)
+          SessionStorage.set('UserToken', data.token)
           const user = data.user
           user.roles = ['user']
           if (user.moderator) {
@@ -44,6 +44,19 @@ export function getInfo({ commit }) {
       .catch(() => {
         resolve({ role: 'guest' })
       })
+  })
+}
+
+export function userLogout({ commit }, data) {
+  return new Promise((resolve, reject) => {
+    logout(data)
+      .then(() => {
+        SessionStorage.remove('UserToken')
+        commit('setInfo', { role: '' })
+        resolve()
+      }).catch(error => {
+      reject(error)
+    })
   })
 }
 

@@ -9,19 +9,28 @@ class SendSms
 {
     private $user;
     private $text;
+    private $sms;
 
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public static function getBalance()
+    public function __construct()
     {
         $apikey = env('SMS_API_KEY');
-        $smsru = new Sms($apikey);
-        $smsru->getBalance();
+        $this->sms = new Sms($apikey);
     }
 
+    public function getBalance()
+    {
+        $res = $this->sms->getBalance();
+        if ($res->status_code == 100) {
+            return $res->balance;
+        }
+        return '';
+    }
+
+    public function user(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     public function text($text)
     {

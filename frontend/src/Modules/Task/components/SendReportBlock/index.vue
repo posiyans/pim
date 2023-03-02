@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-end q-pb-xs relative-position">
+  <div v-if="!disable" class="row items-end q-pb-xs relative-position">
     <div class="hidden">
       <input
         ref="file"
@@ -46,6 +46,10 @@ export default {
     taskId: {
       type: [Number, String],
       required: true
+    },
+    disable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -14,7 +14,7 @@ class GetSmsBalanceController extends MyController
     {
         $user = Auth::user();
         if ($user->moderator) {
-            return SendSms::getBalance();
+            return (new SendSms())->getBalance();
         }
 
         return '';

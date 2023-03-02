@@ -10,8 +10,8 @@ export function loginByUsername(data) {
 
 export function logout() {
   return request({
-    url: '/api/login/logout',
-    method: 'post'
+    url: '/api/auth/logout',
+    method: 'get'
   })
 }
 

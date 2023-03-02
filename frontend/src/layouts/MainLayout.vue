@@ -14,8 +14,8 @@
         <q-toolbar-title>
           Задачник
         </q-toolbar-title>
-
-        <MyInfo />
+        <ShowBalance />
+        <UserMenu />
       </q-toolbar>
     </q-header>
 
@@ -30,16 +30,19 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container class="q-px-md">
-      <router-view />
+    <q-page-container>
+      <div class="q-pa-md">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue'
-import MyInfo from 'src/components/MyInfo/index.vue'
 import MenuItems from './components/MenuItems/index.vue'
+import ShowBalance from 'src/Modules/Sms/Components/ShowBalance/index.vue'
+import UserMenu from 'src/layouts/components/UserMenu/index.vue'
 
 const linksList = [
   {
@@ -74,8 +77,9 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    MyInfo,
-    MenuItems
+    MenuItems,
+    ShowBalance,
+    UserMenu
   },
 
   setup() {

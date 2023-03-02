@@ -44,26 +44,32 @@ export function addReport(formData) {
   )
 }
 
-export function taskDone(executor) {
-  return request.put('/api/report/' + executor.id,
-    { item: executor })
+export function setTaskDone(data) {
+  return request({
+    url: '/api/task/report/set-done',
+    method: 'post',
+    data
+  })
 }
 
 export function delReport(id) {
   return request.delete('/api/report/' + id)
 }
 
-export function taskToArchiv(task) {
-  return request.put('/api/task/' + task,
-    { type: 'taskToArchiv' })
+export function taskToArchiv(params) {
+  return request({
+    url: '/api/task/move-to-archive',
+    method: 'get',
+    params
+  })
 }
 
-export function updateTask(task) {
-  return request.put('/api/task/' + task.id,
-    {
-      type: 'updateTask',
-      task: task
-    })
+export function updateTask(data) {
+  return request({
+    url: '/api/task/update',
+    method: 'post',
+    data
+  })
 }
 
 export function fetchProtokol(query) {
@@ -74,18 +80,25 @@ export function fetchProtokol(query) {
   })
 }
 
-export function downloadReport(query) {
+export function downloadReport(params) {
   return request({
-    url: '/api/file/' + query,
+    url: '/api/file/download',
     method: 'get',
-    responseType: 'blob'
+    responseType: 'blob',
+    params
   })
 }
 
-export function transferDate(task) {
-  return request.put('/api/task/' + task.id,
-    {
-      type: 'transferDate',
-      task: task
-    })
+/**
+ * перенести дату выполнения
+ *
+ * @param data
+ * @returns {Promise<AxiosResponse<any>>|*}
+ */
+export function transferDate(data) {
+  return request({
+    url: '/api/task/move-date-execution',
+    method: 'post',
+    data
+  })
 }

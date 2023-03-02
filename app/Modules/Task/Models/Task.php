@@ -19,9 +19,9 @@ class Task extends MyModel
     {
         if ($this->remove) {
             $this->remove = false;
-            return $this->hasMany('App\Models\Report')->withTrashed();
+            return $this->hasMany('App\Modules\Task\Models\Report')->withTrashed();
         } else {
-            return $this->hasMany('App\Models\Report');
+            return $this->hasMany('App\Modules\Task\Models\Report');
         }
     }
 

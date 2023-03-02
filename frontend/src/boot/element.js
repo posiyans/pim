@@ -1,7 +1,12 @@
 import { boot } from 'quasar/wrappers'
-import ElementPlus from 'element-plus'
+import ElementPlus, { dayjs } from 'element-plus'
 import 'element-plus/dist/index.css'
+import ru from 'element-plus/dist/locale/ru.mjs'
 
 export default boot(({ app }) => {
-  app.use(ElementPlus)
+  dayjs.Ls.en.weekStart = 1
+  // ElementPlus.dayjs().$locale().weekStart = 1
+  app.use(ElementPlus, {
+    locale: ru
+  })
 })

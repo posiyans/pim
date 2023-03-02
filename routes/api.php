@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\File\Controlles\DownloadFileController;
 use App\Modules\Sms\Contollers\GetSmsBalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,8 +27,16 @@ Route::middleware('auth:sanctum')->get('/my-user', function (Request $request) {
 Route::Post('/auth/login', [\App\Http\Controllers\Auth\ApiAuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::Get('/auth/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'index']);
+
     Route::Get('/task/list', [\App\Modules\Task\Controllers\GetTasksListController::class, 'index']);
     Route::Get('/task/get', [\App\Modules\Task\Controllers\GetTaskController::class, 'index']);
+    Route::Post('/task/update', [\App\Modules\Task\Controllers\UpdateTaskController::class, 'index']);
+    Route::Get('/task/move-to-archive', [\App\Modules\Task\Controllers\MoveTaskToArchiveController::class, 'index']);
+    Route::Post('/task/move-date-execution', [\App\Modules\Task\Controllers\MoveDateExecutionController::class, 'index']);
+
+    Route::Post('/task/report/set-done', [\App\Modules\Task\Controllers\SetTaskIsDoneController::class, 'index']);
+
 
     Route::match(['get', 'options', 'post'], '/user/list', [\App\Http\Controllers\Ppsd\UserController::class, 'getList']);
     Route::Get('/protocol/list', [\App\Modules\Protocol\Controllers\GetProtocolListController::class, 'index']);
@@ -39,6 +48,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Post('/test', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
     Route::Post('/report/create', [\App\Modules\Task\Controllers\CreateReportController::class, 'index']);
     Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
+
+    Route::Get('/file/download', [DownloadFileController::class, 'index']);
 
 
 //    Route::match(['get', 'options', 'post'], '/login/logout', [\App\Http\Controllers\Auth\ApiAuthController::class, 'logout']);
