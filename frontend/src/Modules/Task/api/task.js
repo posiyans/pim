@@ -52,8 +52,12 @@ export function setTaskDone(data) {
   })
 }
 
-export function delReport(id) {
-  return request.delete('/api/report/' + id)
+export function delReport(params) {
+  return request({
+    url: '/api/task/report/delete',
+    method: 'delete',
+    params
+  })
 }
 
 export function taskToArchiv(params) {

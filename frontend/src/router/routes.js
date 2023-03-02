@@ -1,6 +1,8 @@
 import Auth from './modules/auth'
 import Tasks from './modules/task.js'
 import Protocol from './modules/protocol.js'
+import User from './modules/user.js'
+import Calendar from './modules/calendar.js'
 
 const routes = [
   {
@@ -19,7 +21,9 @@ const routes = [
   },
   Auth,
   Tasks,
-  Protocol
+  Protocol,
+  User,
+  Calendar
 ]
 
 export default routes

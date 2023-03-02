@@ -55,10 +55,10 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       env: {
-        API: ctx.dev ? 'http://localhost' : ''
+        API: ctx.dev ? 'http://pim.loc' : ''
       },
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      vueRouterMode: 'history', // available values: 'hash', 'history'
+      distDir: './../public',
       // transpile: false,
       // publicPath: '/',
 
@@ -91,7 +91,7 @@ module.exports = configure(function (ctx) {
       server: {
         type: 'http'
       },
-      port: 8080,
+      port: 8081,
       open: true // opens browser window automatically
     },
 
@@ -111,7 +111,8 @@ module.exports = configure(function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ]
     },
 

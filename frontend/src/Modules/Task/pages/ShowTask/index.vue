@@ -78,7 +78,7 @@
           <div>
             <div class="bg-blue-1 q-pa-md">
               <div v-for="item in task.report" :key="item.id">
-                <ItemReportMessage :item="item" />
+                <ItemReportMessage :item="item" @reload="getTask" />
               </div>
             </div>
             <SendReportBlock :task-id="$route.params.id" :disable="task.arxiv" class="bg-blue-2" @reload="getTask" />

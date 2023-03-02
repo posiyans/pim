@@ -26,7 +26,7 @@
       bordered
     >
       <q-list>
-        <MenuItems v-for="item in linksList" :key="item.title" :item="item" />
+        <MenuItems v-for="item in showMenu" :key="item.title" :item="item" />
       </q-list>
     </q-drawer>
 
@@ -39,43 +39,48 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import MenuItems from './components/MenuItems/index.vue'
 import ShowBalance from 'src/Modules/Sms/Components/ShowBalance/index.vue'
 import UserMenu from 'src/layouts/components/UserMenu/index.vue'
+import { useStore } from 'vuex'
 
 const linksList = [
   {
     title: 'Главная',
     icon: 'school',
-    link: '/'
+    link: '/',
+    roles: ['user']
+
   },
   {
     title: 'Задачи',
     icon: 'code',
-    link: '/task/list'
+    link: '/task/list',
+    roles: ['user']
   },
   {
     title: 'Календарь',
     icon: 'chat',
-    link: '/calendar'
+    link: '/calendar/show',
+    roles: ['user']
   },
   {
     title: 'Протоколы',
     icon: 'record_voice_over',
-    link: '/protocol/list'
+    link: '/protocol/list',
+    roles: ['admin']
   },
   {
     title: 'Пользователи',
     roles: ['admin', 'moderator'],
     icon: 'rss_feed',
-    link: '/users'
+    link: '/user/list',
   }
 ]
 
 export default defineComponent({
   name: 'MainLayout',
-
   components: {
     MenuItems,
     ShowBalance,
@@ -84,9 +89,15 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false)
-
+    const store = useStore()
+    const showMenu = computed(() => {
+      return linksList.filter(item => {
+        return item.roles.filter(x => store.state.user.info.roles.includes(x)).length > 0
+      })
+    })
     return {
       linksList,
+      showMenu,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value

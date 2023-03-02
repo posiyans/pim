@@ -38,7 +38,16 @@
       </el-table-column>
       <el-table-column label="%" align="center" width="80px">
         <template #default="scope">
-          <el-tag :type="scope.row.PercentComplete > 90 ? 'success' : 'danger'">{{ scope.row.PercentComplete }} %</el-tag>
+          <q-knob
+            disable
+            v-model="scope.row.PercentComplete"
+            show-value
+            size="30px"
+            :thickness="0.5"
+            color="teal-2"
+            track-color="red-1"
+            :class="scope.row.PercentComplete >90 ? 'text-primary' : 'text-negative'"
+          />
         </template>
       </el-table-column>
     </el-table>

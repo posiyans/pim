@@ -7,8 +7,8 @@
       <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
     </div>
     <h4 v-if="protokol.arxiv" class="alert" v-html="protokol.arxiv" />
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
+    <el-row>
+      <el-col>
         <div class="chart-wrapper">
           <table>
             <tr>

@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Post('/task/move-date-execution', [\App\Modules\Task\Controllers\MoveDateExecutionController::class, 'index']);
 
     Route::Post('/task/report/set-done', [\App\Modules\Task\Controllers\SetTaskIsDoneController::class, 'index']);
+    Route::Delete('/task/report/delete', [\App\Modules\Task\Controllers\DeleteReportController::class, 'index']);
 
 
     Route::match(['get', 'options', 'post'], '/user/list', [\App\Http\Controllers\Ppsd\UserController::class, 'getList']);
