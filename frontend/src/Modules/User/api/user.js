@@ -1,16 +1,36 @@
 import request from 'src/utils/request'
 
-export function fetchList(query) {
+export function getUsersList(query) {
   return request({
-    url: '/api/user',
+    url: '/api/user/get-list',
     method: 'get',
     params: query
   })
 }
 
-export function updateUser(user) {
-  return request.put('/api/user/' + user.id,
-    { user: user })
+export function getUserInfo(query) {
+  return request({
+    url: '/api/user/get',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getUserAvatar(query) {
+  return request({
+    url: '/api/user/get-avatar',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+
+export function updateUser(data) {
+  return request({
+    url: '/api/user/update',
+    method: 'post',
+    data
+  })
 }
 
 export function createUser(user) {
@@ -18,9 +38,12 @@ export function createUser(user) {
     { user: user })
 }
 
-export function updatePassword(password) {
-  return request.put('/api/user/' + password.id,
-    { password: password })
+export function changeUserPassword(data) {
+  return request({
+    url: '/api/user/password-change',
+    method: 'post',
+    data
+  })
 }
 
 export function fetchExecutors() {

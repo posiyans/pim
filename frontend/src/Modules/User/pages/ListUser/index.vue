@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="q-mb-sm">
       Пользователи
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addUser">{{ $t('table.add') }}</el-button>
+      <q-btn flat icon="add" color="primary" @click="addUser" />
     </div>
 
     <el-table
@@ -13,19 +13,24 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column label="id" prop="id" align="center" width="65">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="" width="60px" align="center">
+      <el-table-column label="Login">
         <template #default="scope">
-          <img :src="scope.row.id" class="user-avatar">
-        </template>
-      </el-table-column>
-      <el-table-column label="Login" width="100px">
-        <template #default="scope">
-          <span>{{ scope.row.login }}</span>
+          <div class="text-no-wrap row items-center q-col-gutter-md">
+            <div class="">
+              <AvatarById :id="scope.row.id" size="40px" />
+            </div>
+            <div>
+              {{ scope.row.login }}
+            </div>
+            <div v-if="scope.row.hide">
+              <q-icon name="visibility_off" color="negative" />
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="Имя" width="120px" align="center">
@@ -45,129 +50,81 @@
       </el-table-column>
       <el-table-column label="Phone" align="center">
         <template #default="scope">
-          <span>{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Telegram Id" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.telegram }}</span>
+          <div class="row items-center q-col-gutter-sm justify-center">
+            <div>{{ scope.row.phone }}</div>
+            <div v-if="scope.row.phone && scope.row.login_by_sms" class="text-teal text-small-80">SMS</div>
+          </div>
+
         </template>
       </el-table-column>
       <el-table-column label="" align="center" class-name="small-padding">
         <template #default="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button type="danger" size="mini" title="Сбросить пароль" @click="resetPassword(scope.row)">Reset</el-button>
+          <div class="row items-center q-col-gutter-sm">
+            <div>
+              <q-btn color="primary" outline label="Edit" @click="handleUpdate(scope.row)" />
+            </div>
+            <ChangeUserPasswordBtn :user-id="scope.row.id" :user-name="scope.row.full_name" />
+
+          </div>
         </template>
       </el-table-column>
     </el-table>
+    <LoadMore :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" />
 
-    <!--    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />-->
+    <q-dialog v-model="dialogFormVisible" persistent maximized>
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ selectUser.full_name }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
 
-    <el-dialog :title="temp.full_name" v-model="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Id"> {{ temp.id }}
-        </el-form-item>
-        <el-form-item label="Имя" prop="name">
-          <el-input v-model="temp.name" />
-        </el-form-item>
-        <el-form-item label="Полное имя" prop="full_name">
-          <el-input v-model="temp.full_name" />
-        </el-form-item>
-        <el-form-item label="Login" prop="login">
-          <el-input v-model="temp.login" />
-        </el-form-item>
-        <el-form-item label="e-mail">
-          <el-input v-model="temp.email" />
-        </el-form-item>
-        <el-form-item label="Телефон">
-          <el-input v-model="temp.phone" />
-        </el-form-item>
-        <el-form-item label="SMS">
-          <el-checkbox v-model="temp.login_by_sms" true-value="1" false-value="0" class="filter-item" style="margin-left:15px;">Вход по SMS</el-checkbox>
-        </el-form-item>
-        <el-form-item label="Telegram Id">
-          <el-input v-model="temp.telegram" />
-        </el-form-item>
-        <el-form-item label="Роли">
-          <el-select v-model="temp.roles_json" style="width:500px;" multiple placeholder="Пожалуйста, выберите">
-            <el-option v-for="item in roles" :label="item" :value="item" :key="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Доступ к ">
-          <el-select v-model="temp.aliases" style="width:500px;" multiple placeholder="Пожалуйста, выберите">
-            <el-option v-for="item in allExecutor" :label="item.label" :value="item.value" :key="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Цвет">
-          <el-color-picker
-            v-model="temp.color"
-            class="user-theme-picker"
-            popper-class="theme-picker-dropdown" />
-        </el-form-item>
-        <el-form-item v-if="dialogStatus == 'update'" label="Аватар">
-          <pan-thumb :image="getUrl(temp.id)" />
-          <el-button type="primary" icon="upload" style="position: absolute;bottom: 15px;margin-left: 40px;" @click="imagecropperShow=true">Сменить аватар
-          </el-button>
-          <image-cropper
-            v-show="imagecropperShow"
-            :width="300"
-            :height="300"
-            :key="imagecropperKey"
-            :url="getUrl(temp.id)"
-            lang-type="en"
-            @close="close"
-            @crop-upload-success="cropSuccess" />
-        </el-form-item>
-      </el-form>
-      <div class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Отмена</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createUser():updateUser()">Сохранить</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog :title="reset.title" v-model="dialogResetPassword">
-      <el-form ref="dataForm" label-position="left" label-width="140px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Новый Пароль:">
-          <el-input v-model="reset.password" />
-        </el-form-item>
-      </el-form>
-      <div class="dialog-footer" align="center">
-        <el-button @click="dialogResetPassword = false">Отмена</el-button>
-        <el-button type="danger" @click="updatePassword()">Сменить!!!</el-button>
-      </div>
-    </el-dialog>
+        <q-card-section>
+          <EditUserProfile
+            :user-id="selectUser.id"
+            @success="reload"
+            @cancel="dialogFormVisible = false"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
-import { createUser, fetchExecutors, fetchList, updatePassword, updateUser } from 'src/Modules/User/api/user.js'
-
+import { createUser, fetchExecutors, getUsersList, updateUser } from 'src/Modules/User/api/user.js'
+import LoadMore from 'src/components/LoadMore/index.vue'
+import AvatarById from 'src/Modules/User/components/AvatarById/index.vue'
+import ChangeUserPasswordBtn from 'src/Modules/User/components/ChangeUserPasswordBtn/index.vue'
+import EditUserProfile from 'src/Modules/User/components/EditUserProfile/index.vue'
 
 export default {
-  components: {},
+  components: {
+    ChangeUserPasswordBtn,
+    LoadMore,
+    AvatarById,
+    EditUserProfile
+  },
   data() {
     return {
+      key: 1,
+      func: getUsersList,
       imagecropperShow: false,
       imagecropperKey: 0,
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         page: 1,
-        limit: 20,
-        arxiv: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id',
-        archiv: false,
-        executor: undefined
+        limit: 20
       },
+      selectUser: {},
       yearAll: [],
       allExecutor: [],
       test1: false,
       showReviewer: false,
       dialogFormVisible: false,
-      dialogResetPassword: false,
       dialogStatus: '',
       dialogPvVisible: false,
       downloadLoading: false,
@@ -190,11 +147,14 @@ export default {
       return this.user.roles
     }
   },
-  created() {
-    this.getList()
-    this.getExecutors()
+  mounted() {
+    // this.getList()
+    // this.getExecutors()
   },
   methods: {
+    setList(val) {
+      this.list = val
+    },
     getUrl(id) {
       return process.env.BASE_API + '/user/avatar/' + id
     },
@@ -208,59 +168,32 @@ export default {
     close() {
       this.imagecropperShow = false
     },
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items.data
-        this.total = response.data.total
-        this.yearAll = response.data.years
-        this.listLoading = false
-      })
+    reload() {
+      this.key++
+      this.dialogFormVisible = false
     },
     addUser() {
-      this.temp = {
-        id: 'new',
-        name: '',
-        full_name: '',
-        login: '',
-        email: '',
-        color: '#ff0000',
-        telegram: '',
-        phone: '',
-        login_by_sms: true,
-        roles: ['user'],
-        aliases: []
+      this.selectUser = {
+        full_name: 'Новый пользователь',
+        id: ''
       }
-      this.dialogStatus = 'create'
       this.dialogFormVisible = true
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      if (this.temp.login_by_sms === 1) {
-        this.temp.login_by_sms = true
-      } else {
-        this.temp.login_by_sms = false
-      }
-      const i = []
-      this.temp.aliases.forEach(function (item) {
-        i.push(parseInt(item, 10))
-      })
-      this.temp.aliases = i
-      this.dialogStatus = 'update'
+      this.selectUser = row
+      // this.temp = Object.assign({}, row) // copy obj
+      // if (this.temp.login_by_sms === 1) {
+      //   this.temp.login_by_sms = true
+      // } else {
+      //   this.temp.login_by_sms = false
+      // }
+      // const i = []
+      // this.temp.aliases.forEach(function (item) {
+      //   i.push(parseInt(item, 10))
+      // })
+      // this.temp.aliases = i
+      // this.dialogStatus = 'update'
       this.dialogFormVisible = true
-    },
-    resetPassword(row) {
-      this.reset.id = row.id
-      this.reset.title = 'Сбросить пароль для ' + row.full_name
-      this.reset.password = this.randomString(8)
-      this.dialogResetPassword = true
-    },
-    updatePassword() {
-      updatePassword(this.reset).then(response => {
-        console.log(response.data)
-        this.getList()
-      })
-      this.dialogResetPassword = false
     },
     updateUser() {
       this.$refs['dataForm'].validate((valid) => {

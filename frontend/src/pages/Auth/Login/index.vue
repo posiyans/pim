@@ -1,7 +1,7 @@
 <template>
   <div class="fullscreen" style="background-color: #2d3a4b;">
     <div class="fixed-center">
-      <div class="text-h4 text-weight-bold q-pb-lg text-primary">
+      <div class="text-h4 text-weight-bold q-pb-lg text-white">
         Добро Пожаловать
       </div>
       <div>
@@ -67,7 +67,7 @@ export default {
     return {
       showSms: false,
       loginForm: {
-        username: 'ertwert',
+        username: '',
         password: '',
         sms: ''
       },

@@ -33,6 +33,7 @@ class ApiAuthController extends MyController
                 $log->description = 'login by login, password, sms';
                 $log->type = 'ok';
                 $user->log()->save($log);
+                $user->last_connect = date('Y-m-d H:i:s');
                 $user->save();
                 $token = $user->createToken('primary');
                 return response(['token' => $token->plainTextToken, 'user' => $user]);
@@ -52,7 +53,7 @@ class ApiAuthController extends MyController
                 $user = Auth::user();
                 if (Auth::user()->login_by_sms) {
                     try {
-                        $sms = (new SendSms($user))->code()->run();
+                        $sms = (new SendSms())->code($user);
                         $user->sms = $sms;
                         $user->save();
                         return response(['sms' => 'send', 't' => $sms]);
@@ -80,6 +81,8 @@ class ApiAuthController extends MyController
                 $log->description = 'login by login, password';
                 $log->type = 'ok';
                 $user->log()->save($log);
+                $user->last_connect = date('Y-m-d H:i:s');
+                $user->save();
 //                Auth::login($user, true);
                 $token = $user->createToken('primary');
                 return response(['token' => $token->plainTextToken, 'user' => $user]);

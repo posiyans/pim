@@ -28,6 +28,12 @@ Route::Post('/auth/login', [\App\Http\Controllers\Auth\ApiAuthController::class,
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/auth/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'index']);
+    Route::Get('/user/get-list', [\App\Modules\User\Controllers\GetUsersListController::class, 'index']);
+    Route::Get('/user/get', [\App\Modules\User\Controllers\GetUserInfoController::class, 'index']);
+    Route::Post('/user/update', [\App\Modules\User\Controllers\UpdateUserController::class, 'index']);
+    Route::Get('/user/get-avatar', [\App\Modules\User\Controllers\GetUserAvatarController::class, 'index']);
+    Route::Post('/user/password-change', [\App\Modules\User\Controllers\ChangeUserPasswordController::class, 'index']);
+
 
     // Задачи для календаря
     Route::Get('/calendar/get-tasks', [\App\Modules\Task\Controllers\GetTasksForCalendarController::class, 'index']);

@@ -1,11 +1,13 @@
 <template>
   <q-chat-message
     :name="item.user.name"
-    avatar="~/assets/user.png"
     :sent="send"
     :text-color="item.deleted_at ? 'grey' : 'black'"
     bg-color="grey-2"
   >
+    <template v-slot:avatar>
+      <AvatarById :id="item.user_id" class="q-message-avatar" :class="send ? 'q-message-avatar--sent' : 'q-message-avatar--received'" />
+    </template>
     <div class="relative-position q-pr-md">
       <div v-if="moderator && !item.deleted_at" class="absolute-top-right">
         <q-btn
@@ -38,10 +40,12 @@ import { delReport, downloadReport } from 'src/Modules/Task/api/task'
 import { exportFile } from 'quasar'
 import ShowTime from 'src/components/ShowTime/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
+import AvatarById from 'src/Modules/User/components/AvatarById/index.vue'
 
 export default {
   components: {
     ShowTime,
+    AvatarById,
     FileBlock
   },
   props: {
