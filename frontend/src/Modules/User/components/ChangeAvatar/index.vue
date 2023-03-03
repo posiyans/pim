@@ -11,18 +11,17 @@
       </slot>
     </div>
     <image-cropper
-      v-show="imagecropperShow"
+      v-model="imagecropperShow"
+      :key="key"
       :width="400"
       :params="{ 'id': id }"
       :height="400"
+      :headers="headers"
       imgFormat="jpg"
       field="avatar"
       :url="url"
       lang-type="ru"
-      @close="close"
-      style="z-index: 20000;"
-      with-credentials
-      @crop-upload-success="cropSuccess"
+      @update:model-value="close"
     />
   </div>
 </template>
@@ -30,6 +29,7 @@
 <script>
 import ImageCropper from 'vue-image-crop-upload'
 import AvatarById from 'src/Modules/User/components/AvatarById/index.vue'
+import { SessionStorage } from 'quasar'
 
 export default {
   components: {
@@ -52,8 +52,14 @@ export default {
     }
   },
   computed: {
+    headers() {
+      const token = SessionStorage.getItem('UserToken') || ''
+      return {
+        Authorization: 'Bearer ' + token
+      }
+    },
     url() {
-      return '/avatar/upload'
+      return process.env.API + '/api/user/avatar-upload'
     },
     key() {
       return this.$store.state.avatar.key
@@ -62,10 +68,12 @@ export default {
   methods: {
     cropSuccess() {
       this.imagecropperShow = false
-      this.$store.commit('avatar/incrementKey')
+      this.$store.commit('avatar/increment')
     },
     close() {
+      console.log('close')
       this.imagecropperShow = false
+      this.$store.commit('avatar/increment')
     }
   }
 }

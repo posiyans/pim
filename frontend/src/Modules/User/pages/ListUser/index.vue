@@ -20,15 +20,22 @@
       </el-table-column>
       <el-table-column label="Login">
         <template #default="scope">
-          <div class="text-no-wrap row items-center q-col-gutter-md">
+          <div class="text-no-wrap row items-center no-wrap q-col-gutter-md">
             <div class="">
               <AvatarById :id="scope.row.id" size="40px" />
             </div>
             <div>
               {{ scope.row.login }}
             </div>
+            <q-space />
+
+          </div>
+          <div class="row items-center q-pr-sm no-wrap q-col-gutter-sm absolute-bottom-right">
             <div v-if="scope.row.hide">
               <q-icon name="visibility_off" color="negative" />
+            </div>
+            <div v-if="scope.row.moderator">
+              <q-icon name="perm_identity" color="secondary" />
             </div>
           </div>
         </template>
@@ -40,7 +47,7 @@
       </el-table-column>
       <el-table-column label="Полное имя">
         <template #default="scope">
-          <span>{{ scope.row.full_name }}</span>
+          <div class="ellipsis">{{ scope.row.full_name }}</div>
         </template>
       </el-table-column>
       <el-table-column label="Последний вход" align="center">
@@ -71,7 +78,7 @@
     </el-table>
     <LoadMore :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" />
 
-    <q-dialog v-model="dialogFormVisible" persistent maximized>
+    <q-dialog v-model="dialogFormVisible" maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ selectUser.full_name }}</div>

@@ -22,21 +22,27 @@
     <div>
       <QSelectExecutor v-model="user.aliases" outlined multiple label="Доступ к " />
     </div>
-    <div>
-      <q-checkbox
-        v-model="user.login_by_sms"
-        label="Вход по SMS"
-        :true-value="1"
-        :false-value="0"
-      />
-    </div>
-    <div>
-      <q-checkbox
-        v-model="user.hide"
-        label="Скрыть в списке исполнителей"
-        :true-value="1"
-        :false-value="0"
-      />
+    <div class="row items-center q-col-gutter-md q-pa-md">
+      <div>
+        <q-checkbox
+          v-model="user.login_by_sms"
+          label="Вход по SMS"
+        />
+      </div>
+      <div>
+        <q-checkbox
+          v-model="user.hide"
+          label="Скрыть в списке исполнителей"
+          color="negative"
+        />
+      </div>
+      <div>
+        <q-checkbox
+          v-model="user.moderator"
+          label="Модератор"
+          color="teal"
+        />
+      </div>
     </div>
     <div class="text-right q-gutter-md">
       <q-btn color="negative" flat label="Отмена" @click="editCancel" />

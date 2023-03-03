@@ -46,6 +46,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'roles' => 'array',
         'aliases' => 'array',
+        'moderator' => 'boolean',
+        'hide' => 'boolean',
+        'login_by_sms' => 'boolean',
     ];
 
 

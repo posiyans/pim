@@ -1,9 +1,10 @@
 <template>
-  <q-img :src="url" spinner-color="white">
+  <q-img v-if="url" :src="url" spinner-color="white">
     <template v-slot:loading>
       <q-spinner-gears color="secondary" size="0.5em" />
     </template>
   </q-img>
+  <q-spinner-gears v-else color="secondary" size="1em" />
 </template>
 
 <script>
@@ -43,6 +44,9 @@ export default {
       getUserAvatar(data)
         .then(res => {
           this.url = URL.createObjectURL(res.data)
+        })
+        .catch(() => {
+          this.getData()
         })
     }
   }

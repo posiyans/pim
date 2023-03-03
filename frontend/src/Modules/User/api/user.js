@@ -18,12 +18,22 @@ export function getUserInfo(query) {
 
 export function getUserAvatar(query) {
   return request({
-    url: '/api/user/get-avatar',
+    url: '/api/user/avatar-get',
     method: 'get',
     responseType: 'blob',
     params: query
   })
 }
+
+export function uploadUserAvatar(query) {
+  return request({
+    url: '/api/user/avatar-upload',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+
 
 export function updateUser(data) {
   return request({

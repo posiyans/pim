@@ -46,7 +46,7 @@ class UserController extends MyController
         array_push($executor, $user->id);
 //        $users = User::where('hide', null)->whereIn('id', $executor)->get();
 //        } else {
-        $users = User::where('hide', null)->get();
+        $users = User::where('hide', false)->get();
 //        }
         $data = [];
         foreach ($users as $user) {

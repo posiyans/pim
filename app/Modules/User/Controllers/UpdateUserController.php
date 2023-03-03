@@ -30,7 +30,10 @@ class UpdateUserController extends MyController
                 $user->phone = $request->phone ?? $user->phone;
                 $user->login_by_sms = $request->login_by_sms ?? $user->login_by_sms;
                 $user->aliases = $request->aliases ?? $user->aliases;
-                $user->hide = $request->hide ?? $user->hide;
+                if ($request->has('hide')) {
+                    $user->hide = $request->hide ?? null;
+                }
+                $user->moderator = $request->moderator ?? $user->moderator;
                 if ($user->save()) {
                     if ($edit) {
                         Log::saveDiff($user, $user_old);
