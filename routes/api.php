@@ -29,12 +29,15 @@ Route::Post('/auth/login', [\App\Http\Controllers\Auth\ApiAuthController::class,
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/auth/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'index']);
 
+    // Задачи для календаря
+    Route::Get('/calendar/get-tasks', [\App\Modules\Task\Controllers\GetTasksForCalendarController::class, 'index']);
+
+    // Задачи
     Route::Get('/task/list', [\App\Modules\Task\Controllers\GetTasksListController::class, 'index']);
     Route::Get('/task/get', [\App\Modules\Task\Controllers\GetTaskController::class, 'index']);
     Route::Post('/task/update', [\App\Modules\Task\Controllers\UpdateTaskController::class, 'index']);
     Route::Get('/task/move-to-archive', [\App\Modules\Task\Controllers\MoveTaskToArchiveController::class, 'index']);
     Route::Post('/task/move-date-execution', [\App\Modules\Task\Controllers\MoveDateExecutionController::class, 'index']);
-
     Route::Post('/task/report/set-done', [\App\Modules\Task\Controllers\SetTaskIsDoneController::class, 'index']);
     Route::Delete('/task/report/delete', [\App\Modules\Task\Controllers\DeleteReportController::class, 'index']);
 

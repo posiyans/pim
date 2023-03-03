@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-2  fullscreen">
+  <div class="fullscreen" style="background-color: #2d3a4b;">
     <div class="fixed-center">
       <div class="text-h4 text-weight-bold q-pb-lg text-primary">
         Добро Пожаловать
@@ -7,7 +7,7 @@
       <div>
         <q-form
           @submit="handleLogin"
-          ref="loginForm"
+          ref="inputForm"
           class="q-gutter-md"
         >
           <q-input
@@ -67,7 +67,7 @@ export default {
     return {
       showSms: false,
       loginForm: {
-        username: '',
+        username: 'ertwert',
         password: '',
         sms: ''
       },
@@ -110,7 +110,7 @@ export default {
     },
     handleLogin() {
 
-      this.$refs.loginForm.validate()
+      this.$refs.inputForm.validate()
         .then(() => {
           this.loading = true
           this.$store.dispatch('user/loginUser', this.loginForm)

@@ -1,8 +1,6 @@
 import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
 import user from './user/index.js'
-// import example from './module-example'
-
 
 /*
  * If not building with SSR mode, you can
