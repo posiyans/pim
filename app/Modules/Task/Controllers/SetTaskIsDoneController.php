@@ -3,7 +3,7 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +13,7 @@ class SetTaskIsDoneController extends MyController
     public function index(Request $request)
     {
         $id = $request->id;
-        $report = VievReport::find($id);
+        $report = ViewReport::find($id);
         if ($report) {
             $user = Auth::user();
             if ($report->user_id == $user->id or $user->moderator) {

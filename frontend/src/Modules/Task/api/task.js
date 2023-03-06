@@ -44,6 +44,21 @@ export function addReport(formData) {
   )
 }
 
+export function setReportAsRead(params) {
+  return request({
+    url: '/api/task/report/set-as-read',
+    method: 'post',
+    params
+  })
+}
+
+export function getCountNoReadReportForMy() {
+  return request({
+    url: '/api/task/report/get-no-read-count',
+    method: 'get'
+  })
+}
+
 export function setTaskDone(data) {
   return request({
     url: '/api/task/report/set-done',

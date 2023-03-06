@@ -1,23 +1,6 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Задачник
-        </q-toolbar-title>
-        <ShowBalance />
-        <UserMenu />
-      </q-toolbar>
-    </q-header>
+  <q-layout view="hHh Lpr lFf">
+    <PrimaryHeader />
 
     <q-drawer
       v-model="leftDrawerOpen"
@@ -39,10 +22,9 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import MenuItems from './components/MenuItems/index.vue'
-import ShowBalance from 'src/Modules/Sms/Components/ShowBalance/index.vue'
-import UserMenu from 'src/layouts/components/UserMenu/index.vue'
+import PrimaryHeader from 'src/layouts/components/Header/index.vue'
 import { useStore } from 'vuex'
 
 const linksList = [
@@ -83,13 +65,16 @@ export default defineComponent({
   name: 'MainLayout',
   components: {
     MenuItems,
-    ShowBalance,
-    UserMenu
+    PrimaryHeader
+
   },
 
   setup() {
-    const leftDrawerOpen = ref(false)
     const store = useStore()
+    const leftDrawerOpen = computed(() => {
+      return store.state.header.leftDrawerOpen
+    })
+
     const showMenu = computed(() => {
       return linksList.filter(item => {
         return item.roles.filter(x => store.state.user.info.roles.includes(x)).length > 0

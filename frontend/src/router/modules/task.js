@@ -4,7 +4,10 @@ const Tasks = {
   children: [
     {
       path: 'list',
-      component: () => import('src/Modules/Task/pages/TasksList/index.vue')
+      component: () => import('src/Modules/Task/pages/TasksList/index.vue'),
+      meta: {
+        title: 'Задачи'
+      }
     },
     {
       path: 'show/:id',

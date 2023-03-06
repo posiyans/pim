@@ -4,6 +4,7 @@ namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
 use App\Modules\File\Models\File;
+use App\Modules\Task\Classes\NewReportNotification;
 use App\Modules\Task\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,10 @@ class CreateReportController extends MyController
                 $file = new File();
                 $file->hash = $md5['md5'];
                 $file->name = $inputFile->getClientOriginalName();
-                $report->file()->save($file);
+                $report->files()->save($file);
             }
+            (new NewReportNotification($report))->run();
+            // todo обновить всем подписчикам (кроме себя) что есть новое сообщение
         }
         return response([$report]);
     }

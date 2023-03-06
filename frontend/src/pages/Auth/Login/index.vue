@@ -120,7 +120,7 @@ export default {
               } else if (res === 'bad_sms') {
                 Notify.create({
                   type: 'negative',
-                  message: 'Не верный код'
+                  message: 'Неверный код'
                 })
               } else {
                 console.log('login')
@@ -129,11 +129,10 @@ export default {
               }
             })
             .catch((error) => {
-              console.log(error)
-              // Notify.create({
-              //   type: 'negative',
-              //   message: error.response.data.error
-              // })
+              this.$q.notify({
+                message: error.response.data.error,
+                color: 'negative'
+              })
             })
             .finally(() => {
               this.loading = false

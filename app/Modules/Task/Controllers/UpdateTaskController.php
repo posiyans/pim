@@ -3,7 +3,7 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\Log\Models\Log;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
@@ -39,7 +39,7 @@ class UpdateTaskController extends MyController
                     }
                 }
                 foreach ($user as $item) {
-                    $executor = new VievReport();
+                    $executor = new ViewReport();
                     $executor->user_id = (int)$item;
                     $executor->executor = 1;
                     $task->viewReport()->save($executor);

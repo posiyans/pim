@@ -5,7 +5,7 @@
     <q-dialog v-model="dialogVisible">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Сбросить пароль для "{{ userName }}"</div>
+          <div class="text-h6">Сменить пароль для "{{ userName }}"</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>

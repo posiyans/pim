@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\Controller;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use App\Modules\Task\Models\Report;
@@ -37,7 +37,7 @@ class ReportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -57,7 +57,7 @@ class ReportController extends Controller
                 $file = new File();
                 $file->hash = $md5['md5'];
                 $file->name = $inputFile->getClientOriginalName();
-                $report->file()->save($file);
+                $report->files()->save($file);
             }
         }
         return response([$report]);
@@ -66,7 +66,7 @@ class ReportController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id, Request $request)
@@ -77,7 +77,7 @@ class ReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,13 +88,13 @@ class ReportController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $report = VievReport::find($id);
+        $report = ViewReport::find($id);
         if ($report) {
             $user = Auth::user();
             if ($report->user_id == $user->id or $user->hasRole('admin')) {
@@ -121,7 +121,7 @@ class ReportController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

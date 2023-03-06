@@ -1,7 +1,18 @@
 export default async ({ store, router }) => {
+
+  let timer = null
   await store.dispatch('user/getInfo')
 
   router.beforeEach(async (to, from, next) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      store.dispatch('user/userLogout')
+        .then(() => {
+          router.push('/auth/login')
+        })
+    }, 10 * 60 * 1000)
+
+
     const hasRole = !!store.state.user.info.roles
     console.log('hasRole')
     console.log(hasRole)
@@ -15,6 +26,9 @@ export default async ({ store, router }) => {
         }
         return true
       }
+      console.log(to)
+      store.dispatch('header/fetchCountMyNoReadReport')
+      store.commit('header/setTitle', to.meta.title)
       next()
       return true
     }

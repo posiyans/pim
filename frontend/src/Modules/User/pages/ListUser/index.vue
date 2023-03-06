@@ -13,11 +13,7 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="id" prop="id" align="center" width="65">
-        <template #default="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column type="index" width="50" label="№" align="center" />
       <el-table-column label="Login">
         <template #default="scope">
           <div class="text-no-wrap row items-center no-wrap q-col-gutter-md">

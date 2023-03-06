@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { fetchTask, setTaskDone } from 'src/Modules/Task/api/task.js'
+import { fetchTask, setReportAsRead, setTaskDone } from 'src/Modules/Task/api/task.js'
 import DropDownBlock from 'components/DropDownBlock/index.vue'
 import ItemReportMessage from 'src/Modules/Task/components/ItemReportMessage/index.vue'
 import SendReportBlock from 'src/Modules/Task/components/SendReportBlock/index.vue'
@@ -123,6 +123,7 @@ export default {
   },
   data() {
     return {
+      timer: null,
       access: false,
       showdeleted: false,
       time: '',
@@ -149,6 +150,11 @@ export default {
   },
   mounted() {
     this.getTask()
+  },
+  unmounted() {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
   },
   methods: {
     accessFilter(user) {
@@ -179,6 +185,9 @@ export default {
       }
     },
     getTask() {
+      setTimeout(() => {
+        setReportAsRead({ id: this.$route.params.id })
+      }, 2000)
       this.listLoading = true
       this.listQuery.id = this.$route.params.id
       fetchTask(this.listQuery)

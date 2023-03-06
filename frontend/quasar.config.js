@@ -61,7 +61,7 @@ module.exports = configure(function (ctx) {
       distDir: './../public',
       // transpile: false,
       // publicPath: '/',
-
+      productName: 'Персональный информационный менеджер задач',
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
       // Applies only if "transpile" is set to true.
@@ -161,9 +161,9 @@ module.exports = configure(function (ctx) {
 
 
       manifest: {
-        name: `pim`,
-        short_name: `pim`,
-        description: `pim`,
+        name: `Pim`,
+        short_name: `Персональный информационный менеджер задач`,
+        description: `Персональный информационный менеджер задач`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

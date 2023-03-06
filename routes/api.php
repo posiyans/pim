@@ -46,7 +46,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/task/move-to-archive', [\App\Modules\Task\Controllers\MoveTaskToArchiveController::class, 'index']);
     Route::Post('/task/move-date-execution', [\App\Modules\Task\Controllers\MoveDateExecutionController::class, 'index']);
     Route::Post('/task/report/set-done', [\App\Modules\Task\Controllers\SetTaskIsDoneController::class, 'index']);
+    Route::Post('/task/report/set-as-read', [\App\Modules\Task\Controllers\SetReportAsReadController::class, 'index']);
     Route::Delete('/task/report/delete', [\App\Modules\Task\Controllers\DeleteReportController::class, 'index']);
+    Route::Get('/task/report/get-no-read-count', [\App\Modules\Task\Controllers\GetNoReadReportForUserController::class, 'index']);
 
 
     Route::match(['get', 'options', 'post'], '/user/list', [\App\Http\Controllers\Ppsd\UserController::class, 'getList']);

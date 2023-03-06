@@ -3,7 +3,7 @@
 namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
@@ -40,7 +40,7 @@ class CreateProtocolController extends MyController
                 $file = new File();
                 $file->name = $fileInput->getClientOriginalName();
                 $file->hash = $md5;
-                $protokol->file()->save($file);
+                $protokol->files()->save($file);
                 $log = new Log();
                 $log->type = 'ok';
                 $log->description = 'create protokol';
@@ -91,7 +91,7 @@ class CreateProtocolController extends MyController
                             throw new \Exception('Не выбран исполнитель');
                         } else {
                             foreach ($task_json->users as $executor_json) {
-                                $executor = new VievReport();
+                                $executor = new ViewReport();
                                 $executor->user_id = (int)$executor_json;
                                 $executor->executor = 1;
                                 $task->viewReport()->save($executor);

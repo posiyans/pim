@@ -44,7 +44,7 @@ class PartitionPpsd extends Model
                     $file = new File();
                     $file->name = $item->file_name;
                     $file->hash = $item->file_md5;
-                    $part->file()->save($file);
+                    $part->files()->save($file);
                 }
                 $i++;
             }

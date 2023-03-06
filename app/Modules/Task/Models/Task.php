@@ -2,7 +2,7 @@
 
 namespace App\Modules\Task\Models;
 
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\MyModel;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +49,7 @@ class Task extends MyModel
      */
     public function viewReport()
     {
-        return $this->hasMany('App\Models\VievReport', 'task_id', 'id');
+        return $this->hasMany('App\Models\ViewReport', 'task_id', 'id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Task extends MyModel
      */
     public function getExecutor()
     {
-        $executors = VievReport::where('executor', 1)->where('task_id', $this->id)->get();
+        $executors = ViewReport::where('executor', 1)->where('task_id', $this->id)->get();
         foreach ($executors as $executor) {
             $executor->user;
         }
@@ -123,7 +123,7 @@ class Task extends MyModel
         }
         $executor = $user->aliases;
         array_push($executor, $user->id);
-        $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->where('task_id', $this->id)->pluck('task_id')->toArray();
+        $task = ViewReport::where('executor', 1)->whereIn('user_id', $executor)->where('task_id', $this->id)->pluck('task_id')->toArray();
         if (count($task) > 0) {
             $access = true;
         }

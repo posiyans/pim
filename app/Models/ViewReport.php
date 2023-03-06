@@ -4,9 +4,10 @@ namespace App\Models;
 
 use App\MyModel;
 
-class VievReport extends MyModel
+class ViewReport extends MyModel
 {
     //
+    protected $table = 'viev_reports';
 
     public function user()
     {

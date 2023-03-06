@@ -42,7 +42,7 @@ class ReportPssd extends Model
                             $file = new File();
                             $file->name = $item->file_name;
                             $file->hash = $item->file_md5;
-                            $task->file()->save($file);
+                            $task->files()->save($file);
                         }
                     }
                     $i++;

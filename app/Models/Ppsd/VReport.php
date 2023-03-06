@@ -2,7 +2,7 @@
 
 namespace App\Models\Ppsd;
 
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\Task\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ class VReport extends Model
 
     public static function VreportMigrate()
     {
-        if (count(VievReport::all()) > 0) {
+        if (count(ViewReport::all()) > 0) {
             dump('Report no migrate');
         } else {
             foreach (Task::all() as $task) {
@@ -27,7 +27,7 @@ class VReport extends Model
             $report = VReport::all();
             foreach ($report as $item) {
                 if (isset($countReport[$item->zadach]) and $item->user != 14 and $item->user != 16) {
-                    $r = new VievReport();
+                    $r = new ViewReport();
                     $r->task_id = $item->zadach;
                     $r->user_id = $item->user;
                     $r->executor = 1;
@@ -42,7 +42,7 @@ class VReport extends Model
             $report = \App\Models\Ppsd\VmReport::all();
             foreach ($report as $item) {
                 if (isset($countReport[$item->zadach]) and $item->user != 14 and $item->user != 16) {
-                    $r = new VievReport();
+                    $r = new ViewReport();
                     $r->task_id = $item->zadach;
                     $r->user_id = $item->user;
                     $r->executor = 0;

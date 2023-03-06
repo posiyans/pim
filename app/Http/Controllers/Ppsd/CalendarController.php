@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ppsd;
 
 use App\Http\Controllers\Controller;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class CalendarController extends Controller
         if (!$user->hasRole('admin')) {
             $executor = $user->aliases;
             array_push($executor, $user->id);
-            $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
+            $task = ViewReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
             $query->whereIn('id', $task);
         }
         $query->where(function ($query) use ($start) {

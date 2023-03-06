@@ -3,7 +3,7 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\VievReport;
+use App\Models\ViewReport;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +25,12 @@ class GetTasksListController extends MyController
         if (!$user->moderator) {
             $executor = $user->aliases;
             array_push($executor, $user->id);
-            $task = VievReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
+            $task = ViewReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
             $query->whereIn('id', $task);
         }
         if ($request->executor) {
             $executor = $request->executor;
-            $task = VievReport::where('executor', 1)->where('user_id', $executor)->pluck('task_id')->toArray();
+            $task = ViewReport::where('executor', 1)->where('user_id', $executor)->pluck('task_id')->toArray();
             $query->whereIn('id', $task);
         }
         if ($request->today) {
@@ -42,9 +42,8 @@ class GetTasksListController extends MyController
         }
         if ($request->title) {
             $find = explode(' ', $request->title);
-
             foreach ($find as $value) {
-                $query->where('text', 'like', '%' . $value . '%');
+                $query->whereRaw("(lower(concat_ws(' ',id, text))) like '%" . strtolower($value) . "%'");
             }
         }
         if ($request->sort) {
@@ -61,15 +60,18 @@ class GetTasksListController extends MyController
                 'number' => $protokol->number
             ];
             $last_report = $task->report->last();
-            $task->last_report = '';
             if ($last_report) {
-                if ($last_report->file_name) {
-                    $task->last_report = 'Добавлен файл';
-                }
-                if ($last_report->text) {
-                    $task->last_report = $last_report->text;
-                }
+                $last_report->files;
             }
+            $task->last_report = $last_report;
+//            if ($last_report) {
+//                if ($last_report->text) {
+//                    $task->last_report = $last_report->text;
+//                }
+//                if ($last_report->file) {
+//                    $task->last_report = 'Добавлен файл';
+//                }
+//            }
 //
             $task->execution = $task->getPercentComplete();
         }
