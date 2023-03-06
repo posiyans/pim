@@ -15,7 +15,7 @@
       <div class="card-body">
         <div>
           <div><b>Протокол:</b> {{ task.protokol.nomer }}</div>
-          <div><b>От:</b>{{ task.protokol.descriptions.date }}</div>
+          <div @click="$router.push('/protocol/show/' + task.protokol.id)"><b>От:</b>{{ task.protokol.descriptions.date }}</div>
           <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
           <div><b>Тема:</b> {{ task.partition.text }}</div>
         </div>

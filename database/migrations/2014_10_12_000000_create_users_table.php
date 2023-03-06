@@ -18,16 +18,11 @@ return new class extends Migration {
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->integer('moderator')->nullable();
+            $table->boolean('moderator')->nullable();
             $table->dateTime('last_connect')->nullable();
-            $table->string('phone')->nullable();
-            $table->boolean('login_by_sms')->default(true);
-            $table->integer('sms')->nullable();
-            $table->string('color')->nullable();
+            $table->json('options')->nullable();
             $table->integer('hide')->nullable();
-            $table->integer('telegram')->nullable();
             $table->json('aliases')->nullable();
-            $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

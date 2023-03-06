@@ -48,9 +48,9 @@ class GetTasksListController extends MyController
         }
         if ($request->sort) {
             if ($request->sort == '+id') {
-                $query->orderBy('id', 'desc')->orderBy('protokol_id', 'desc');
+                $query->orderBy('id', 'desc')->orderBy('protocol_id', 'desc');
             } else {
-                $query->orderBy('id', 'asc')->orderBy('protokol_id', 'asc');
+                $query->orderBy('id', 'asc')->orderBy('protocol_id', 'asc');
             }
         }
         $tasks = $query->paginate($limit);

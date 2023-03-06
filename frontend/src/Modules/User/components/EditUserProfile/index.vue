@@ -25,12 +25,6 @@
     <div class="row items-center q-col-gutter-md q-pa-md">
       <div>
         <q-checkbox
-          v-model="user.login_by_sms"
-          label="Вход по SMS"
-        />
-      </div>
-      <div>
-        <q-checkbox
           v-model="user.hide"
           label="Скрыть в списке исполнителей"
           color="negative"

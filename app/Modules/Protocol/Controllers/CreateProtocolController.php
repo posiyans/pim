@@ -7,7 +7,7 @@ use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +31,7 @@ class CreateProtocolController extends MyController
                 $fileInput = $request->file('file');
                 $md5 = $this->save_file($fileInput);
                 $protokol_json = json_decode($request->get('protokol'));
-                $protokol = new Protokol();
+                $protokol = new Protocol();
                 $protokol->nomer = $protokol_json->nomer;
                 $protokol->title = $protokol_json->title;
                 $protokol->type = $protokol_json->type;
@@ -84,7 +84,7 @@ class CreateProtocolController extends MyController
                         $task->text = $task_json->text;
                         $task->autor_id = $user->id;
                         $task->executor = $task_json->executor;
-                        $task->protokol_id = $protokol->id;
+                        $task->protocol_id = $protokol->id;
                         $task->history = '<i>' . $data . '</i> ' . $user->name . ' Создание задачи<br>';
                         $partition->task()->save($task);
                         if (count($task_json->users) == 0) {

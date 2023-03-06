@@ -4,7 +4,7 @@ namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
 use App\Modules\File\Repositories\FileRepository;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -23,7 +23,7 @@ class GetProtocolFileController extends MyController
         $user = Auth::user();
         $id = $request->id;
         if ($user->moderator) {
-            $item = Protokol::find($id);
+            $item = Protocol::find($id);
             if ($item && count($item->file) > 0) {
                 $file = $item->file;
                 $md5 = $file[0]->hash;

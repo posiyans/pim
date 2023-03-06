@@ -3,7 +3,7 @@
 namespace App\Models\Ppsd;
 
 use App\Modules\Protocol\Models\Partition;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,7 +20,7 @@ class TaskPpsd extends Model
         if (count(Task::all()) > 0) {
             dump('Task no migrate');
         } else {
-            foreach (Protokol::all() as $item) {
+            foreach (Protocol::all() as $item) {
                 if (isset($pr[$item['nomer']])) {
                     dump($item['nomer']);
                 }

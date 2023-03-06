@@ -20,7 +20,10 @@ export default {
       return this.item.view_report.find(item => item.user_id === this.user.id)
     },
     show() {
-      return this.report.show > 0
+      if (this.report) {
+        return this.report.show > 0
+      }
+      return false
     }
 
   }

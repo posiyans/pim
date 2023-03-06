@@ -43,7 +43,7 @@ class DownloadFileController extends MyController
         if ($user->moderator) {
             return true;
         }
-        if ($file->commentable_type == 'App\Modules\Protocol\Models\Protokol') {
+        if ($file->commentable_type == 'App\Modules\Protocol\Models\Protocol') {
             return $user->moderator;
         }
         if ($file->commentable_type == 'App\Modules\Task\Models\Report') {

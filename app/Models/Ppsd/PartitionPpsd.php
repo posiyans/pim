@@ -4,7 +4,7 @@ namespace App\Models\Ppsd;
 
 use App\Modules\File\Models\File;
 use App\Modules\Protocol\Models\Partition;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Database\Eloquent\Model;
 
 class PartitionPpsd extends Model
@@ -17,7 +17,7 @@ class PartitionPpsd extends Model
 
     public static function PartitionMigrate()
     {
-        foreach (Protokol::all() as $item) {
+        foreach (Protocol::all() as $item) {
             if (isset($pr[$item['nomer']])) {
                 dump($item['nomer']);
                 //dump($pr[$item['nomer']] );

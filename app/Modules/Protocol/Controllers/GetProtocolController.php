@@ -3,7 +3,7 @@
 namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -19,7 +19,7 @@ class GetProtocolController extends MyController
     public function index(Request $request)
     {
         $id = $request->id;
-        $protokol = Protokol::with('partition.task.viewReport')->find($id);
+        $protokol = Protocol::with('partition.task.viewReport')->find($id);
         return response($protokol);
     }
 

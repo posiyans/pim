@@ -18,7 +18,7 @@ class CovertFileController extends MyController
     {
         $replace = [
             'App\\Http\\Models\\Report' => 'App\\Modules\\Task\\Models\\Report',
-            'App\\Http\\Models\\Protokol' => 'App\\Modules\\Protocol\\Models\\Protokol',
+            'App\\Http\\Models\\Protokol' => 'App\\Modules\\Protocol\\Models\\Protocol',
             'App\\Http\\Models\\Partition' => 'App\\Modules\\Protocol\\Models\\Partition',
         ];
         $files = File::all();

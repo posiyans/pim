@@ -3,7 +3,7 @@
 namespace App\Models\Ppsd;
 
 use App\Modules\File\Models\File;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Database\Eloquent\Model;
 
 class ProtokolsPpsd extends Model
@@ -14,12 +14,12 @@ class ProtokolsPpsd extends Model
 
     public static function ProtokolsMigrate()
     {
-        if (count(Protokol::all()) > 0) {
-            dump('Protokol no migrate');
+        if (count(Protocol::all()) > 0) {
+            dump('Protocol no migrate');
         } else {
             $protoklsPpsd = ProtokolsPpsd::all();
             foreach ($protoklsPpsd as $item) {
-                $protokol = new Protokol();
+                $protokol = new Protocol();
                 $protokol->id = $item->id;
                 $protokol->nomer = $item->nomer;
                 $protokol->title = $item->prim;
@@ -40,7 +40,7 @@ class ProtokolsPpsd extends Model
                 }
                 //dump($protokol);
             }
-            dump('Protokol Ok');
+            dump('Protocol Ok');
         }
     }
 

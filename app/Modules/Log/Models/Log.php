@@ -21,7 +21,10 @@ class Log extends MyModel
             $this->user_id = Auth::user()->id;
         }
         $this->action = debug_backtrace()[1]['function'];
-        $this->user_agent = $_SERVER['REMOTE_ADDR'] . '/' . $_SERVER['HTTP_USER_AGENT'];
+        try {
+            $this->user_agent = $_SERVER['REMOTE_ADDR'] . '/' . $_SERVER['HTTP_USER_AGENT'];
+        } catch (\Exception $e) {
+        }
     }
 
     /**

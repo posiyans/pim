@@ -7,7 +7,7 @@ use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ class ProtokolController extends Controller
 
     public function getProtokolSource(Request $request)
     {
-        $protokol = Protokol::find($request->id);
+        $protokol = Protocol::find($request->id);
         $partitions = $protokol->partition;
         $data = [];
         //var_dump($partitions);
@@ -58,9 +58,9 @@ class ProtokolController extends Controller
      */
     public function index(Request $request)
     {
-        //$total=Protokol::count();
+        //$total=Protocol::count();
         $limit = (int)$request->limit;
-        $query = Protokol::query()->with('partition.task.viewReport');
+        $query = Protocol::query()->with('partition.task.viewReport');
         if (isset($request->archiv) && $request->archiv == 'true') {
             $query->whereNotNull('arxiv');
         } else {
@@ -110,12 +110,12 @@ class ProtokolController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store_old(Request $request)
     {
-        $protokol = Protokol::find($request->id);
+        $protokol = Protocol::find($request->id);
         $partitions = $protokol->partition;
         $data = [];
         //var_dump($partitions);
@@ -148,7 +148,7 @@ class ProtokolController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -160,7 +160,7 @@ class ProtokolController extends Controller
                 $fileInput = Input::file('file');
                 $md5 = $this->save_file($fileInput);
                 $protokol_json = json_decode(Input::get('protokol'));
-                $protokol = new Protokol();
+                $protokol = new Protocol();
                 $protokol->nomer = $protokol_json->nomer;
                 $protokol->title = $protokol_json->title;
 
@@ -250,20 +250,20 @@ class ProtokolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id, Request $request)
     {
         //
-        $protokol = Protokol::with('partition.task.viewReport')->find($id);
+        $protokol = Protocol::with('partition.task.viewReport')->find($id);
         return response(['protokol' => $protokol]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -274,8 +274,8 @@ class ProtokolController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update($id, Request $request)
@@ -284,7 +284,7 @@ class ProtokolController extends Controller
         if ($user->hasRole('admin')) {
             $action = $request->type;
             if ($action == 'protokolToArchiv') {
-                $protokol = Protokol::find($id);
+                $protokol = Protocol::find($id);
 
                 if ($protokol) {
                     $today = date('Y-m-d H:m:s');
@@ -302,7 +302,7 @@ class ProtokolController extends Controller
                 return response(['protokolToArchiv']);
             }
             if ($action == 'protokolUpdate') {
-                $protokol = Protokol::with('partition.task.viewreport')->find($id);
+                $protokol = Protocol::with('partition.task.viewreport')->find($id);
                 $protokol_old = clone $protokol;
                 //$protokol_old = $protokol_old->toArray();
                 if ($protokol and $protokol->id == $request->protokol['id']) {
@@ -323,7 +323,7 @@ class ProtokolController extends Controller
                         $partition->speaker = $partition_json['speaker'];
                         $partition->save();
                     }
-                    $protokol = Protokol::with('partition.task.viewreport')->find($id);
+                    $protokol = Protocol::with('partition.task.viewreport')->find($id);
                     Log::saveDiff($protokol, $protokol_old);
                     return response([$request->protokol]);
                 }
@@ -335,7 +335,7 @@ class ProtokolController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -349,7 +349,7 @@ class ProtokolController extends Controller
             if (strlen($id) == 32) {
                 $item = Partition::where('file_hash', $id)->first();
             } else {
-                $item = Protokol::find($id);
+                $item = Protocol::find($id);
             }
             if ($item) {
                 $file = $item->file;

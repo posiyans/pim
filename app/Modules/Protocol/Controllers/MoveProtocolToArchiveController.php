@@ -3,7 +3,7 @@
 namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -22,7 +22,7 @@ class MoveProtocolToArchiveController extends MyController
         $id = $request->id;
         $user = Auth::user();
         if ($user->moderator) {
-            $protokol = Protokol::find($id);
+            $protokol = Protocol::find($id);
             if ($protokol) {
                 $today = date('Y-m-d H:m:s');
                 $text = '<i>' . $today . '</i> ' . $user->name . ' перенес данный протокол и задачи в архив';

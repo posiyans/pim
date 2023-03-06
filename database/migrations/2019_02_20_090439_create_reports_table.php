@@ -14,15 +14,12 @@ class CreateReportsTable extends Migration
     public function up()
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('task_id')->unsigned();
+            $table->id();
+            $table->foreignId('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->foreignId('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->text('text')->nullable();
-//            $table->string('file_hash')->nullable();
-//            $table->string('file_name')->nullable();
-            $table->text('history')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

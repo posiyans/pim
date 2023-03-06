@@ -14,7 +14,7 @@ class Partition extends MyModel
 
     public function protokol()
     {
-        return $this->belongsTo('App\Modules\Protocol\Models\Protokol');
+        return $this->belongsTo('App\Modules\Protocol\Models\Protocol');
     }
 
     public function getPercentComplete()

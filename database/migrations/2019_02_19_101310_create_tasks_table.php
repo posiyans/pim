@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTasksTable extends Migration
 {
@@ -14,8 +14,8 @@ class CreateTasksTable extends Migration
     public function up()
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('partition_id')->unsigned();
+            $table->id();
+            $table->foreignId('partition_id')->unsigned();
             $table->foreign('partition_id')->references('id')->on('partitions');
             $table->string('number')->nullable();
             $table->date('data_ispoln')->nullable();
@@ -23,10 +23,8 @@ class CreateTasksTable extends Migration
             $table->text('text');
             $table->integer('autor_id');
             $table->string('executor')->nullable();
-            $table->integer('protokol_id')->unsigned();
-            $table->foreign('protokol_id')->references('id')->on('protokols');
-            $table->text('history')->nullable();
-            $table->text('full_history')->nullable();
+            $table->foreignId('protocol_id')->unsigned();
+            $table->foreign('protocol_id')->references('id')->on('protocols');
             $table->string('arxiv')->nullable();
             $table->timestamps();
         });

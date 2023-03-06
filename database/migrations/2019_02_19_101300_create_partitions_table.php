@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePartitionsTable extends Migration
 {
@@ -14,14 +14,12 @@ class CreatePartitionsTable extends Migration
     public function up()
     {
         Schema::create('partitions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('protokol_id')->unsigned();
-            $table->foreign('protokol_id')->references('id')->on('protokols');
+            $table->id();
+            $table->foreignId('protocol_id')->unsigned();
+            $table->foreign('protocol_id')->references('id')->on('protocols');
             $table->integer('number');
             $table->text('text');
             $table->string('speaker')->nullable();
-//            $table->string('file_hash')->nullable();
-//            $table->string('file_name')->nullable();
             $table->timestamps();
         });
     }

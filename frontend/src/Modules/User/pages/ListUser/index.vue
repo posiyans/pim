@@ -51,15 +51,6 @@
           <span>{{ scope.row.last_connect }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Phone" align="center">
-        <template #default="scope">
-          <div class="row items-center q-col-gutter-sm justify-center">
-            <div>{{ scope.row.phone }}</div>
-            <div v-if="scope.row.phone && scope.row.login_by_sms" class="text-teal text-small-80">SMS</div>
-          </div>
-
-        </template>
-      </el-table-column>
       <el-table-column label="" align="center" class-name="small-padding">
         <template #default="scope">
           <div class="row items-center q-col-gutter-sm">

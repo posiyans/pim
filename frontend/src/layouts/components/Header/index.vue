@@ -14,20 +14,17 @@
         {{ headTitle }}
       </q-toolbar-title>
       <CountNoReadReport />
-      <ShowBalance />
       <UserMenu />
     </q-toolbar>
   </q-header>
 </template>
 
 <script>
-import ShowBalance from 'src/Modules/Sms/Components/ShowBalance/index.vue'
 import UserMenu from 'src/layouts/components/UserMenu/index.vue'
 import CountNoReadReport from 'src/Modules/Task/components/CountNoReadReport/index.vue'
 
 export default {
   components: {
-    ShowBalance,
     UserMenu,
     CountNoReadReport
   },

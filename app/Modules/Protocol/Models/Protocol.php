@@ -5,7 +5,7 @@ namespace App\Modules\Protocol\Models;
 use App\MyModel;
 use Illuminate\Database\Eloquent\Collection;
 
-class Protokol extends MyModel
+class Protocol extends MyModel
 {
     //
     protected $casts = [
@@ -15,7 +15,7 @@ class Protokol extends MyModel
 
     public function partition()
     {
-        return $this->hasMany('App\Modules\Protocol\Models\Partition', 'protokol_id', 'id');
+        return $this->hasMany('App\Modules\Protocol\Models\Partition', 'protocol_id', 'id');
     }
 
 

@@ -5,7 +5,7 @@ namespace App\Modules\Protocol\Controllers;
 use App\Http\Controllers\MyController;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -24,7 +24,7 @@ class UpdateProtocolController extends MyController
         $id = $request->id;
         $user = Auth::user();
         if ($user->moderator) {
-            $protokol = Protokol::with('partition.task.viewreport')->find($id);
+            $protokol = Protocol::with('partition.task.viewreport')->find($id);
             $protokol_old = clone $protokol;
             if ($protokol) {
                 $protokol_json = $request;
@@ -44,7 +44,7 @@ class UpdateProtocolController extends MyController
                     $partition->speaker = $partition_json['speaker'];
                     $partition->save();
                 }
-                $protokol = Protokol::with('partition.task.viewreport')->find($id);
+                $protokol = Protocol::with('partition.task.viewreport')->find($id);
                 Log::saveDiff($protokol, $protokol_old);
                 return response($protokol);
             }

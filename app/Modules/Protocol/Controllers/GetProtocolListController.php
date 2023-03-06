@@ -2,9 +2,8 @@
 
 namespace App\Modules\Protocol\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\MyController;
-use App\Modules\Protocol\Models\Protokol;
+use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -19,9 +18,9 @@ class GetProtocolListController extends MyController
      */
     public function index(Request $request)
     {
-        //$total=Protokol::count();
+        //$total=Protocol::count();
         $limit = (int)$request->limit;
-        $query = Protokol::query()->with('partition.task.viewReport');
+        $query = Protocol::query()->with('partition.task.viewReport');
         if (isset($request->archiv) && $request->archiv == 'true') {
             $query->whereNotNull('arxiv');
         } else {

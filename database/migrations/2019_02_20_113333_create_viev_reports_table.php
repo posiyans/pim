@@ -14,14 +14,14 @@ class CreateVievReportsTable extends Migration
     public function up()
     {
         Schema::create('viev_reports', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('task_id')->unsigned();
+            $table->id();
+            $table->foreignId('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->foreignId('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('executor')->nullable();
             $table->dateTime('done')->nullable();
-            $table->integer('show')->nullable();
+            $table->integer('show')->default(0);
             $table->timestamps();
         });
     }

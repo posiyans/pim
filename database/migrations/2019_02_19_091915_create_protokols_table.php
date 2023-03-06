@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateProtokolsTable extends Migration
 {
@@ -13,15 +13,14 @@ class CreateProtokolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('protokols', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nomer');
+        Schema::create('protocols', function (Blueprint $table) {
+            $table->id();
+            $table->string('number');
             $table->string('title')->nullable();
 //            $table->string('file_hash')->nullable();
 //            $table->string('file_name')->nullable();
             $table->json('descriptions')->nullable();
             $table->string('type')->default('psd');
-            $table->integer('year')->nullable();
             $table->string('arxiv')->nullable();
             $table->timestamps();
         });

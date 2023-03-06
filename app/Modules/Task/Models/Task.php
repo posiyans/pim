@@ -40,7 +40,7 @@ class Task extends MyModel
      */
     public function protokol()
     {
-        return $this->hasOne('App\Modules\Protocol\Models\Protokol', 'id', 'protokol_id');
+        return $this->hasOne('App\Modules\Protocol\Models\Protocol', 'id', 'protocol_id');
     }
 
     /**

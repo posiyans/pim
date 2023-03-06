@@ -14,7 +14,7 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->foreignId('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('commentable_id')->nullable();
@@ -22,7 +22,7 @@ class CreateFilesTable extends Migration
             $table->string('hash')->nullable();
             $table->text('name')->nullable();
             $table->integer('size')->nullable();
-            $table->text('discription')->nullable();
+            $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
