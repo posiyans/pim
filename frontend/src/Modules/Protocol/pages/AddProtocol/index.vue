@@ -1,21 +1,26 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <div class="text-teal text-weight-bold q-pa-lg">
+    <div class="row items-center q-col-gutter-sm q-pb-md">
+      <div class="text-teal text-weight-bold">
         Добавить протокол
       </div>
-      <span>Тип протокола </span>
-      <SelectTypeProtocol v-model="protokol.type" clearable />
+      <div style="min-width: 150px;">
+        <SelectTypeProtocol
+          v-model="protokol.type"
+          outlined
+          dense
+        />
+      </div>
+
       <div class="form-group">
-        <label for="InputFile">Добавить фаил</label>
+        <label for="InputFile">Загрузить из файла</label>
         <div class="input-group">
           <div class="custom-file">
-            <input id="InputFile" ref="file" type="file" name="file" class="custom-file-input" @change="parseFile">
-            <label class="custom-file-label" for="InputFile" />
+            <input ref="file" type="file" name="file"
+                   @change="parseFile">
           </div>
         </div>
       </div>
-      <el-button v-if="parserButton" type="primary" class="filter-item" @click="setExecutor">Потвердить</el-button>
     </div>
     <div v-if="loading">
       <q-spinner
@@ -23,78 +28,206 @@
         size="3em"
       />
     </div>
-    <div v-if="parserOk">
-      <div class="bg-red-2 q-pa-lg text-weight-bold">{{ infoMessage }}</div>
-      <div>
-        Протокол номер: <i>{{ protokol.nomer }}</i>
-      </div>
-      <div>
-        <b>{{ protokol.title }}</b> от {{ protokol.descriptions.date }}
-      </div>
-      <div>
-        Место проведения: {{ protokol.descriptions.region }}
-      </div>
-      <div>
-        Председатель: {{ protokol.descriptions.president }}
-      </div>
-      <div :class="protokol.arxiv">
-        Секретарь: {{ protokol.descriptions.secretary }}
-      </div>
-      <div style="padding-bottom: 20px">
-        Присутствовали: <b>{{ protokol.descriptions.composition }}</b>
-      </div>
-      <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 20px">
-        <p><b>{{ partition.number }}. {{ partition.text }}</b></p>
-        <p v-if="partition.speaker">
-          <i>Докладчик: {{ partition.speaker }}</i>
-        </p>
-        <div v-if="partition.task">
-          <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
-          <div v-for="task in partition.task" :key="task.number" class="task-text">
-            <div class="task-row" @click="editTask(task)">
-              <div :class="task.users.length === 0 ? 'bg-reg' : ''" class="task">
-                <span>{{ task.number }}.</span> {{ task.executor }}
-                <b>–{{ task.data_ispoln }}–</b> {{ task.text }}
-              </div>
-              <SelectExecutor v-model="task.users" multiple />
+    <div>
+      <q-card class="q-mb-sm">
+        <q-card-section>
+
+          <div class="row items-center">
+            <div class="field-label">
+              Протокол номер:
+            </div>
+            <div class="field">
+              {{ protokol.number }}
+              <q-popup-edit v-model="protokol.number" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
             </div>
           </div>
-        </div>
+          <div class="row items-center">
+            <div class="field-label">
+            </div>
+            <div class="field">
+              {{ protokol.title }}
+              <q-popup-edit v-model="protokol.title" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+            <div class="q-mx-sm">
+              от
+            </div>
+            <div class="field">
+              {{ protokol.descriptions.date }}
+              <q-popup-edit v-model="protokol.descriptions.date" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <div class="row items-center">
+            <div class="field-label">
+              Место проведения:
+            </div>
+            <div class="field">
+              {{ protokol.descriptions.region }}
+              <q-popup-edit v-model="protokol.descriptions.region" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <div class="row items-center">
+            <div class="field-label">
+              Председатель:
+            </div>
+            <div class="field">
+              {{ protokol.descriptions.president }}
+              <q-popup-edit v-model="protokol.descriptions.president" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <div class="row items-center">
+            <div class="field-label">
+              Секретарь:
+            </div>
+            <div class="field">
+              {{ protokol.descriptions.secretary }}
+              <q-popup-edit v-model="protokol.descriptions.secretary" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <div class="row items-center">
+            <div class="field-label">
+              Присутствовали:
+            </div>
+            <div class="field">
+              {{ protokol.descriptions.composition }}
+              <q-popup-edit v-model="protokol.descriptions.composition" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-btn icon="add" flat label="Добавить доклад" color="primary" @click="addPartition" />
+      <div v-for="partition in protokol.partition" :key="partition.id" class="q-pb-sm">
+        <q-card>
+          <q-card-section>
+            <div class="row items-center text-weight-bold">
+              <div>
+                {{ partition.number }}
+                <q-popup-edit
+                  v-model="partition.number"
+                  auto-save
+                  v-slot="scope"
+                  @before-hide="changeSortTask"
+                >
+                  <q-input v-model="scope.value" dense autofocus counter type="number" @keyup.enter="scope.set" />
+                </q-popup-edit>
+              </div>
+              <div class="q-pr-xs">.</div>
+              <div class="">
+                {{ partition.text }}
+                <q-popup-edit v-model="partition.text" auto-save v-slot="scope">
+                  <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+                </q-popup-edit>
+              </div>
+            </div>
+            <div class="row items-center q-pl-sm q-pb-sm">
+              <div class="q-pr-sm">
+                Докладчик:
+              </div>
+              <div class="">
+                {{ partition.speaker }}
+                <q-popup-edit v-model="partition.speaker" auto-save v-slot="scope">
+                  <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+                </q-popup-edit>
+              </div>
+            </div>
+            <div>
+              <div class="row items-center q-col-gutter-sm">
+                <div>
+                  ПОСТАВЛЕННЫЕ ЗАДАЧИ:
+                </div>
+                <div>
+                  <q-btn icon="add" flat color="primary" @click="addTask(partition)" />
+                </div>
+              </div>
+              <div v-for="task in partition.task" :key="task.number" class="row items-center justify-between no-wrap">
+                <div :class="task.users.length === 0 ? 'text-red-10' : ''" class="row q-col-gutter-xs no-wrap">
+                  <div>
+                    {{ partition.number }}.{{ task.number }}.
+                    <q-popup-edit
+                      v-model="task.number"
+                      auto-save
+                      v-slot="scope"
+                      @before-hide="changeSortTask"
+                    >
+                      <q-input v-model="scope.value" type="number" dense autofocus counter @keyup.enter="scope.set" />
+                    </q-popup-edit>
+                  </div>
+                  <div>
+                    {{ task.executor }}
+                    <q-popup-edit v-model="task.executor" auto-save v-slot="scope">
+                      <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
+                    </q-popup-edit>
+                  </div>
+                  <div>
+                    –
+                  </div>
+                  <div>
+                    <ShowTime :time="task.data_ispoln" format="DD.MM.YYYY" />
+                    <q-popup-edit v-model="task.data_ispoln" auto-save v-slot="scope">
+                      <InputDate v-model="scope.value" />
+                    </q-popup-edit>
+                  </div>
+                  <div>
+                    –
+                  </div>
+                  <div>
+                    <ShowTaskText :text="task.text" />
+                    <q-popup-edit v-model="task.text" auto-save v-slot="scope">
+                      <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
+                    </q-popup-edit>
+                  </div>
+                </div>
+                <div style="min-width:150px;">
+                  <SelectExecutor v-model="task.users" multiple dense outlined />
+                </div>
+              </div>
+
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
+
+      <q-btn color="primary" :disabled="!setUser" @click="publishProtokol">Опубликовать</q-btn>
     </div>
-    <el-button v-if="setUser" type="danger" @click="publishProtokol">Опубликовать</el-button>
-    <br>
-    <el-dialog v-model="dialogEditTask" title="Правка">
-      <el-form ref="dataForm" label-position="left" label-width="140px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Задача:">
-          <el-input v-model="temp.executor" />
-          <el-input v-model="temp.data_ispoln" />
-          <el-input v-model="temp.text" type="textarea" rows="6" style="width: 600px;" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="cancelTask">Отмена</el-button>
-        <el-button type="danger" @click="updateTask">Обновить</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import SelectTypeProtocol from 'src/Modules/Protocol/components/SelectTypeProtocol/index.vue'
-import SelectExecutor from 'src/Modules/User/components/SelectExecutor/index.vue'
+import SelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
+import SelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import { publishProtokol, uploadProtocol } from 'src/Modules/Protocol/api/protocol.js'
-
+import { date } from 'quasar'
+import ShowTime from 'components/ShowTime/index.vue'
+import ShowTaskText from './componets/ShowTaskText/index.vue'
+import InputDate from 'components/InputDate/index.vue'
 
 export default {
-  components: { SelectTypeProtocol, SelectExecutor },
+  components: {
+    SelectTypeProtocol,
+    SelectExecutor,
+    ShowTime,
+    InputDate,
+    ShowTaskText
+  },
   directives: {},
 
   data() {
     return {
       l: [],
       loading: false,
-      dialogEditTask: false,
       formExecutor: false,
       file: false,
       parserOk: false,
@@ -104,11 +237,24 @@ export default {
       temp: {},
       oldProtokol: {},
       protokol: {
-        title: '',
+        title: 'Протокол планового заседания',
         type: 'psd',
-        number: '',
-        descriptions: {},
-        partition: {}
+        number: '00/00/00',
+        descriptions: {
+          date: date.formatDate(new Date(), 'DD MMMM YYYY'),
+          region: 'Место проведения',
+          president: 'Председатель',
+          secretary: 'Секретарь',
+          composition: 'Присутствовали'
+        },
+        partition: [
+          {
+            number: 1,
+            text: 'Тема доклада',
+            speaker: 'Докдачик',
+            task: []
+          }
+        ]
       }
     }
   },
@@ -132,35 +278,38 @@ export default {
     }
   },
   methods: {
-    strToarray(text) {
-      text = text.replace('Председатель Совета Директоров', '')
-      const pr = text.split('\n')
-      console.log('pr')
-      console.log(pr)
-
-      pr.forEach((p) => {
-        const field = p.replace(/<\/?[^>]+>/g, '')
-        if (field.length > 0) {
-          if (~field.toLowerCase().indexOf('протокол')) {
-            this.protokol.title = field.trim()
-            this.protokol.nomer = field.split('№')[1].trim()
-          } else if (~field.toLowerCase().indexOf('место')) {
-            this.protokol.descriptions.region = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('председатель')) {
-            this.protokol.descriptions.president = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('секретарь')) {
-            this.protokol.descriptions.secretary = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('присутствовали')) {
-            this.protokol.descriptions.composition = field.split(':')[1].trim()
-          } else {
-            this.protokol.descriptions.date = field.trim()
-          }
-        }
+    addPartition() {
+      this.protokol.partition.push({
+        number: this.protokol.partition.length + 1,
+        text: 'Тема доклада',
+        speaker: 'Докдачик',
+        task: []
       })
-      this.getPartitions(text)
+      this.changeSortTask()
     },
-    getPartitions(text) {
-
+    changeSortTask() {
+      console.log('changesrot')
+      this.protokol.partition = this.protokol.partition.sort((a, b) => {
+        return a.number - b.number
+      })
+      this.protokol.partition.forEach(part => {
+        part.taks = part.task.sort((a, b) => {
+          return a.number - b.number
+        })
+      })
+    },
+    addTask(partition) {
+      const n = partition.task.length + 1
+      partition.task.push({
+        number: n,
+        executor: 'Исполнитель',
+        data_ispoln: date.formatDate(new Date(), 'YYYY-MM-DD'),
+        text: 'Текст задачи',
+        users: []
+      })
+      this.changeSortTask()
+    },
+    getPartitions() {
       const temp = this.text.split('\n')
       let part_i = 0
       const partitions = []
@@ -170,33 +319,19 @@ export default {
         // console.log(p)
         // console.log(index)
         if (~p.toLowerCase().indexOf('докладчик')) {
-          console.log('докладчик')
-          console.log(p)
-          console.log(index)
-          // if (tmp) {
-          //   partitions.push(tmp)
-          // }
           tmp = {
             number: ++part_i,
             speaker: p.split(':')[1].trim(),
             text: temp[index - 1],
             task: []
           }
-          console.log(tmp)
-          // partitions.push({
-          //   number: part_i,
-          //   speaker: p.split(':')[1],
-          //   text: temp[index - 1],
-          //   // task: this.getTask(temp[part_i], part_i)
-          // })
-
         } else if (tmp) {
           const field = p.replace(/<\/?[^>]+>/g, '')
           if (p.replace(/ /g, '').length > 0) {
             if (field.toLowerCase().indexOf('поставленные задачи')) {
               const task = this.parseTask(field)
               const i = tmp.task.length + 1
-              task.number = part_i + '.' + i
+              task.number = i
               tmp.task.push(task)
             } else {
               findNull = true
@@ -211,18 +346,26 @@ export default {
       if (tmp) {
         partitions.push(tmp)
       }
-      console.log(partitions)
       this.protokol.partition = Object.assign({}, this.protokol.partition, partitions)
     },
     parseTask(line) {
       let title = ''
-      let date = ''
+      let date_ispoln = ''
       let executor = ''
       const temptask = line.replace(' - ', ' – ').split('–')
       let successfull = false
       if (temptask.length > 2 && temptask[1].length < 11) {
         executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
-        date = temptask[1].replace(/<\/?[^>]+>/g, '').trim()
+        const temp_d = temptask[1].replace(/<\/?[^>]+>/g, '').trim().split('.');
+        if (temp_d.length === 2) {
+          date_ispoln = temptask[1].replace(/<\/?[^>]+>/g, '').trim()
+          const nowMonth = date.formatDate(new Date(), 'M')
+          let year = date.formatDate(new Date(), 'YYYY')
+          if (nowMonth > +temp_d[1]) {
+            year++
+          }
+          date_ispoln = date.formatDate(new Date(year, temp_d[1] - 1, temp_d[0]), 'YYYY-MM-DD')
+        }
         temptask.shift()
         temptask.shift()
         title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
@@ -233,50 +376,13 @@ export default {
           executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
           temptask.shift()
           title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
-          date = ''
+          date_ispoln = ''
         }
       }
-      return { text: title, executor: executor, data_ispoln: date, users: [] }
-    },
-    getTask(text, part) {
-      // console.log(text)
-      const temp = text.split('<li>')
-      let part_i = 0
-      const task = []
-      temp.forEach((p) => {
-        if (p.replace(/<\/?[^>]+>/g, '').trim().length > 10) {
-          if (!~p.toLowerCase().indexOf('докладчик')) {
-            part_i++
-            let title = ''
-            let date = ''
-            let executor = ''
-            const temptask = p.replace(' - ', ' – ').split('–')
-            let successfull = false
-            if (temptask.length > 2 && temptask[1].length < 11) {
-              executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
-              date = temptask[1].replace(/<\/?[^>]+>/g, '').trim()
-              temptask.shift()
-              temptask.shift()
-              title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
-              successfull = true
-            }
-            if (!successfull) {
-              if (temptask[1].length > 11) {
-                executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
-                temptask.shift()
-                title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
-                date = ''
-              }
-            }
-            task.push({ text: title, executor: executor, data_ispoln: date, users: [], number: part + '.' + part_i })
-          }
-        }
-      })
-      return Object.assign({}, task)
+      return { text: title, executor: executor, data_ispoln: date_ispoln, users: [] }
     },
     parseFile() {
       const file = this.$refs.file.files[0]
-      console.log(file)
       if (file) {
         this.loading = true
         const formData = new FormData()
@@ -298,14 +404,12 @@ export default {
     parseHeader() {
       const text = this.text.replace('Председатель Совета Директоров', '')
       const line = text.split('\n')
-
       line.forEach((item, index) => {
-
         const field = item.replace(/<\/?[^>]+>/g, '')
         if (field.length > 0) {
           if (~field.toLowerCase().indexOf('протокол')) {
             this.protokol.title = field.trim()
-            this.protokol.nomer = field.split('№')[1].trim()
+            this.protokol.number = field.split('№')[1].trim()
           } else if (~field.toLowerCase().indexOf('место')) {
             this.protokol.descriptions.region = field.split(':')[1].trim()
           } else if (~field.toLowerCase().indexOf('председатель')) {
@@ -319,28 +423,6 @@ export default {
           }
         }
       })
-    },
-    setExecutor() {
-      this.infoMessage = 'Укажите исполнителей для задач'
-      this.parserButton = false
-      this.formExecutor = true
-    },
-    editTask(task) {
-      if (!this.formExecutor) {
-        this.temp = task
-        this.oldProtokol = this.protokol
-        this.dialogEditTask = true
-      }
-    },
-    updateTask() {
-      // this.protokol = Object.assign({}, this.protokol, this.temp)
-      this.dialogEditTask = false
-    },
-    cancelTask() {
-      this.$nextTick(() => {
-        this.protokol = Object.assign({}, this.oldProtokol)
-      })
-      this.dialogEditTask = false
     },
     publishProtokol() {
       const data = new FormData()
@@ -362,48 +444,12 @@ export default {
   }
 }
 </script>
-<style scoped>
-.task {
-  width: 70%;
-  float: left;
-  display: block;
+<style scoped lang="scss">
+.field-label {
+  min-width: 150px;
 }
 
-.task-left {
-  float: left;
-  display: block;
-  width: 30%;
-}
-
-el-drag-select .task-left {
-  width: 100%;
-}
-
-.task-row {
-  width: 100%;
-  display: inline-block;
-  border-top: #c0c0c0 solid 1px;
-  border-bottom: #c0c0c0 solid 1px;
-}
-
-.alert {
-  color: red;
-  background-color: rgba(255, 0, 0, 0.05);
-}
-
-.message {
-  color: red;
-  background-color: rgba(255, 0, 51, 0.1);
-  padding: 20px;
-  font-size: 16px;
-  display: inline-block;
-}
-
-.select {
-  width: 100%;
-}
-
-.no-select {
-  border: #ff7b9f solid 1px;
+.field {
+  color: $teal;
 }
 </style>

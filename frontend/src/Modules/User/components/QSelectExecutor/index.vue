@@ -8,6 +8,7 @@
       :label="label"
       :outlined="outlined"
       map-options
+      :dense="dense"
       option-value="id"
       option-label="name"
       emit-value
@@ -30,6 +31,10 @@ export default {
       default: false
     },
     outlined: {
+      type: Boolean,
+      default: false
+    },
+    dense: {
       type: Boolean,
       default: false
     },

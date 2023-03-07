@@ -10,7 +10,7 @@ export default async ({ store, router }) => {
         .then(() => {
           router.push('/auth/login')
         })
-    }, 10 * 60 * 1000)
+    }, 15 * 60 * 1000)
 
 
     const hasRole = !!store.state.user.info.roles
