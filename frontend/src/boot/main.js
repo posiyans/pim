@@ -4,13 +4,13 @@ export default async ({ store, router }) => {
   await store.dispatch('user/getInfo')
 
   router.beforeEach(async (to, from, next) => {
-    if (timer) clearTimeout(timer)
-    timer = setTimeout(() => {
-      store.dispatch('user/userLogout')
-        .then(() => {
-          router.push('/auth/login')
-        })
-    }, 15 * 60 * 1000)
+    // if (timer) clearTimeout(timer)
+    // timer = setTimeout(() => {
+    //   store.dispatch('user/userLogout')
+    //     .then(() => {
+    //       router.push('/auth/login')
+    //     })
+    // }, 15 * 60 * 1000)
 
 
     const hasRole = !!store.state.user.info.roles

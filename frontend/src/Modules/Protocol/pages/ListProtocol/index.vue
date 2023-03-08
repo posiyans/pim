@@ -1,16 +1,25 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-select v-model="listQuery.type" placeholder="Тип протокола" clearable class="filter-item" style="width: 130px" @update:model-value="handleFilter">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @update:model-value="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button class="filter-item" type="primary" @click="handleFilter">Найти</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="addProtokol">Add</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" @click="handleDownload">Скачать</el-button>
-      <el-checkbox v-model="listQuery.archiv" class="filter-item" style="margin-left:15px;" @change="handleFilter">Архив</el-checkbox>
+    <div class="row items-center q-col-gutter-sm q-pb-xs">
+      <div style="width: 220px;">
+        <QSelectTypeProtocol v-model="listQuery.type" outlined dense />
+      </div>
+      <div>
+        <q-input
+          v-model="listQuery.find"
+          label="Найти"
+          dense
+          outlined
+          clearable
+          @update:model-value="handleFilter"
+        />
+      </div>
+      <div>
+        <q-checkbox v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
+      </div>
+      <div>
+        <q-btn icon="add" color="primary" flat @click="addProtokol" />
+      </div>
     </div>
 
     <el-table
@@ -20,8 +29,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange">
-      <el-table-column label="id" prop="id" sortable="custom" align="center" width="65">
+    >
+      <el-table-column label="№" prop="id" align="center" width="65">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -59,7 +68,7 @@
 
 <script>
 import { fetchList, fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
-
+import QSelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import LoadMore from 'src/components/LoadMore/index.vue'
 
 const calendarTypeOptions = [
@@ -75,7 +84,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
-  components: { LoadMore },
+  components: { LoadMore, QSelectTypeProtocol },
   data() {
     return {
       key: 1,
@@ -87,6 +96,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
+        find: '',
         year: undefined,
         title: undefined,
         type: undefined,

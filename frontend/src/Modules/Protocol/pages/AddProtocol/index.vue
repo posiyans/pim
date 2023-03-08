@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="">
     <div class="row items-center q-col-gutter-sm q-pb-md">
       <div class="text-teal text-weight-bold">
         Добавить протокол
@@ -13,7 +13,7 @@
       </div>
 
       <div class="form-group">
-        <label for="InputFile">Загрузить из файла</label>
+        <label>Загрузить из файла</label>
         <div class="input-group">
           <div class="custom-file">
             <input ref="file" type="file" name="file"
@@ -56,8 +56,8 @@
               от
             </div>
             <div class="field">
-              {{ protokol.descriptions.date }}
-              <q-popup-edit v-model="protokol.descriptions.date" auto-save v-slot="scope">
+              {{ protokol.date }}
+              <q-popup-edit v-model="protokol.date" auto-save v-slot="scope">
                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
               </q-popup-edit>
             </div>
@@ -67,8 +67,8 @@
               Место проведения:
             </div>
             <div class="field">
-              {{ protokol.descriptions.region }}
-              <q-popup-edit v-model="protokol.descriptions.region" auto-save v-slot="scope">
+              {{ protokol.region }}
+              <q-popup-edit v-model="protokol.region" auto-save v-slot="scope">
                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
               </q-popup-edit>
             </div>
@@ -78,8 +78,8 @@
               Председатель:
             </div>
             <div class="field">
-              {{ protokol.descriptions.president }}
-              <q-popup-edit v-model="protokol.descriptions.president" auto-save v-slot="scope">
+              {{ protokol.president }}
+              <q-popup-edit v-model="protokol.president" auto-save v-slot="scope">
                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
               </q-popup-edit>
             </div>
@@ -89,8 +89,8 @@
               Секретарь:
             </div>
             <div class="field">
-              {{ protokol.descriptions.secretary }}
-              <q-popup-edit v-model="protokol.descriptions.secretary" auto-save v-slot="scope">
+              {{ protokol.secretary }}
+              <q-popup-edit v-model="protokol.secretary" auto-save v-slot="scope">
                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
               </q-popup-edit>
             </div>
@@ -100,8 +100,8 @@
               Присутствовали:
             </div>
             <div class="field">
-              {{ protokol.descriptions.composition }}
-              <q-popup-edit v-model="protokol.descriptions.composition" auto-save v-slot="scope">
+              {{ protokol.composition }}
+              <q-popup-edit v-model="protokol.composition" auto-save v-slot="scope">
                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
               </q-popup-edit>
             </div>
@@ -152,46 +152,55 @@
                   <q-btn icon="add" flat color="primary" @click="addTask(partition)" />
                 </div>
               </div>
-              <div v-for="task in partition.task" :key="task.number" class="row items-center justify-between no-wrap">
-                <div :class="task.users.length === 0 ? 'text-red-10' : ''" class="row q-col-gutter-xs no-wrap">
-                  <div>
-                    {{ partition.number }}.{{ task.number }}.
-                    <q-popup-edit
-                      v-model="task.number"
-                      auto-save
-                      v-slot="scope"
-                      @before-hide="changeSortTask"
-                    >
-                      <q-input v-model="scope.value" type="number" dense autofocus counter @keyup.enter="scope.set" />
-                    </q-popup-edit>
-                  </div>
-                  <div>
-                    {{ task.executor }}
-                    <q-popup-edit v-model="task.executor" auto-save v-slot="scope">
-                      <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
-                    </q-popup-edit>
-                  </div>
-                  <div>
-                    –
-                  </div>
-                  <div>
-                    <ShowTime :time="task.data_ispoln" format="DD.MM.YYYY" />
-                    <q-popup-edit v-model="task.data_ispoln" auto-save v-slot="scope">
-                      <InputDate v-model="scope.value" />
-                    </q-popup-edit>
-                  </div>
-                  <div>
-                    –
-                  </div>
-                  <div>
-                    <ShowTaskText :text="task.text" />
-                    <q-popup-edit v-model="task.text" auto-save v-slot="scope">
-                      <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
-                    </q-popup-edit>
-                  </div>
+              <div v-for="task in partition.tasks" :key="task.number" class="row no-wrap task-line q-col-gutter-sm">
+                <div class="text-no-wrap">
+                  {{ partition.number }}.{{ task.number }}.
+                  <q-popup-edit
+                    v-model="task.number"
+                    auto-save
+                    v-slot="scope"
+                    @before-hide="changeSortTask"
+                  >
+                    <q-input v-model="scope.value" type="number" dense autofocus counter @keyup.enter="scope.set" />
+                  </q-popup-edit>
                 </div>
-                <div style="min-width:150px;">
-                  <SelectExecutor v-model="task.users" multiple dense outlined />
+                <div class="text-no-wrap">
+                  {{ task.executor }}
+                  <q-popup-edit v-model="task.executor" auto-save v-slot="scope">
+                    <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
+                  </q-popup-edit>
+                </div>
+                <div>
+                  –
+                </div>
+                <div>
+                  <div v-if="!task.data_ispoln" class="text-teal">
+                    Тезис
+                  </div>
+                  <ShowTime v-else :time="task.data_ispoln" format="DD.MM.YYYY" />
+                  <q-popup-edit v-model="task.data_ispoln" auto-save v-slot="scope">
+                    <InputDate v-model="scope.value" clearable />
+                  </q-popup-edit>
+                </div>
+                <div>
+                  –
+                </div>
+                <div class="" style="flex-grow: 1;">
+                  <ShowTaskText :text="task.text" />
+                  <q-popup-edit v-model="task.text" auto-save v-slot="scope">
+
+                    <q-input v-model="scope.value" dense autofocus counter autogrow>
+                      <template v-slot:after>
+                        <q-btn round dense color="primary" flat icon="save" @click="scope.set" />
+                      </template>
+                    </q-input>
+                  </q-popup-edit>
+                </div>
+                <div class="row items-center no-wrap">
+                  <SelectExecutor v-model="task.users" multiple dense outlined style="min-width:150px;" :class="task.users.length === 0 ? 'bg-red-2' : ''" />
+                  <div>
+                    <q-btn icon="delete" flat color="negative" @click="deleteTask(partition, task)" />
+                  </div>
                 </div>
               </div>
 
@@ -252,7 +261,7 @@ export default {
             number: 1,
             text: 'Тема доклада',
             speaker: 'Докдачик',
-            task: []
+            tasks: []
           }
         ]
       }
@@ -263,12 +272,9 @@ export default {
       let user = false
       if (this.protokol.partition[0]) {
         user = true
-        const p = this.protokol.partition
-        Object.keys(p).forEach(key => {
-          const partition = p[key].task
-          Object.keys(partition).forEach(taskkey => {
-            const task = partition[taskkey]
-            if (task.users.length === 0) {
+        this.protokol.partition.forEach(part => {
+          part.tasks.forEach(task => {
+            if (task && task.users.length === 0) {
               user = false
             }
           })
@@ -278,6 +284,20 @@ export default {
     }
   },
   methods: {
+    deleteTask(partition, task) {
+      const t_number = partition.number + '.' + task.number + '.'
+      this.$q.dialog({
+        title: 'Подтверждение',
+        message: 'Удалить задачу № ' + t_number + ' ?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        const index = partition.tasks.findIndex(item => item === task)
+        partition.tasks.splice(index, 1)
+        this.changeSortTask()
+      })
+
+    },
     addPartition() {
       this.protokol.partition.push({
         number: this.protokol.partition.length + 1,
@@ -293,14 +313,19 @@ export default {
         return a.number - b.number
       })
       this.protokol.partition.forEach(part => {
-        part.taks = part.task.sort((a, b) => {
+        part.tasks = part.tasks.sort((a, b) => {
           return a.number - b.number
+        })
+        let i = 1
+        part.tasks = part.tasks.map(item => {
+          item.number = i++
+          return item
         })
       })
     },
     addTask(partition) {
-      const n = partition.task.length + 1
-      partition.task.push({
+      const n = partition.tasks.length + 1
+      partition.tasks.push({
         number: n,
         executor: 'Исполнитель',
         data_ispoln: date.formatDate(new Date(), 'YYYY-MM-DD'),
@@ -372,7 +397,7 @@ export default {
         successfull = true
       }
       if (!successfull) {
-        if (temptask[1].length > 11) {
+        if (temptask[1] && temptask[1].length > 11) {
           executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
           temptask.shift()
           title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
@@ -390,11 +415,14 @@ export default {
         formData.append('file', file)
         uploadProtocol(formData)
           .then(res => {
-            this.text = res.data
-            this.parserOk = true
-            this.parseHeader()
-            this.getPartitions()
-            this.parserButton = true
+            const type = this.protokol.type
+            this.protokol = Object.assign({}, res.data)
+            this.protokol.type = type
+            // this.text = res.data
+            // this.parserOk = true
+            // this.parseHeader()
+            // this.getPartitions()
+            // this.parserButton = true
           })
           .finally(() => {
             this.loading = false
@@ -427,7 +455,7 @@ export default {
     publishProtokol() {
       const data = new FormData()
       data.append('file', this.$refs.file.files[0])
-      data.append('protokol', JSON.stringify(this.protokol))
+      data.append('protocol', JSON.stringify(this.protokol))
       publishProtokol(data)
         .then(response => {
           const protokol = response.data[0]
@@ -451,5 +479,13 @@ export default {
 
 .field {
   color: $teal;
+}
+
+.task-line {
+  padding: 0 10px;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
 }
 </style>

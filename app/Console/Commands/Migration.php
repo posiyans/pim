@@ -102,12 +102,10 @@ class Migration extends Command
                 $task->task_id = (int)$item->zadach;
                 $task->user_id = $item->avtor;
                 $task->text = $item->text;
-//            $task->text = str_replace('?', 'Ы', $item->text);
                 $task->created_at = $item->time;
                 $task->updated_at = $item->time;
                 if ($item->del != null) {
                     $task->deleted_at = date("Y-m-d H:i:s");
-//                $task->history = $item->del; todo -->> to Log
                 }
                 if ($item->avtor != 15) {
                     $task->save();
@@ -165,8 +163,6 @@ class Migration extends Command
                 $task->autor_id = $item->avtor;
                 $task->executor = $item->ispolnitel;
                 $task->protocol_id = $pr[$item->protokol];
-//            $task->history = $item->hist; todo отправить в лог
-//            $task->full_history = $item->hide_hist;todo отправить в лог
                 $task->arxiv = $item->arxiv;
                 $task->save();
                 $i++;

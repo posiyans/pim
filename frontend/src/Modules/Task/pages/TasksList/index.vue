@@ -39,13 +39,13 @@
       <el-table-column label="Дата исполнения" width="100px">
         <template #default="scope">
           <div v-if="scope.row.data_ispoln">
-            <ShowTime :time="scope.row.data_ispoln" />
+            <ShowTime :time="scope.row.data_ispoln" format="DD.MM.YYYY" />
           </div>
           <div v-else>
             Тезис
           </div>
           <div v-if="scope.row.data_perenosa" class="text-red">
-            <ShowTime :time="scope.row.data_perenosa" />
+            <ShowTime :time="scope.row.data_perenosa" format="DD.MM.YYYY" />
           </div>
         </template>
       </el-table-column>
@@ -53,7 +53,7 @@
       <el-table-column label="Задача" max-width="50vw">
         <template #default="scope">
           <div class="link-type ellipsis no-wrap cursor-pointer text-small-80" @click="getTaskInfo(scope.row)">
-            {{ scope.row.number }} {{ scope.row.text }}
+            {{ scope.row.partition.number }}.{{ scope.row.number }}. {{ scope.row.text }}
             <q-tooltip v-if="scope.row.text.length > 100">
               {{ scope.row.text }}
             </q-tooltip>
@@ -126,7 +126,7 @@ export default {
   methods: {
     tableRowClassName({ row }) {
       if (row.execution < 100) {
-        return 'bg-deep-orange-1'
+        return 'task-red-1'
       }
       return ''
     },
@@ -149,3 +149,9 @@ export default {
 <style scoped>
 
 </style>
+<style>
+.task-red-1 {
+  background-color: #fff8f8 !important;
+}
+</style>
+

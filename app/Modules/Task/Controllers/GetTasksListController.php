@@ -46,6 +46,7 @@ class GetTasksListController extends MyController
                 $query->whereRaw("(lower(concat_ws(' ',id, text))) like '%" . strtolower($value) . "%'");
             }
         }
+        $query->orderBy('id', 'desc');
         if ($request->sort) {
             if ($request->sort == '+id') {
                 $query->orderBy('id', 'desc')->orderBy('protocol_id', 'desc');
@@ -72,7 +73,9 @@ class GetTasksListController extends MyController
 //                    $task->last_report = 'Добавлен файл';
 //                }
 //            }
-//
+            $task->partition;
+
+
             $task->execution = $task->getPercentComplete();
         }
 

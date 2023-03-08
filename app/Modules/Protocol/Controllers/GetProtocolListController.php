@@ -30,6 +30,9 @@ class GetProtocolListController extends MyController
             $type = $request->type;
             $query->where('type', $type);
         }
+        if ($request->find) {
+            $query->where('title', 'like', '%' . $request->find . '%');
+        }
         if ($request->year) {
             $year = $request->year;
             $query->where('year', $year);

@@ -14,10 +14,10 @@
 
       <div class="card-body">
         <div>
-          <div><b>Протокол:</b> {{ task.protokol.nomer }}</div>
+          <div><b>Протокол:</b> {{ task.protokol.number }}</div>
           <div @click="$router.push('/protocol/show/' + task.protokol.id)"><b>От:</b>{{ task.protokol.descriptions.date }}</div>
           <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
-          <div><b>Тема:</b> {{ task.partition.text }}</div>
+          <div><b>Тема:</b> {{ task.partition.number }}.{{ task.partition.text }}</div>
         </div>
         <div v-if="task.arxiv" class="text-red text-weight-bolder" v-html="task.arxiv" />
         <div class="text-primary bg-grey-2 q-pa-md" v-html="textTask" />
@@ -79,6 +79,9 @@
             <div class="bg-blue-1 q-pa-md">
               <div v-for="item in task.report" :key="item.id">
                 <ItemReportMessage :item="item" @reload="getTask" />
+              </div>
+              <div v-if="task.report.length === 0" class="q-pa-md text-primary">
+                Нет отчетов
               </div>
             </div>
             <SendReportBlock :task-id="$route.params.id" :disable="task.arxiv" class="bg-blue-2" @reload="getTask" />
@@ -145,7 +148,7 @@ export default {
       return this.user.roles
     },
     textTask() {
-      return this.task.number + '. ' + this.task.text
+      return this.task.partition.number + '.' + this.task.number + '. ' + this.task.text
     }
   },
   mounted() {

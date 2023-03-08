@@ -2,12 +2,18 @@
   <div class="app-container">
     <div class="row items-center q-col-gutter-md">
       <div>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="exportPorotokol">Скачать</el-button>
+        <q-btn class="filter-item" style="margin-left: 10px;" color="primary" label="Скачать" @click="exportPorotokol" />
       </div>
       <div class="row items-center q-col-gutter-md">
         <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
         <div>
-          <el-button v-if="roles.includes('admin') && !protokol.arxiv" class="filter-item" type="danger" @click="showEditForm = true">Edit</el-button>
+          <q-btn
+            v-if="roles.includes('admin') && !protokol.arxiv"
+            class="filter-item"
+            color="secondary"
+            label="Edit"
+            :to="'/protocol/edit/' + protokol.id"
+          />
         </div>
       </div>
     </div>
@@ -30,9 +36,6 @@
 
     <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 20px">
       <p><b>{{ partition.number }}. {{ partition.text }}</b>
-        <span v-if="partition.file_name" class="link">
-          <q-icon name="text_snippet" @click="getLink(partition)" />
-        </span>
       </p>
       <p v-if="partition.speaker">
         <i>Докладчик: {{ partition.speaker }}</i>
@@ -41,21 +44,15 @@
         <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
         <div v-for="task in partition.task" :key="task.id" class="task-text">
           <div :class="task.arxiv  ? 'text-grey-5' : ''">
-            <span :class="done(task)">{{ task.number }}.</span> {{ task.executor }}
-            <b>{{ task.data_ispoln }}</b> {{ task.text }}
+            <span :class="done(task)">{{ partition.number }}.{{ task.number }}.</span> {{ task.executor }}
+            <b>
+              <ShowTime :time="task.data_ispoln" format="DD.MM.YYYY" />
+            </b> {{ task.text }}
             <span class="link" @click="taskShow(task)">---></span>
           </div>
         </div>
       </div>
     </div>
-    <el-button class="btn btn-primary" @click="$router.go(-1)">назад</el-button>
-
-    <el-dialog v-model="showEditForm" title="Редактировать протокол" class="dialog">
-      <template #footer>
-        <el-button @click="showEditForm = false">Отмена</el-button>
-        <el-button type="danger" @click="$router.push('/protocol/edit/' + protokol.id)">Ок</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -63,11 +60,12 @@
 import { downloadProtocol, fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
 import { exportFile } from 'quasar'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
-
+import ShowTime from 'src/components/ShowTime/index.vue'
 
 export default {
   components: {
-    MoveProtocolToArchiveBtn
+    MoveProtocolToArchiveBtn,
+    ShowTime
   },
   data() {
     return {
@@ -92,13 +90,6 @@ export default {
     this.getProtokolInfo()
   },
   methods: {
-    getLink(partition) {
-      downloadProtokol(partition.file_hash).then(response => {
-        saveAs(new Blob([response.data], {
-          type: response.data.type
-        }), partition.file_name)
-      })
-    },
     done(task) {
       const report = task.view_report
       let done = 0

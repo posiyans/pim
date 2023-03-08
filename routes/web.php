@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
+//Route::Get('/test', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
 //
 //Route::get('/', function () {
 //    return '/';

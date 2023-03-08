@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 import user from './user/index.js'
 import avatar from './avatar/index.js'
 import header from './header/index.js'
-
+import users from 'src/Modules/User/store/index.js'
 /*
  * If not building with SSR mode, you can
  * directly export the Store instantiation;
@@ -18,7 +18,8 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       user,
       avatar,
-      header
+      header,
+      users
     },
 
     // enable strict mode (adds overhead!)

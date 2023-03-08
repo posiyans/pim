@@ -8,6 +8,7 @@ use App\Modules\Protocol\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class GetProtocolFileController extends MyController
 {
@@ -29,7 +30,8 @@ class GetProtocolFileController extends MyController
                 $md5 = $file[0]->hash;
                 $name = $file[0]->name;
                 $path = FileRepository::getPathFromHash($md5);
-                return response()->download($path, $name);
+//                $path = Storage::path($path);
+                return Storage::download($path, $name);
             }
             return response('Файл не найден', 404);
         }

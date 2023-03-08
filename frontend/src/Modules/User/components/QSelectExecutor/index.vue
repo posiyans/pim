@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { fetchExecutors } from 'src/Modules/User/api/user.js'
 
 export default {
   props: {
@@ -49,23 +48,28 @@ export default {
   },
   data() {
     return {
-      allExecutor: []
+      // allExecutor: []
     }
   },
-
+  computed: {
+    allExecutor() {
+      return this.$store.state.users.executors
+    }
+  },
   mounted() {
-    this.getExecutors()
+    // this.getExecutors()
+    this.$store.dispatch('users/getExecutors')
   },
   methods: {
     setValue(val) {
       this.$emit('update:model-value', val)
-    },
-    getExecutors() {
-      fetchExecutors()
-        .then(response => {
-          this.allExecutor = response.data
-        })
     }
+    // getExecutors() {
+    //   fetchExecutors()
+    //     .then(response => {
+    //       this.allExecutor = response.data
+    //     })
+    // }
   }
 }
 </script>
