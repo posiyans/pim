@@ -1,6 +1,17 @@
 <template>
-  <div class="cursor-pointer file text-primary" @click="getFile">
-    {{ i }} {{ file.name }} {{ size }}
+  <div class="cursor-pointer file row items-center q-col-gutter-sm">
+    <div class="text-primary">
+      {{ i }}
+    </div>
+    <div class="cursor-pointer file text-primary" @click="getFile">
+      {{ file.name }}
+    </div>
+    <div class="text-grey">
+      {{ size }}
+    </div>
+    <div v-if="edit">
+      <q-btn flat color="negative" :icon="hover ? 'delete' : 'close'" size="10px" @mousemove="hover = true" @mouseout="hover = false" @click="deleteFile" />
+    </div>
   </div>
 </template>
 
@@ -8,7 +19,7 @@
 import { sizeFilter } from 'src/utils/file'
 import { downloadReport } from 'src/Modules/Task/api/task'
 import { exportFile } from 'quasar'
-import { downloadFile } from 'src/Modules/Files/api/file'
+import { deleteFile, downloadFile } from 'src/Modules/Files/api/file'
 
 export default {
   props: {
@@ -19,6 +30,15 @@ export default {
     index: {
       type: [Number, String],
       default: ''
+    },
+    edit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      hover: false
     }
   },
   computed: {
@@ -36,10 +56,18 @@ export default {
     }
   },
   methods: {
+    deleteFile() {
+      const data = {
+        uid: this.file.uid
+      }
+      deleteFile(data)
+        .then(res => {
+          this.$emit('reload')
+        })
+    },
     getFile() {
       const data = {
-        id: this.file.id,
-        hash: this.file.hash
+        uid: this.file.uid
       }
       downloadFile(data)
         .then(response => {

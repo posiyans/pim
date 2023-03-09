@@ -6,8 +6,17 @@ use App\MyModel;
 
 class Partition extends MyModel
 {
-    //
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @deprecated
+     *
+     */
     public function task()
+    {
+        return $this->hasMany('App\Modules\Task\Models\Task', 'partition_id', 'id');
+    }
+
+    public function tasks()
     {
         return $this->hasMany('App\Modules\Task\Models\Task', 'partition_id', 'id');
     }

@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @deprecated
+ */
 class GetProtocolFileController extends MyController
 {
 

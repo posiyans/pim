@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\ViewReport;
 use App\Modules\File\Models\File;
+use App\Modules\File\Repositories\FileRepository;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protocol;
@@ -14,6 +15,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class Migration extends Command
 {
@@ -43,7 +46,35 @@ class Migration extends Command
         $this->migrateTask();
         $this->migrateReport();
         $this->migrateExecurers();
+        $this->fixTaskNumber();
+        $this->fixFileSize();
         return;
+    }
+
+    private function fixFileSize()
+    {
+        $files = File::all();
+        foreach ($files as $file) {
+            $path = FileRepository::getPathFromHash($file->hash);
+            if (Storage::has($path)) {
+                $file->size = Storage::size($path);
+                $file->save();
+            } else {
+                $file->delete();
+            }
+        }
+    }
+
+    private function fixTaskNumber()
+    {
+        $partitions = Partition::all();
+        foreach ($partitions as $partition) {
+            $i = 1;
+            foreach ($partition->tasks as $task) {
+                $task->number = $i++;
+                $task->save();
+            }
+        }
     }
 
 
@@ -113,6 +144,7 @@ class Migration extends Command
                         $file = new File();
                         $file->name = $item->file_name;
                         $file->hash = $item->file_md5;
+                        $file->uid = Uuid::uuid4()->toString();
                         $file->user_id = $item->avtor;
                         $task->files()->save($file);
                     }
@@ -129,8 +161,10 @@ class Migration extends Command
     {
         $pr = [];
         $ur = [];
+        $ur_i = [];
         foreach (User::all() as $u) {
             $ur[trim($u->name)] = $u->id;
+            $ur_i[$u->id] = $u->name;
         }
         print_r($ur);
         echo PHP_EOL;
@@ -176,7 +210,11 @@ class Migration extends Command
                         $t_create = str_replace('<i>', '', $tmp[0]);
                         $r = explode(' ', $tmp[1]);
                         $log->user_id = $ur[trim($r[0])] ?? null;
-                        $log->value = ['text' => $tmp[1]];
+                        $text = explode('br>', $tmp[1]);
+                        $text = $text[0];
+                        $text = str_replace('</', '', $text);
+                        $text = str_replace($ur_i[$log->user_id] ?? '', '', $text);
+                        $log->value = ['text' => $text];
                         $task->log()->save($log);
                         $log->created_at = $t_create;
                         $log->save();
@@ -184,6 +222,8 @@ class Migration extends Command
                 }
             } catch (\Exception $e) {
                 echo $item->id . ' задача пропущена';
+                echo PHP_EOL;
+                echo $e->getMessage();
                 echo PHP_EOL;
             }
             //dump($task);
@@ -215,6 +255,7 @@ class Migration extends Command
                 $file = new File();
                 $file->name = $item->file_name;
                 $file->hash = $item->file_md5;
+                $file->uid = Uuid::uuid4()->toString();
                 $file->user_id = 5;
                 $part->files()->save($file);
             }
@@ -251,7 +292,7 @@ class Migration extends Command
                 $file = new File();
                 $file->name = $item->file_name;
                 $file->hash = $item->file_md5;
-                $file->hash = $item->file_md5;
+                $file->uid = Uuid::uuid4()->toString();
                 $file->user_id = 5;
                 $protokol->files()->save($file);
             }

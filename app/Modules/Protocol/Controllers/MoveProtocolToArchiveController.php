@@ -28,7 +28,7 @@ class MoveProtocolToArchiveController extends MyController
                 $text = '<i>' . $today . '</i> ' . $user->name . ' перенес данный протокол и задачи в архив';
                 $protokol->arxiv = '<i>' . $today . '</i> ' . $user->name . ' перенес протокол в архив<br>';
                 $protokol->save();
-                $tasks = $protokol->task();
+                $tasks = $protokol->tasks();
                 foreach ($tasks as $task) {
                     $task->history .= $text;
                     $task->arxiv = $text;

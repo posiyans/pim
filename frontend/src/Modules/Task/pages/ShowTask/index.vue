@@ -14,13 +14,33 @@
 
       <div class="card-body">
         <div>
-          <div><b>Протокол:</b> {{ task.protokol.number }}</div>
-          <div @click="$router.push('/protocol/show/' + task.protokol.id)"><b>От:</b>{{ task.protokol.descriptions.date }}</div>
+          <div class="row items-center q-col-gutter-sm" @click="$router.push('/protocol/show/' + task.protokol.id)">
+            <div class="text-weight-bold">
+              Протокол:
+            </div>
+            <div>
+              {{ task.protokol.number }}
+            </div>
+            <div class="text-weight-bold">
+              От:
+            </div>
+            <div>
+              {{ task.protokol.descriptions.date }}
+            </div>
+            <div>
+              {{ task.protokol.descriptions.region }}
+            </div>
+          </div>
           <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
           <div><b>Тема:</b> {{ task.partition.number }}.{{ task.partition.text }}</div>
         </div>
         <div v-if="task.arxiv" class="text-red text-weight-bolder" v-html="task.arxiv" />
-        <div class="text-primary bg-grey-2 q-pa-md" v-html="textTask" />
+        <div class="row text-primary bg-grey-1 q-pa-md q-col-gutter-xs">
+          <div>
+            {{ task.partition.number }}.{{ task.number }}.
+          </div>
+          <div v-html="task.text" />
+        </div>
         <div>
           Исполнители: {{ task.executor }}
         </div>
@@ -64,7 +84,7 @@
 
       <DropDownBlock hide-label="История" show-label="История">
         <div class="q-pa-sm">
-          <div v-html="task.history" />
+          <ShowTaskHistory :task-id="task.id" />
         </div>
       </DropDownBlock>
       <q-card class="">
@@ -114,9 +134,11 @@ import SendReportBlock from 'src/Modules/Task/components/SendReportBlock/index.v
 import MoveTaskToArchiveBtn from 'src/Modules/Task/components/MoveTaskToArchiveBtn/index.vue'
 import MoveDateTaskBtn from 'src/Modules/Task/components/MoveDateTaskBtn/index.vue'
 import ShowTime from 'src/components/ShowTime/index.vue'
+import ShowTaskHistory from 'src/Modules/Log/components/ShowTaskHistory/index.vue'
 
 export default {
   components: {
+    ShowTaskHistory,
     ShowTime,
     DropDownBlock,
     MoveTaskToArchiveBtn,
@@ -146,9 +168,6 @@ export default {
     },
     roles() {
       return this.user.roles
-    },
-    textTask() {
-      return this.task.partition.number + '.' + this.task.number + '. ' + this.task.text
     }
   },
   mounted() {

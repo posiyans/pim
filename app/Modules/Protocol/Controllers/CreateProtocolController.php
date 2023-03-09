@@ -5,13 +5,15 @@ namespace App\Modules\Protocol\Controllers;
 use App\Http\Controllers\MyController;
 use App\Models\ViewReport;
 use App\Modules\File\Models\File;
-use App\Modules\Log\Models\Log;
+use App\Modules\File\Repositories\FileRepository;
+use App\Modules\Log\Classes\CreateInfoLog;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CreateProtocolController extends MyController
 {
@@ -28,8 +30,6 @@ class CreateProtocolController extends MyController
         if ($user->moderator and $request->has('protocol') and $request->hasFile('file')) {
             DB::beginTransaction();
             try {
-                $fileInput = $request->file('file');
-                $md5 = $this->save_file($fileInput);
                 $protokol_json = json_decode($request->get('protocol'));
                 $protokol = new Protocol();
                 $protokol->number = $protokol_json->number;
@@ -44,24 +44,26 @@ class CreateProtocolController extends MyController
                 ];
                 $protokol->descriptions = $description;
                 $protokol->save();
-                $file = new File();
-                $file->name = $fileInput->getClientOriginalName();
-                $file->hash = $md5;
-                $protokol->files()->save($file);
-                $log = new Log();
-                $log->type = 'ok';
-                $log->description = 'Добавление протокола';
-                $log->value = $protokol->toArray();
-                $log->save();
-                $data = date("d-m-Y H:i:s");
-                $m_now = date("m");
-                $y_now = date("Y");
+                (new CreateInfoLog($protokol))->text('Создание протокола')->run();
+                $fileInput = $request->file('file');
+                if ($fileInput) {
+                    $md5 = md5_file($fileInput->getRealPath());
+                    $file = new File();
+                    $file->name = $fileInput->getClientOriginalName();
+                    $file->hash = $md5;
+                    $file->size = $fileInput->getSize();
+                    $protokol->files()->save($file);
+                    $path = FileRepository::getPathFromHash($md5, true);
+                    Storage::putFileAs($path, $fileInput, $md5);
+                }
+
                 foreach ($protokol_json->partition as $partition_json) {
                     $partition = new Partition();
                     $partition->text = $partition_json->text;
                     $partition->number = $partition_json->number;
                     $partition->speaker = $partition_json->speaker;
                     $protokol->partition()->save($partition);
+                    (new CreateInfoLog($partition))->text('Создание доклада')->run();
                     foreach ($partition_json->tasks as $task_json) {
                         $task = new Task();
                         $task->data_ispoln = $task_json->data_ispoln ?? null;
@@ -70,15 +72,8 @@ class CreateProtocolController extends MyController
                         $task->autor_id = $user->id;
                         $task->executor = $task_json->executor;
                         $task->protocol_id = $protokol->id;
-//                        $task->history = '<i>' . $data . '</i> ' . $user->name . ' Создание задачи<br>';
-                        $partition->task()->save($task);
-                        $log = new Log();
-                        $log->type = 'info';
-                        $log->value = [
-                            'text' => ' Создание задачи'
-                        ];
-                        $log->user_id = $user->id;
-                        $task->log()->save($log);
+                        $partition->tasks()->save($task);
+                        (new CreateInfoLog($task))->text('Создание задачи')->run();
                         if (count($task_json->users) == 0) {
                             throw new \Exception('Не выбран исполнитель');
                         } else {
@@ -91,11 +86,6 @@ class CreateProtocolController extends MyController
                         }
                     }
                 }
-//                $log = new Log();
-//                $log->type = 'ok';
-//                $log->description = 'create protokol';
-//                $log->value = $protokol->toArray();
-//                $log->save();
                 DB::commit();
                 return response([$protokol]);
             } catch (\Exception $e) {

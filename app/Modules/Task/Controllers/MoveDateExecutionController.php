@@ -24,12 +24,19 @@ class MoveDateExecutionController extends MyController
             } else {
                 $task->data_perenosa = date('Y-m-d', strtotime($newDate));
             }
-            $hist = $task->history;
-            $today = date('Y-m-d H:m:s');
-            $text = '<i>' . $today . '</i> ' . $user->name . ' перенес дату исполнения на' . $task->data_perenosa . '<br>';
-            $task->history = $hist . $text;
+//            $hist = $task->history;
+//            $today = date(/**/'Y-m-d H:m:s');
+//            $text = '<i>' . $today . '</i> ' . $user->name . ' перенес дату исполнения на' . $task->data_perenosa . '<br>';
+//            $task->history = $hist . $text;
             $task->save();
             Log::saveDiff($task, $task_old, 'Task transfer Date');
+            $log = new Log();
+            $log->user_id = $user->id;
+            $log->value = [
+                'text' => $user->name . ' перенос даты исполнения на ' . $task->data_perenosa,
+            ];
+            $log->type = 'info';
+            $task->log()->save($log);
         }
         return response(true);
     }

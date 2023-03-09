@@ -1,15 +1,17 @@
 <template>
   <div>
     <div class="row items-center q-col-gutter-sm q-pb-xs">
-      <div>
-        <el-input v-model="listQuery.title" placeholder="Найти..." style="width: 200px;" clearable class="filter-item" @update:model-value="handleFilter" />
+      <div style="width: 200px;">
+        <q-input v-model="listQuery.title" label="Найти..." dense clearable outlined @update:model-value="handleFilter" />
       </div>
-      <SelectExecutor v-model="listQuery.executor" clearable @update:model-value="handleFilter" />
-      <div>
-        <el-button class="filter-item" type="primary" @click="handleFilter">Найти</el-button>
+      <div style="width: 200px;">
+        <QSelectExecutor v-model="listQuery.executor" clearable outlined dense @update:model-value="handleFilter" />
       </div>
       <div>
-        <el-checkbox v-if="roles.includes('admin')" v-model="listQuery.archiv" class="filter-item" style="margin-left:15px;" @change="handleFilter">Архив</el-checkbox>
+        <q-btn color="primary" label="Найти" @click="handleFilter" />
+      </div>
+      <div>
+        <q-checkbox v-if="roles.includes('admin')" v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
       </div>
     </div>
 
@@ -91,12 +93,12 @@
 <script>
 import { fetchList } from 'src/Modules/Task/api/task.js'
 import LoadMore from 'src/components/LoadMore/index.vue'
-import SelectExecutor from 'src/Modules/User/components/SelectExecutor/index.vue'
+import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import NoReadReport from 'src/Modules/Task/pages/TasksList/components/NoReadReport/index.vue'
 import ShowTime from 'components/ShowTime/index.vue'
 
 export default {
-  components: { LoadMore, SelectExecutor, NoReadReport, ShowTime },
+  components: { LoadMore, QSelectExecutor, NoReadReport, ShowTime },
   data() {
     return {
       key: 1,
@@ -105,7 +107,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        arxiv: false,
+        archiv: false,
         title: '',
         type: undefined,
         sort: '+id',

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class Protocol extends MyModel
 {
+
     //
     protected $casts = [
         'descriptions' => 'array',
@@ -31,7 +32,7 @@ class Protocol extends MyModel
     {
         $partitions = $this->partition;
         foreach ($partitions as $partition) {
-            $partition->task;
+            $partition->tasks;
         }
         return $partitions;
     }
@@ -41,7 +42,7 @@ class Protocol extends MyModel
         $partitions = $this->partition;
         $task = new Collection;
         foreach ($partitions as $partition) {
-            $task = $task->merge($partition->task);
+            $task = $task->merge($partition->tasks);
         }
         return $task;
     }

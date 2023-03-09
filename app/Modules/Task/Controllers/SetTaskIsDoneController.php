@@ -4,6 +4,7 @@ namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
 use App\Models\ViewReport;
+use App\Modules\Log\Classes\CreateInfoLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,13 +26,14 @@ class SetTaskIsDoneController extends MyController
                 }
                 if (isset($report->done)) {
                     $report->done = null;
-                    $task->history .= '<i>' . $now . '</i> ' . $user->name . ' отменил закрытие задачи ' . $task_executor . '</br>';
+                    $text_log = 'Отмена закрытия задачи ' . $task_executor;
                 } else {
                     $report->done = $now;
-                    $task->history .= '<i>' . $now . '</i> ' . $user->name . ' закрыл задачу ' . $task_executor . '</br>';
+                    $text_log = 'Закрыл задачу ' . $task_executor;
                 }
                 $task->save();
                 $report->save();
+                (new CreateInfoLog($task))->text($text_log)->run();
             }
         }
         return response([]);

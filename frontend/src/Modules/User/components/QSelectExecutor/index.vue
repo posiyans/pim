@@ -53,23 +53,19 @@ export default {
   },
   computed: {
     allExecutor() {
-      return this.$store.state.users.executors
+      if (this.$store.state.users.executors) {
+        return this.$store.state.users.executors.filter(user => !user.hide)
+      }
+      return []
     }
   },
   mounted() {
-    // this.getExecutors()
     this.$store.dispatch('users/getExecutors')
   },
   methods: {
     setValue(val) {
       this.$emit('update:model-value', val)
     }
-    // getExecutors() {
-    //   fetchExecutors()
-    //     .then(response => {
-    //       this.allExecutor = response.data
-    //     })
-    // }
   }
 }
 </script>

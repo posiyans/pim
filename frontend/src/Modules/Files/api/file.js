@@ -9,3 +9,12 @@ export function downloadFile(params) {
     params
   })
 }
+
+export function deleteFile(params) {
+  return request({
+    url: '/api/file/delete',
+    method: 'get',
+    params
+  })
+}
+

@@ -1,97 +1,185 @@
 <template>
   <div>
-    <div class="row items-center q-col-gutter-sm">
-      <div class="q-mr-lg">
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="exportPorotokol()">Скачать</el-button>
-      </div>
+    <div class="row items-center q-col-gutter-sm q-pb-xs">
+      <DownloadProtocolBtn :id="$route.params.id" />
       <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
-    </div>
-    <h4 v-if="protokol.arxiv" class="alert" v-html="protokol.arxiv" />
-    <el-row>
-      <el-col>
-        <div class="chart-wrapper">
-          <table>
-            <tr>
-              <td colspan="2"><input v-model="protokol.title" style="width:500px"></td>
-              <td>от <input v-model="protokol.descriptions.date"></td>
-            </tr>
-            <tr>
-              <td>Место проведения:</td>
-              <td><input v-model="protokol.descriptions.region"></td>
-            </tr>
-            <tr>
-              <td>Председатель:</td>
-              <td><input v-model="protokol.descriptions.president"></td>
-            </tr>
-            <tr>
-              <td>Секретарь:</td>
-              <td><input v-model="protokol.descriptions.secretary"></td>
-            </tr>
-            <tr>
-              <td>Присутствовали:</td>
-              <td><input v-model="protokol.descriptions.composition"></td>
-            </tr>
-            <tr>
-              <td>Тип протокола:</td>
-              <td>
-                <SelectTypeProtocol v-model="protokol.type" clearable />
-              </td>
-            </tr>
-          </table>
-        </div>
-      </el-col>
-    </el-row>
-    <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 5px">
-      <p><input v-model="partition.number" style="width:40px">. <input v-model="partition.text" style="width:800px">
-        <span v-if="partition.file_name" class="link" @click="getLink(partition)">
-          <svg-icon icon-class="link" /> скачать
-        </span>
-        <span v-if="false" @click="showUploadFileForm(partition)">
-          <svg-icon icon-class="link" /> Добавить отчет
-        </span>
-      </p>
-      <p v-if="partition.speaker">
-        <i>Докладчик:</i><input v-model="partition.speaker" style="width:240px">
-      </p>
-    </div>
-
-    <el-button class="btn btn-primary" @click="$router.go(-1)">назад</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="saveProtokol">Сохранить</el-button>
-    <el-dialog v-model="showFormUpload" title="Загрузить отчет">
-      // отключено так как недоделано
-      <div class="dialog-body">
-        <input id="InputFile" ref="file" type="file" name="file" class="custom-file-input" @change="selectFile">
+      <div v-if="noSave">
+        <q-btn label="Отмена" color="negative" flat @click="getProtokolInfo" />
       </div>
-      <template #footer>
-        <el-button @click="showFormUpload = false">Отмена</el-button>
-        <el-button type="primary" @click="UploadFile">Загрузить</el-button>
-      </template>
-    </el-dialog>
+      <div v-if="noSave">
+        <q-btn label="Сохранить" color="primary" />
+      </div>
+    </div>
+    <div v-if="protokol.arxiv" class="text-red q-pa-md" v-html="protokol.arxiv" />
+    <q-card class="q-mb-sm">
+      <q-card-section>
 
+        <div class="row items-center q-col-gutter-md">
+          <div class="text-teal">
+            {{ protokol.title }}
+            <q-popup-edit v-model="protokol.title" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+          <div>
+            от
+          </div>
+          <div class="text-teal">
+            {{ protokol.descriptions.date }}
+            <q-popup-edit v-model="protokol.descriptions.date" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+        </div>
+        <div class="row items-center">
+          <div class="field-header">
+            Место проведения:
+          </div>
+          <div class="text-teal">
+            {{ protokol.descriptions.region }}
+            <q-popup-edit v-model="protokol.descriptions.region" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+        </div>
+        <div class="row items-center">
+          <div class="field-header">
+            Председатель:
+          </div>
+          <div class="text-teal">
+            {{ protokol.descriptions.president }}
+            <q-popup-edit v-model="protokol.descriptions.president" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+        </div>
+        <div class="row items-center">
+          <div class="field-header">
+            Секретарь:
+          </div>
+          <div class="text-teal">
+            {{ protokol.descriptions.secretary }}
+            <q-popup-edit v-model="protokol.descriptions.secretary" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+        </div>
+        <div class="row items-center">
+          <div class="field-header">
+            Присутствовали:
+          </div>
+          <div class="text-teal">
+            {{ protokol.descriptions.composition }}
+            <q-popup-edit v-model="protokol.descriptions.composition" auto-save v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+            </q-popup-edit>
+          </div>
+        </div>
+        <div class="row items-center">
+          <div class="field-header">
+            Тип протокола:
+          </div>
+          <div class="text-teal">
+            <ShowTypeProtocol :type="protokol.type" />
+            <q-popup-edit v-model="protokol.type" auto-save v-slot="scope">
+              <QSelectTypeProtocol v-model="scope.value" />
+            </q-popup-edit>
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
+    <q-card class="q-mb-sm">
+      <q-card-section>
+        <div>
+          <div class="row items-center q-col-gutter-sm">
+            <div>
+              Файлы:
+            </div>
+            <div>
+              <q-btn icon="add" flat color="primary" />
+            </div>
+          </div>
+          <FileBlock v-for="(f, index) in protokol.files" :file="f" :key="f.id" edit :index="++index" @reload="getProtokolInfo" />
+        </div>
+      </q-card-section>
+    </q-card>
+    <q-card>
+      <q-card-section>
+        <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 5px">
+          <div class="row items-center q-col-gutter-md q-pb-sm">
+            <div class="text-teal">
+              {{ partition.number }}.
+              <q-popup-edit v-model="partition.number" auto-save v-slot="scope" @before-hide="changeSortTask">
+                <q-input
+                  v-model="scope.value"
+                  dense
+                  autofocus
+                  type="number"
+                  @keyup.enter="scope.set"
 
+                />
+              </q-popup-edit>
+            </div>
+            <div class="text-teal" style="flex-grow: 1;">
+              {{ partition.text }}
+              <q-popup-edit v-model="partition.text" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <div class="row items-center q-col-gutter-md">
+            <div>
+              Докладчик:
+            </div>
+            <div class="text-teal">
+              {{ partition.speaker }}
+              <q-popup-edit v-model="partition.speaker" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+          <DropDownBlock :show-label="'Задачи (' + partition.task.length + ')'" :hide-label="'Задачи (' + partition.task.length + ')'">
+            <ShowTaskList :list="partition.task" :partition-number="partition.number " />
+          </DropDownBlock>
+        </div>
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 
 <script>
-import { downloadProtocol, fetchProtokol, protokolToArchiv, updateProtokol, uploadPartitionFile } from 'src/Modules/Protocol/api/protocol.js'
-import SelectTypeProtocol from 'src/Modules/Protocol/components/SelectTypeProtocol/index.vue'
+import { fetchProtokol, updateProtokol, uploadPartitionFile } from 'src/Modules/Protocol/api/protocol.js'
+import QSelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
-import { exportFile } from 'quasar'
+import DownloadProtocolBtn from 'src/Modules/Protocol/components/DownloadProtocolBtn/index.vue'
+import ShowTypeProtocol from 'src/Modules/Protocol/components/ShowTypeProtocol/index.vue'
+import { nextTick } from 'vue'
+import DropDownBlock from 'components/DropDownBlock/index.vue'
+import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
+import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
 
 export default {
   components: {
-    SelectTypeProtocol,
-    MoveProtocolToArchiveBtn
+    FileBlock,
+    DropDownBlock,
+    QSelectTypeProtocol,
+    ShowTypeProtocol,
+    MoveProtocolToArchiveBtn,
+    DownloadProtocolBtn,
+    ShowTaskList
   },
   data() {
     return {
+      noSave: false,
       data: {},
+
       showFormUpload: false,
       fileUploadTo: false,
       protokol: {
         id: '',
         title: '',
-        descriptions: {}
+        descriptions: {},
+        files: []
       }
     }
   },
@@ -103,25 +191,38 @@ export default {
       return this.user.roles
     }
   },
+  watch: {
+    protokol: {
+      deep: true,
+      handler() {
+        this.noSave = true
+      }
+    }
+  },
   mounted() {
     this.getProtokolInfo()
   },
   methods: {
-    getLink(partition) {
-      downloadProtokol(partition.file_hash).then(response => {
-        saveAs(new Blob([response.data], {
-          type: response.data.type
-        }), partition.file_name)
+    changeSortTask() {
+      console.log('changesrot')
+      this.protokol.partition = this.protokol.partition.sort((a, b) => {
+        return a.number - b.number
       })
-    },
-    statusArchiv() {
-      this.listLoading = true
-      protokolToArchiv(this.$route.params.id).then(response => {
-        console.log(response.data)
-        this.listLoading = false
-        this.getProtokolInfo()
+      let i = 1
+      this.protokol.partition = this.protokol.partition.map(item => {
+        item.number = i++
+        return item
       })
-      this.showFormStatus = false
+      // this.protokol.partition.forEach(part => {
+      //   part.tasks = part.tasks.sort((a, b) => {
+      //     return a.number - b.number
+      //   })
+      //   let i = 1
+      //   part.tasks = part.tasks.map(item => {
+      //     item.number = i++
+      //     return item
+      //   })
+      // })
     },
     done(task) {
       // console.log(task.view_report)
@@ -147,6 +248,9 @@ export default {
       fetchProtokol(data)
         .then(response => {
           this.protokol = response.data
+          nextTick(() => {
+            this.noSave = false
+          })
         })
     },
     saveProtokol() {
@@ -199,60 +303,13 @@ export default {
       })
       // this.fileName = event.target.files[0].name
       // this.newMessage.file = event.target.files[0]
-    },
-    exportPorotokol() {
-      downloadProtocol(this.$route.params.id)
-        .then(response => {
-          exportFile(this.protokol.nomer + '.docx', response.data)
-        })
-        .catch(er => {
-          this.$message({
-            message: 'Файл не найден',
-            type: 'error',
-            showClose: true,
-            duration: 3000
-          })
-        })
     }
   }
 }
 </script>
 
 <style scoped>
-.task-text {
-  padding: 1px;
-  font-style: italic;
-}
-
-.alert {
-  color: red;
-}
-
-.arxiv {
-  color: #6e0000;
-}
-
-.success {
-  color: darkgreen;
-}
-
-.link {
-  color: #000061;
-  padding: 0 15px;
-}
-
-.link:hover {
-  color: #0000ff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.edit-button {
-  padding-left: 200px;
-}
-
-.dialog {
-  background-color: #ffeaea;
-  color: green;
+.field-header {
+  min-width: 150px;
 }
 </style>

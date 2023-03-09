@@ -32,7 +32,7 @@ class ProtokolController extends Controller
             $item['number'] = $partition->number;
             $item['speaker'] = $partition->speaker;
             $item['timeLine'] = 60;
-            $tasks = $partition->task;
+            $tasks = $partition->tasks;
             if ($tasks) {
                 $item_task = [];
                 foreach ($tasks as $task) {
@@ -126,7 +126,7 @@ class ProtokolController extends Controller
             $item['number'] = $partition->number;
             $item['speaker'] = $partition->speaker;
             $item['timeLine'] = 60;
-            $tasks = $partition->task;
+            $tasks = $partition->tasks;
             if ($tasks) {
                 $item_task = [];
                 foreach ($tasks as $task) {

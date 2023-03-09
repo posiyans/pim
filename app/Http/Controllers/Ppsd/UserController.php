@@ -16,38 +16,17 @@ class UserController extends MyController
     /**
      * вывод списка пользователя по полученному шаблону
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return mixed
      */
     public function getList(Request $request)
     {
-        $data = [];
         $fields = [];
-//        if ($request->field) {
-//            $list = $request->field;
-//            $list = str_replace('"', '', $list);
-//            $list = str_replace('{', '', $list);
-//            $list = str_replace('}', '', $list);
-//            foreach (explode(',', $list) as $value) {
-//                $i = explode(':', $value);
-//                $fields[$i[0]] = $i[1];
-//            }
-//        } else {
         $fields['id'] = 'id';
         $fields['name'] = 'name';
-        $fields['login'] = 'login';
         $fields['full_name'] = 'full_name';
-//        $fields['email'] = 'email';
-//        $fields['avatar'] = 'avatar';
-//        }
-        $user = Auth::user();
-//        if (!$user->hasRole('admin')) {
-        $executor = $user->aliases;
-        array_push($executor, $user->id);
-//        $users = User::where('hide', null)->whereIn('id', $executor)->get();
-//        } else {
-        $users = User::where('hide', false)->get();
-//        }
+        $fields['hide'] = 'hide';
+        $users = User::all();
         $data = [];
         foreach ($users as $user) {
             $item = [];
@@ -161,8 +140,8 @@ class UserController extends MyController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -203,7 +182,7 @@ class UserController extends MyController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)

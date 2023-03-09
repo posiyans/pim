@@ -1,9 +1,6 @@
 <template>
   <div class="app-container">
     <div class="row items-center q-col-gutter-md">
-      <div>
-        <q-btn class="filter-item" style="margin-left: 10px;" color="primary" label="Скачать" @click="exportPorotokol" />
-      </div>
       <div class="row items-center q-col-gutter-md">
         <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
         <div>
@@ -30,26 +27,23 @@
     <div>
       Секретарь: {{ protokol.descriptions.secretary }}
     </div>
-    <div style="padding-bottom: 20px">
+    <div>
       Присутствовали: <b>{{ protokol.descriptions.composition }}</b>
     </div>
-
-    <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 20px">
-      <p><b>{{ partition.number }}. {{ partition.text }}</b>
-      </p>
-      <p v-if="partition.speaker">
-        <i>Докладчик: {{ partition.speaker }}</i>
-      </p>
-      <div v-if="partition.task">
-        <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
-        <div v-for="task in partition.task" :key="task.id" class="task-text">
-          <div :class="task.arxiv  ? 'text-grey-5' : ''">
-            <span :class="done(task)">{{ partition.number }}.{{ task.number }}.</span> {{ task.executor }}
-            <b>
-              <ShowTime :time="task.data_ispoln" format="DD.MM.YYYY" />
-            </b> {{ task.text }}
-            <span class="link" @click="taskShow(task)">---></span>
-          </div>
+    <div v-if="protokol.files && protokol.files.length > 0">
+      Файлы:
+      <FileBlock v-for="(f, index) in protokol.files" :file="f" :key="f.id" :index="++index" />
+    </div>
+    <div class="q-pt-md">
+      <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 20px">
+        <p><b>{{ partition.number }}. {{ partition.text }}</b>
+        </p>
+        <p v-if="partition.speaker">
+          <i>Докладчик: {{ partition.speaker }}</i>
+        </p>
+        <div v-if="partition.task">
+          <b>ПОСТАВЛЕННЫЕ ЗАДАЧИ:</b>
+          <ShowTaskList :list="partition.task" :partition-number="partition.number " />
         </div>
       </div>
     </div>
@@ -57,15 +51,18 @@
 </template>
 
 <script>
-import { downloadProtocol, fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
-import { exportFile } from 'quasar'
+import { fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
-import ShowTime from 'src/components/ShowTime/index.vue'
+// import ShowTime from 'src/components/ShowTime/index.vue'
+import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
+import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
 
 export default {
   components: {
+    FileBlock,
     MoveProtocolToArchiveBtn,
-    ShowTime
+    // ShowTime,
+    ShowTaskList
   },
   data() {
     return {
@@ -74,7 +71,8 @@ export default {
       protokol: {
         id: '',
         title: '',
-        descriptions: {}
+        descriptions: {},
+        files: []
       }
     }
   },
@@ -117,24 +115,6 @@ export default {
     },
     taskShow(task) {
       this.$router.push('/task/show/' + task.id)
-    },
-    exportPorotokol() {
-      const data = {
-        id: this.$route.params.id
-      }
-      downloadProtocol(data)
-        .then(response => {
-          const fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0] || this.protokol.nomer + '.docx'
-          exportFile(fileName, response.data)
-        })
-        .catch(er => {
-          this.$message({
-            message: 'Файл не найден',
-            type: 'error',
-            showClose: true,
-            duration: 3000
-          })
-        })
     }
   }
 }

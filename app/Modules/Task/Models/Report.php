@@ -11,7 +11,7 @@ class Report extends MyModel
     use SoftDeletes;
 
     //
-    protected $dates = ['deleted_at'];
+//    protected $dates = ['deleted_at'];
 
     public function user()
     {

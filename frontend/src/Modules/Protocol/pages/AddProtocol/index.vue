@@ -157,17 +157,42 @@
                   {{ partition.number }}.{{ task.number }}.
                   <q-popup-edit
                     v-model="task.number"
-                    auto-save
                     v-slot="scope"
                     @before-hide="changeSortTask"
                   >
-                    <q-input v-model="scope.value" type="number" dense autofocus counter @keyup.enter="scope.set" />
+                    <q-input v-model="scope.value" type="number" dense autofocus @keyup.enter="scope.set">
+                      <template v-slot:after>
+                        <q-btn
+                          flat dense color="negative" icon="cancel"
+                          @click.stop.prevent="scope.cancel"
+                        />
+
+                        <q-btn
+                          flat dense color="positive" icon="save"
+                          @click.stop.prevent="scope.set"
+                          :disable="scope.validate(scope.value) === false || scope.initialValue === scope.value"
+                        />
+                      </template>
+                    </q-input>
                   </q-popup-edit>
                 </div>
                 <div class="text-no-wrap">
                   {{ task.executor }}
-                  <q-popup-edit v-model="task.executor" auto-save v-slot="scope">
-                    <q-input v-model="scope.value" dense autofocus counter autogrow @keyup.enter="scope.set" />
+                  <q-popup-edit v-model="task.executor" v-slot="scope">
+                    <q-input v-model="scope.value" dense autofocus autogrow @keyup.enter="scope.set">
+                      <template v-slot:after>
+                        <q-btn
+                          flat dense color="negative" icon="cancel"
+                          @click.stop.prevent="scope.cancel"
+                        />
+
+                        <q-btn
+                          flat dense color="positive" icon="save"
+                          @click.stop.prevent="scope.set"
+                          :disable="scope.validate(scope.value) === false || scope.initialValue === scope.value"
+                        />
+                      </template>
+                    </q-input>
                   </q-popup-edit>
                 </div>
                 <div>
@@ -187,11 +212,22 @@
                 </div>
                 <div class="" style="flex-grow: 1;">
                   <ShowTaskText :text="task.text" />
-                  <q-popup-edit v-model="task.text" auto-save v-slot="scope">
+                  <q-popup-edit
+                    v-model="task.text"
+                    v-slot="scope">
 
-                    <q-input v-model="scope.value" dense autofocus counter autogrow>
+                    <q-input v-model="scope.value" dense autofocus autogrow>
                       <template v-slot:after>
-                        <q-btn round dense color="primary" flat icon="save" @click="scope.set" />
+                        <q-btn
+                          flat dense color="negative" icon="cancel"
+                          @click.stop.prevent="scope.cancel"
+                        />
+
+                        <q-btn
+                          flat dense color="positive" icon="save"
+                          @click.stop.prevent="scope.set"
+                          :disable="scope.validate(scope.value) === false || scope.initialValue === scope.value"
+                        />
                       </template>
                     </q-input>
                   </q-popup-edit>

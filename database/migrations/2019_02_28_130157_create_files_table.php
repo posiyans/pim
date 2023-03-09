@@ -15,6 +15,7 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
+            $table->string('uid')->unique();
             $table->foreignId('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('commentable_id')->nullable();
