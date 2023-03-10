@@ -8,3 +8,11 @@ export function getTaskHistory(params) {
     params
   })
 }
+
+export function getProtocolHistory(params) {
+  return request({
+    url: '/api/log/protocol/get',
+    method: 'get',
+    params
+  })
+}

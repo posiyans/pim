@@ -14,7 +14,7 @@
 
       <div class="card-body">
         <div>
-          <div class="row items-center q-col-gutter-sm" @click="$router.push('/protocol/show/' + task.protokol.id)">
+          <div class="row items-center q-col-gutter-sm cursor-pointer hover-opacity-80" @click="$router.push('/protocol/show/' + task.protokol.id)">
             <div class="text-weight-bold">
               Протокол:
             </div>
@@ -71,9 +71,8 @@
           <div v-for="item in task.executors" :key="item.id">
             <q-btn
               :color="item.done ? 'secondary' : 'negative'"
-              @click="changeStatus(item)"
               :disable="!accessFilter(item.user)"
-              :loading="item.loading"
+              @click="changeStatus(item)"
             >
               <q-icon v-if="item.done" name="task_alt" class="q-pr-sm" />
               {{ item.user.name }}
@@ -153,8 +152,6 @@ export default {
       showdeleted: false,
       time: '',
       task: null,
-      test: 3,
-      files: '',
       listLoading: false,
       listQuery: {
         showdeleted: false,
@@ -166,12 +163,18 @@ export default {
     user() {
       return this.$store.state.user.info
     },
+    userId() {
+      return this.user.id
+    },
     roles() {
       return this.user.roles
     }
   },
   mounted() {
     this.getTask()
+    setTimeout(() => {
+      setReportAsRead({ id: this.$route.params.id })
+    }, 2000)
   },
   unmounted() {
     if (this.timer) {
@@ -207,9 +210,6 @@ export default {
       }
     },
     getTask() {
-      setTimeout(() => {
-        setReportAsRead({ id: this.$route.params.id })
-      }, 2000)
       this.listLoading = true
       this.listQuery.id = this.$route.params.id
       fetchTask(this.listQuery)

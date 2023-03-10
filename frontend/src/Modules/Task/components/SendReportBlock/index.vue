@@ -9,7 +9,7 @@
       >
     </div>
     <div class="text-grey-8 q-pb-sm" style="min-width: 20px;">
-      <q-btn v-if="!noFile" flat icon="attach_file" @click.stop="attacheFile" />
+      <q-btn flat icon="attach_file" @click.stop="attacheFile" />
     </div>
     <div class="col-grow">
       <q-input

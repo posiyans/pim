@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getTaskHistory } from 'src/Modules/Log/api/logApi'
+import { getProtocolHistory } from 'src/Modules/Log/api/logApi'
 import ShowLogList from 'src/Modules/Log/components/ShowLogList/index.vue'
 
 export default {
@@ -11,7 +11,7 @@ export default {
     ShowLogList
   },
   props: {
-    taskId: {
+    id: {
       type: [String, Number],
       required: true
     }
@@ -27,9 +27,9 @@ export default {
   methods: {
     getData() {
       const data = {
-        id: this.taskId
+        id: this.id
       }
-      getTaskHistory(data)
+      getProtocolHistory(data)
         .then(res => {
           this.list = res.data
         })

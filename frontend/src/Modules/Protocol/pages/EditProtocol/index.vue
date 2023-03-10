@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="row items-center q-col-gutter-sm q-pb-xs">
-      <DownloadProtocolBtn :id="$route.params.id" />
       <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
       <div v-if="noSave">
         <q-btn label="Отмена" color="negative" flat @click="getProtokolInfo" />
@@ -95,9 +94,7 @@
             <div>
               Файлы:
             </div>
-            <div>
-              <q-btn icon="add" flat color="primary" />
-            </div>
+            <UploadFileBtn type="protocol" :id="protokol.id" @reload="getProtokolInfo" />
           </div>
           <FileBlock v-for="(f, index) in protokol.files" :file="f" :key="f.id" edit :index="++index" @reload="getProtokolInfo" />
         </div>
@@ -151,21 +148,21 @@
 import { fetchProtokol, updateProtokol, uploadPartitionFile } from 'src/Modules/Protocol/api/protocol.js'
 import QSelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
-import DownloadProtocolBtn from 'src/Modules/Protocol/components/DownloadProtocolBtn/index.vue'
 import ShowTypeProtocol from 'src/Modules/Protocol/components/ShowTypeProtocol/index.vue'
 import { nextTick } from 'vue'
 import DropDownBlock from 'components/DropDownBlock/index.vue'
 import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
+import UploadFileBtn from 'src/Modules/Files/components/UploadFileBtn/index.vue'
 
 export default {
   components: {
+    UploadFileBtn,
     FileBlock,
     DropDownBlock,
     QSelectTypeProtocol,
     ShowTypeProtocol,
     MoveProtocolToArchiveBtn,
-    DownloadProtocolBtn,
     ShowTaskList
   },
   data() {

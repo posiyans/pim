@@ -34,6 +34,11 @@
       Файлы:
       <FileBlock v-for="(f, index) in protokol.files" :file="f" :key="f.id" :index="++index" />
     </div>
+    <DropDownBlock hide-label="История" show-label="История">
+      <div class="q-pa-sm">
+        <ShowProtocolHistory :id="protokol.id" />
+      </div>
+    </DropDownBlock>
     <div class="q-pt-md">
       <div v-for="partition in protokol.partition" :key="partition.id" style="padding-bottom: 20px">
         <p><b>{{ partition.number }}. {{ partition.text }}</b>
@@ -56,10 +61,14 @@ import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtoc
 // import ShowTime from 'src/components/ShowTime/index.vue'
 import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
+import DropDownBlock from 'components/DropDownBlock/index.vue'
+import ShowProtocolHistory from 'src/Modules/Log/components/ShowProtocolHistory/index.vue'
 
 export default {
   components: {
     FileBlock,
+    ShowProtocolHistory,
+    DropDownBlock,
     MoveProtocolToArchiveBtn,
     // ShowTime,
     ShowTaskList

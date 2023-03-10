@@ -63,10 +63,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
 
     Route::Get('/file/download', [DownloadFileController::class, 'index']);
+    Route::Post('/file/upload', [\App\Modules\File\Controlles\UploadFileController::class, 'index']);
     Route::Get('/file/delete', [\App\Modules\File\Controlles\DeleteFileController::class, 'index']);
 
 
     Route::Get('/log/task/get', [\App\Modules\Log\Controllers\GetTaskLogController::class, 'index']);
+    Route::Get('/log/protocol/get', [\App\Modules\Log\Controllers\GetProtocolLogController::class, 'index']);
 
 
 //    Route::match(['get', 'options', 'post'], '/login/logout', [\App\Http\Controllers\Auth\ApiAuthController::class, 'logout']);

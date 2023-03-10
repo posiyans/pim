@@ -44,7 +44,7 @@ class CreateProtocolController extends MyController
                 ];
                 $protokol->descriptions = $description;
                 $protokol->save();
-                (new CreateInfoLog($protokol))->text('Создание протокола')->run();
+                (new CreateInfoLog($protokol))->text('Создал протокол')->run();
                 $fileInput = $request->file('file');
                 if ($fileInput) {
                     $md5 = md5_file($fileInput->getRealPath());
@@ -55,6 +55,8 @@ class CreateProtocolController extends MyController
                     $protokol->files()->save($file);
                     $path = FileRepository::getPathFromHash($md5, true);
                     Storage::putFileAs($path, $fileInput, $md5);
+                    $text = 'Добавил файл ' . $file->name;
+                    (new CreateInfoLog($protokol))->text($text)->run();
                 }
 
                 foreach ($protokol_json->partition as $partition_json) {
@@ -63,7 +65,7 @@ class CreateProtocolController extends MyController
                     $partition->number = $partition_json->number;
                     $partition->speaker = $partition_json->speaker;
                     $protokol->partition()->save($partition);
-                    (new CreateInfoLog($partition))->text('Создание доклада')->run();
+                    (new CreateInfoLog($partition))->text('Создал доклад')->run();
                     foreach ($partition_json->tasks as $task_json) {
                         $task = new Task();
                         $task->data_ispoln = $task_json->data_ispoln ?? null;
@@ -73,7 +75,7 @@ class CreateProtocolController extends MyController
                         $task->executor = $task_json->executor;
                         $task->protocol_id = $protokol->id;
                         $partition->tasks()->save($task);
-                        (new CreateInfoLog($task))->text('Создание задачи')->run();
+                        (new CreateInfoLog($task))->text('Создал задачу')->run();
                         if (count($task_json->users) == 0) {
                             throw new \Exception('Не выбран исполнитель');
                         } else {

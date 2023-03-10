@@ -19,8 +19,8 @@ class GetProtocolController extends MyController
     {
 //        return File::trashed()->get();
         $id = $request->id;
-        $protokol = Protocol::with('partition.task.viewReport')->find($id);
-        $protokol->files;
+        $protokol = Protocol::with('partition.task.viewReport')->with('files')->find($id);
+//        $protokol->files;
         return response($protokol);
     }
 

@@ -18,3 +18,16 @@ export function deleteFile(params) {
   })
 }
 
+
+export function uploadFile(formData) {
+  return request.post(
+    '/api/file/upload',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+}
+
+

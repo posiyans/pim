@@ -1,6 +1,5 @@
 <?php
 
-use App\Modules\File\Controlles\CovertFileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,20 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::Get('/test', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
-//
-//Route::get('/', function () {
-//    return '/';
-//});
-
-//Route::get('/', 'HomeMyController@index');
-
-Route::match(['get'], '/user/avatar/{id?}', [\App\Http\Controllers\Ppsd\UserController::class, 'userAvatar']);
 
 
 //Auth::routes();
 
-//Route::get('/home', 'HomeMyController@index')->name('home');
-//Route::get('/migrate', 'PpsdMigrateMyController@migrate');
-Route::Get('/convert/file', [CovertFileController::class, 'index']);
 

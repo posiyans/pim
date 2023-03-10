@@ -19,8 +19,7 @@
           @click="deleteMessage"
         />
       </div>
-      <div class="q-pa-sm">
-        {{ item.text }}
+      <div class="q-pa-sm" v-html="showText">
       </div>
       <div v-if="item.file.length > 0">
         Вложение:
@@ -55,6 +54,9 @@ export default {
     }
   },
   computed: {
+    showText() {
+      return this.item.text.replace(/\n/g, "<br />");
+    },
     user() {
       return this.$store.state.user.info
     },

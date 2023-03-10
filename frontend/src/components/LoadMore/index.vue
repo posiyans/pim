@@ -119,6 +119,7 @@ export default defineComponent({
           this.showCount = this.listQuery.page * this.listQuery.limit
           this.$emit('setList', this.list)
           this.$emit('setOffset', this.offset)
+          this.$emit('setTotal', this.total)
         })
         .finally(() => {
           this.loading = false

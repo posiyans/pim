@@ -4,6 +4,7 @@ namespace App\Modules\File\Controlles;
 
 use App\Http\Controllers\MyController;
 use App\Modules\File\Models\File;
+use App\Modules\Log\Classes\CreateInfoLog;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -24,7 +25,9 @@ class DeleteFileController extends MyController
             if (!$this->checkAccess($file)) {
                 return response('', 405);
             }
+            $model = $file->commentable;
             $file->delete();
+            (new CreateInfoLog($model))->text('Удалил файл ' . $file->name)->run();
             return response(true);
         }
         return response('', 404);

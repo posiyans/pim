@@ -25,7 +25,7 @@ class Migration extends Command
      *
      * @var string
      */
-    protected $signature = 'convert:bd';
+    protected $signature = 'convert:db';
 
     /**
      * The console command description.
@@ -33,6 +33,9 @@ class Migration extends Command
      * @var string
      */
     protected $description = 'Конвертировать базу';
+
+    protected $noFoundProtokcol = null;
+    protected $noFoundPart = null;
 
     /**
      * Execute the console command.
@@ -60,7 +63,7 @@ class Migration extends Command
                 $file->size = Storage::size($path);
                 $file->save();
             } else {
-                $file->delete();
+//                $file->delete();
             }
         }
     }
@@ -94,7 +97,7 @@ class Migration extends Command
                 $r->user_id = $item->user;
                 $r->executor = 1;
                 $r->done = $item->potvergdenie;
-                $r->show = $item->show > $countReport[$task->id] ? $countReport[$task->id] : $item->show;
+                $r->show = $item->show;
                 $r->created_at = $item->time;
                 try {
                     $r->save();
@@ -111,7 +114,7 @@ class Migration extends Command
                 $r->task_id = $item->zadach;
                 $r->user_id = $item->user;
                 $r->executor = 0;
-                $r->show = $item->show > $countReport[$task->id] ? $countReport[$task->id] : $item->show;
+                $r->show = $item->show;
                 try {
                     $r->save();
                 } catch (\Exception $e) {
@@ -128,28 +131,31 @@ class Migration extends Command
         $i = 0;
         foreach ($reportPpsd as $item) {
             if ($item->zadach != 145 and $item->zadach != 0) {
-                $task = new Report();
-                $task->id = $item->id;
-                $task->task_id = (int)$item->zadach;
-                $task->user_id = $item->avtor;
-                $task->text = $item->text;
-                $task->created_at = $item->time;
-                $task->updated_at = $item->time;
-                if ($item->del != null) {
-                    $task->deleted_at = date("Y-m-d H:i:s");
-                }
-                if ($item->avtor != 15) {
-                    $task->save();
-                    if ($item->file_md5) {
-                        $file = new File();
-                        $file->name = $item->file_name;
-                        $file->hash = $item->file_md5;
-                        $file->uid = Uuid::uuid4()->toString();
-                        $file->user_id = $item->avtor;
-                        $task->files()->save($file);
+                try {
+                    $task = new Report();
+                    $task->id = $item->id;
+                    $task->task_id = (int)$item->zadach;
+                    $task->user_id = $item->avtor;
+                    $task->text = $item->text;
+                    $task->created_at = $item->time;
+                    $task->updated_at = $item->time;
+                    if ($item->del != null) {
+                        $task->deleted_at = date("Y-m-d H:i:s");
                     }
+                    if ($item->avtor != 15) {
+                        $task->save();
+                        if ($item->file_md5) {
+                            $file = new File();
+                            $file->name = $item->file_name;
+                            $file->hash = $item->file_md5;
+                            $file->uid = Uuid::uuid4()->toString();
+                            $file->user_id = $item->avtor;
+                            $task->files()->save($file);
+                        }
+                    }
+                    $i++;
+                } catch (\Exception $e) {
                 }
-                $i++;
                 //dump($task);
             }
         }
@@ -166,66 +172,84 @@ class Migration extends Command
             $ur[trim($u->name)] = $u->id;
             $ur_i[$u->id] = $u->name;
         }
-        print_r($ur);
+//        print_r($ur);
         echo PHP_EOL;
         foreach (Protocol::all() as $item) {
             $pr[$item['number']] = $item['id'];
         }
+        $pr['01/05/2021/56'] = 204;
+        $pr['01/05/2021/5'] = 204;
+        $pr['01/05/21'] = 55;
+        $pr['01/05/2023-3-1'] = 292;
+        $pr['01/05/2020-3'] = 168;
         $taskPpsd = DB::connection('old_pim')->table('zadach')->get();
         $i = 0;
         foreach ($taskPpsd as $item) {
-            try {
-                $task = new Task();
-                $task->id = $item->id;
-                $partition = Partition::where('protocol_id', $pr[$item->protokol])->where('number', (int)$item->nomer)->first();
-                if ($partition) {
-                    $task->partition_id = $partition->id;
-                } else {
-                    echo 'task error!!!', $task->id;
-                    echo PHP_EOL;
-                    $task->partition_id = 1;
-                }
-                $task->number = $item->nomer;
-                if ($item->data_ispoln != '0000-00-00') {
-                    if ($item->data_ispoln == '2019-09-00') {
-                        $item->data_ispoln = '2019-09-01';
-                    }
-                    $task->data_ispoln = $item->data_ispoln;
-                }
-                $task->data_perenosa = $item->data_perenosa;
-                $task->text = $item->text;
-                $task->autor_id = $item->avtor;
-                $task->executor = $item->ispolnitel;
-                $task->protocol_id = $pr[$item->protokol];
-                $task->arxiv = $item->arxiv;
-                $task->save();
-                $i++;
-                $hist = explode('<br>', $item->hist);
-                foreach ($hist as $h) {
-                    $tmp = explode('</i> ', $h);
-                    if (count($tmp) > 1) {
-                        $log = new Log();
-                        $log->type = 'info';
-                        $log->action = 'edit';
-                        $t_create = str_replace('<i>', '', $tmp[0]);
-                        $r = explode(' ', $tmp[1]);
-                        $log->user_id = $ur[trim($r[0])] ?? null;
-                        $text = explode('br>', $tmp[1]);
-                        $text = $text[0];
-                        $text = str_replace('</', '', $text);
-                        $text = str_replace($ur_i[$log->user_id] ?? '', '', $text);
-                        $log->value = ['text' => $text];
-                        $task->log()->save($log);
-                        $log->created_at = $t_create;
-                        $log->save();
-                    }
-                }
-            } catch (\Exception $e) {
-                echo $item->id . ' задача пропущена';
-                echo PHP_EOL;
-                echo $e->getMessage();
+//            try {
+            $task = new Task();
+            $task->id = $item->id;
+            $pr_id = $pr[$item->protokol] ?? $this->noFoundProtokcol;
+            if (!isset($pr[$item->protokol])) {
+                echo 'no protokol!!!', $item->protokol;
                 echo PHP_EOL;
             }
+            $nu_t = (int)$item->nomer;
+            if ($pr_id == 226) {
+                $nu_t = $nu_t - 1;
+            }
+            $partition = Partition::where('protocol_id', $pr_id)->where('number', $nu_t)->first();
+            if ($partition) {
+                $task->partition_id = $partition->id;
+            } else {
+                echo 'task error!!!', $task->id;
+                echo PHP_EOL;
+                echo $pr_id;
+                echo PHP_EOL;
+                $partition = Partition::where('protocol_id', $pr_id)->first();
+//                $task->partition_id = $this->noFoundPart;
+                $task->partition_id = $partition->id;
+            }
+            $task->number = $item->nomer;
+            if ($item->data_ispoln != '0000-00-00') {
+                if ($item->data_ispoln == '2019-09-00') {
+                    $item->data_ispoln = '2019-09-01';
+                }
+                $task->data_ispoln = $item->data_ispoln;
+            }
+            $task->data_perenosa = $item->data_perenosa;
+            $task->text = $item->text;
+            $task->autor_id = $item->avtor;
+            $task->executor = $item->ispolnitel;
+            $task->protocol_id = $pr_id;
+            $task->arxiv = $item->arxiv;
+            $task->save();
+            $i++;
+            $hist = explode('<br>', $item->hist);
+            foreach ($hist as $h) {
+                $tmp = explode('</i> ', $h);
+                if (count($tmp) > 1) {
+                    $log = new Log();
+                    $log->type = 'info';
+                    $log->action = 'edit';
+                    $t_create = str_replace('<i>', '', $tmp[0]);
+                    $r = explode(' ', $tmp[1]);
+                    $log->user_id = $ur[trim($r[0])] ?? null;
+                    $text = explode('br>', $tmp[1]);
+                    $text = $text[0];
+                    $text = str_replace('</', '', $text);
+                    $text = str_replace($ur_i[$log->user_id] ?? '', '', $text);
+                    $log->value = ['text' => $text];
+                    $task->log()->save($log);
+                    $log->created_at = $t_create;
+                    $log->save();
+                }
+            }
+//            } catch (\Exception $e) {
+//                echo $item->id . ' задача пропущена';
+//                echo PHP_EOL;
+//                echo $e->getMessage();
+//                echo PHP_EOL;
+//            }
             //dump($task);
         }
         dump('Task count:' . $i);
@@ -241,25 +265,33 @@ class Migration extends Command
 //            }
             $pr[$item['number']] = $item['id'];
         }
-
+        $pr['01/05/2021/56'] = 204;
+        $pr['01/05/2021/5'] = 204;
+        $pr['01/05/2021-5'] = 204;
+        $pr['01/05/21'] = 55;
+        $pr['01/05/2023-3-1'] = 292;
+        $pr['01/05/2020-3'] = 168;
         $i = 0;
         $partitionsPpsd = DB::connection('old_pim')->table('toping')->get();
         foreach ($partitionsPpsd as $item) {
-            $part = new Partition();
-            $part->protocol_id = $pr[$item->protokol];
-            $part->number = $item->nomer;
-            $part->text = $item->tema;
-            $part->speaker = $item->kto;
-            $part->save();
-            if ($item->file_md5) {
-                $file = new File();
-                $file->name = $item->file_name;
-                $file->hash = $item->file_md5;
-                $file->uid = Uuid::uuid4()->toString();
-                $file->user_id = 5;
-                $part->files()->save($file);
+            try {
+                $part = new Partition();
+                $part->protocol_id = $pr[$item->protokol] ?? $this->noFoundProtokcol;
+                $part->number = $item->nomer;
+                $part->text = $item->tema;
+                $part->speaker = $item->kto;
+                $part->save();
+                if ($item->file_md5) {
+                    $file = new File();
+                    $file->name = $item->file_name;
+                    $file->hash = $item->file_md5;
+                    $file->uid = Uuid::uuid4()->toString();
+                    $file->user_id = 5;
+                    $part->files()->save($file);
+                }
+                $i++;
+            } catch (\Exception $e) {
             }
-            $i++;
         }
         dump('Partition count: ' . $i);
     }
@@ -298,6 +330,31 @@ class Migration extends Command
             }
         }
         dump('Protocol Ok');
+//        $this->creteTaskNoFoundProtokol();
+    }
+
+
+    private function creteTaskNoFoundProtokol()
+    {
+        $protokol = new Protocol();
+        $protokol->number = '00/00/00';
+        $protokol->title = 'Потерянные задачи';
+        $descriptions['region'] = '';
+        $descriptions['president'] = '';
+        $descriptions['secretary'] = '';
+        $descriptions['date'] = '';
+        $descriptions['composition'] = '';
+        $protokol->descriptions = $descriptions;
+        $protokol->save();
+        $this->noFoundProtokcol = $protokol->id;
+
+        $part = new Partition();
+        $part->protocol_id = $this->noFoundProtokcol;
+        $part->number = 1;
+        $part->text = 'Потерянные задачи';
+        $part->speaker = '';
+        $part->save();
+        $this->noFoundPart = $part->id;
     }
 
 

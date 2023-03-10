@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="Протокол" min-width="200px">
         <template #default="scope">
-          <span class="link-type" @click="getProtokolInfo(scope.row)">{{ scope.row.title }}</span>
+          <span class="link-type cursor-pointer" @click="getProtokolInfo(scope.row)">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Дата" align="center" min-width="200px">

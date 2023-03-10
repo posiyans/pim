@@ -42,16 +42,16 @@ const linksList = [
     roles: ['user']
   },
   {
-    title: 'Календарь',
-    icon: 'chat',
-    link: '/calendar/show',
-    roles: ['user']
-  },
-  {
     title: 'Протоколы',
     icon: 'record_voice_over',
     link: '/protocol/list',
     roles: ['admin']
+  },
+  {
+    title: 'Календарь',
+    icon: 'chat',
+    link: '/calendar/show',
+    roles: ['user']
   },
   {
     title: 'Пользователи',

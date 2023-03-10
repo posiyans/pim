@@ -2,6 +2,7 @@
   <q-item
     clickable
     :to="item.link"
+    @click="clickLink"
   >
     <q-item-section
       v-if="item.icon"
@@ -22,6 +23,13 @@ export default {
     item: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    clickLink() {
+      if (this.$q.platform.is.mobile) {
+        this.$store.commit('header/toggleLeftDrawer')
+      }
     }
   }
 }

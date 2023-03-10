@@ -1,20 +1,8 @@
 <template>
   <div>
-    <div class="row items-center q-col-gutter-sm q-pb-xs">
-      <div style="width: 200px;">
-        <q-input v-model="listQuery.title" label="Найти..." dense clearable outlined @update:model-value="handleFilter" />
-      </div>
-      <div style="width: 200px;">
-        <QSelectExecutor v-model="listQuery.executor" clearable outlined dense @update:model-value="handleFilter" />
-      </div>
-      <div>
-        <q-btn color="primary" label="Найти" @click="handleFilter" />
-      </div>
-      <div>
-        <q-checkbox v-if="roles.includes('admin')" v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
-      </div>
+    <div class="text-primary text-weight-bold q-pa-sm">
+      Задачи на сегодня
     </div>
-
     <el-table
       :data="list"
       border
@@ -85,7 +73,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <LoadMore :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" />
+    <div class="q-px-sm text-grey-8">
+      Всего {{ total }}
+    </div>
+    <LoadMore v-show="total > listQuery.limit" :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" @setTotal="setTotal" />
 
   </div>
 </template>
@@ -93,20 +84,21 @@
 <script>
 import { fetchList } from 'src/Modules/Task/api/task.js'
 import LoadMore from 'src/components/LoadMore/index.vue'
-import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import NoReadReport from 'src/Modules/Task/pages/TasksList/components/NoReadReport/index.vue'
 import ShowTime from 'components/ShowTime/index.vue'
 
 export default {
-  components: { LoadMore, QSelectExecutor, NoReadReport, ShowTime },
+  components: { LoadMore, NoReadReport, ShowTime },
   data() {
     return {
       key: 1,
       func: fetchList,
       list: [],
+      total: 0,
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 100,
+        today: true,
         archiv: false,
         title: '',
         type: undefined,
@@ -131,6 +123,9 @@ export default {
         return 'task-red-1'
       }
       return ''
+    },
+    setTotal(val) {
+      this.total = val
     },
     setList(val) {
       this.list = val

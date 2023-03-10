@@ -19,14 +19,14 @@ class File extends MyModel
         return $this->morphTo();
     }
 
-    /**
-     * File constructor.
-     */
-    public function __construct()
+
+    public function __construct(array $attributes = [])
     {
         if (Auth::check()) {
             $this->user_id = Auth::user()->id;
-            $this->uid = Uuid::uuid4()->toString();
         }
+        $this->uid = Uuid::uuid4()->toString();
+        return parent::__construct($attributes);
     }
+
 }
