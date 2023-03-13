@@ -69,7 +69,7 @@ class ParseDocxController extends MyController
                         $task = $this->parseTask($item);
                         if ($task || count($partition['task']) == 0) {
                             $task['number'] = $i++;
-                            $task['users'] = [1];
+                            $task['users'] = [];
                             $partition['tasks'][] = $task;
                         } else {
                             $last_key = count($partition['task']) - 1;

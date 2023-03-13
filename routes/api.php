@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\File\Controlles\DownloadFileController;
-use App\Modules\Sms\Contollers\GetSmsBalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,17 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/my-user', function (Request $request) {
-    return $request->user();
-});
-
-
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-Route::Post('/auth/login', [\App\Http\Controllers\Auth\ApiAuthController::class, 'login']);
+Route::Post('/auth/login', [\App\Http\Controllers\Auth\LoginController::class, 'index']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::Get('/my-user', function (Request $request) {
+        return $request->user();
+    });
     Route::Get('/auth/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'index']);
     Route::Get('/user/get-list', [\App\Modules\User\Controllers\GetUsersListController::class, 'index']);
     Route::Get('/user/get', [\App\Modules\User\Controllers\GetUserInfoController::class, 'index']);
@@ -34,6 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/user/avatar-get', [\App\Modules\User\Controllers\GetUserAvatarController::class, 'index']);
     Route::Post('/user/avatar-upload', [\App\Modules\User\Controllers\UploadUserAvatarController::class, 'index']);
     Route::Post('/user/password-change', [\App\Modules\User\Controllers\ChangeUserPasswordController::class, 'index']);
+    Route::Get('/user/get-executors', [\App\Modules\User\Controllers\GetUsersExecutorsController::class, 'index']);
 
 
     // Задачи для календаря
@@ -51,16 +46,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/task/report/get-no-read-count', [\App\Modules\Task\Controllers\GetNoReadReportForUserController::class, 'index']);
 
 
-    Route::match(['get', 'options', 'post'], '/user/list', [\App\Http\Controllers\Ppsd\UserController::class, 'getList']);
     Route::Get('/protocol/list', [\App\Modules\Protocol\Controllers\GetProtocolListController::class, 'index']);
     Route::Get('/protocol/get', [\App\Modules\Protocol\Controllers\GetProtocolController::class, 'index']);
     Route::Post('/protocol/move-to-archive', [\App\Modules\Protocol\Controllers\MoveProtocolToArchiveController::class, 'index']);
     Route::Post('/protocol/update', [\App\Modules\Protocol\Controllers\UpdateProtocolController::class, 'index']);
     Route::Post('/protocol/create', [\App\Modules\Protocol\Controllers\CreateProtocolController::class, 'index']);
     Route::Get('/protocol/get-file', [\App\Modules\Protocol\Controllers\GetProtocolFileController::class, 'index']);
-    Route::Post('/test', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
+    Route::Post('/protocol/parse-file', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
     Route::Post('/report/create', [\App\Modules\Task\Controllers\CreateReportController::class, 'index']);
-    Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
+//    Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
 
     Route::Get('/file/download', [DownloadFileController::class, 'index']);
     Route::Post('/file/upload', [\App\Modules\File\Controlles\UploadFileController::class, 'index']);
@@ -69,25 +63,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::Get('/log/task/get', [\App\Modules\Log\Controllers\GetTaskLogController::class, 'index']);
     Route::Get('/log/protocol/get', [\App\Modules\Log\Controllers\GetProtocolLogController::class, 'index']);
-
-
-//    Route::match(['get', 'options', 'post'], '/login/logout', [\App\Http\Controllers\Auth\ApiAuthController::class, 'logout']);
-////Route::match(['get', 'options', 'post'], '/user/info/{id?}', 'Ppsd\UserController@info');
-//    Route::match(['options', 'post', 'get'], '/user/avatar/{id?}', 'Ppsd\UserController@userAvatar');
-//    Route::match(['get', 'options'], '/protokol/export/{id}', 'Ppsd\ProtokolController@exportProtokol');
-//    Route::resource('user', 'Ppsd\UserController');
-//    Route::resource('protokol', 'Ppsd\ProtokolController');
-//    Route::resource('partition', 'Ppsd\PartitionController');
-//    Route::resource('report', 'Ppsd\ReportController');
-//    Route::resource('file', 'Ppsd\FileController');
-//    Route::resource('calendar', 'Ppsd\CalendarController');
-//
-//    Route::match(['get', 'options'], '/task/statistic', 'Ppsd\TaskController@getTasksStatistic');
-//    Route::match(['get', 'options', 'post'], '/task/info/{id?}', 'Ppsd\TaskController@getTaskInfo');
-//    Route::resource('task', 'Ppsd\TaskController');
-//
-
-
-//Route::match(['get', 'options', 'post'], '/protokol/list', 'Ppsd\ProtokolController@getProtokols');
-//Route::match(['get', 'options', 'post'], '/protokol/source', 'Ppsd\ProtokolController@getProtokolSource');
 });

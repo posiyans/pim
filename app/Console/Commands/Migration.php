@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\File\Repositories\FileRepository;
 use App\Modules\Log\Models\Log;
@@ -11,6 +10,7 @@ use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Report;
 use App\Modules\Task\Models\Task;
+use App\Modules\Task\Models\ViewReport;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;

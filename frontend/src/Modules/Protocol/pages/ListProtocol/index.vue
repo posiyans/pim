@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="row items-center q-col-gutter-sm q-pb-xs">
       <div style="width: 220px;">
-        <QSelectTypeProtocol v-model="listQuery.type" outlined dense />
+        <QSelectTypeProtocol v-model="listQuery.type" outlined dense clearable @update:model-value="handleFilter" />
       </div>
       <div>
         <q-input

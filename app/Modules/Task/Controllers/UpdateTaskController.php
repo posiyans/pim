@@ -3,9 +3,9 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\ViewReport;
 use App\Modules\Log\Models\Log;
 use App\Modules\Task\Models\Task;
+use App\Modules\Task\Models\ViewReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

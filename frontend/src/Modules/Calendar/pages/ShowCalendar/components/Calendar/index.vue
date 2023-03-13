@@ -18,7 +18,7 @@
           <div
             v-for="item in getEventsGroup(timestamp.date)"
             :key="item.id"
-            class="text-black"
+            class="text-black cursor-pointer"
             :class="item.execution < 100 ? 'bg-red-3' : 'bg-teal-3'"
             style="margin-bottom: 1px;"
             @click="showTask(item)"
@@ -52,7 +52,7 @@
 import { QCalendarDay, QCalendarMonth } from '@quasar/quasar-ui-qcalendar/src/index'
 import { defineComponent, onMounted, ref } from 'vue'
 import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
-import ShowTime from '/src/components/ShowTime/index.vue'
+import ShowTime from 'src/components/ShowTime/index.vue'
 import ShowTaskInfo from 'src/Modules/Task/components/ShowTaskInfo/index.vue'
 
 const moment = require('moment')

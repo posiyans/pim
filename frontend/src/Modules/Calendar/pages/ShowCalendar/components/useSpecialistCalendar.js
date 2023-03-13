@@ -15,11 +15,12 @@ moment.locale('ru')
 const storageKey = 'SpecialistCalendarStorageKey'
 const timer = ref(null)
 
+const now = new Date()
 const calendar = reactive({
   key: 1,
   refCalendar: null,
-  start: null,
-  end: null,
+  start: date.formatDate(date.addToDate(now, { months: -1 }), 'YYYY-MM-DD'),
+  end: date.formatDate(date.addToDate(now, { months: 1 }), 'YYYY-MM-DD'),
   loading: false,
   selectedDate: today(),
   view: 'month',
@@ -72,4 +73,4 @@ const getData = () => {
     })
 }
 
-export { calendar, storageKey }
+export { calendar, storageKey, getData }

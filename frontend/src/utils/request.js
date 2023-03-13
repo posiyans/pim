@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { SessionStorage } from 'quasar'
+
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.API, // url = base url + request url
@@ -20,4 +21,19 @@ service.interceptors.request.use(
   }
 )
 
+service.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    if (error.response.status === 401) {
+      SessionStorage.remove('UserToken')
+      if (window.location.pathname !== '/auth/login') {
+        window.location = '/auth/login'
+      }
+    }
+    return Promise.reject(error)
+    // return error
+  }
+)
 export default service

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Task\Models;
 
 use App\MyModel;
 
 class ViewReport extends MyModel
 {
     //
-    protected $table = 'viev_reports';
+    protected $table = 'view_reports';
 
     public function user()
     {

@@ -2,50 +2,42 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Controllers\MyController;
+use App\Modules\Log\Models\Log;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class LoginController extends MyController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
+    //
     public function username()
     {
         return 'login';
     }
 
+    public function index(Request $request)
+    {
+        $name = trim($request->username);
+        $password = $request->password;
+        // нет смс проверям логин и пароль
+        $credentials = ['login' => $name, 'password' => $password];
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $log = new Log();
+            $log->description = 'login by login, password';
+            $log->type = 'ok';
+            $user->log()->save($log);
+            $user->last_connect = date('Y-m-d H:i:s');
+            $user->save();
+            $token = $user->createToken('primary');
+            return response(['token' => $token->plainTextToken, 'user' => $user]);
+        }
+        $log = new Log();
+        $log->description = 'bad login or password';
+        $log->value = $credentials;
+        $log->type = 'alert';
+        $log->save();
+        return response(['error' => 'Не верный логин или пароль'], 401);
+    }
 
 }

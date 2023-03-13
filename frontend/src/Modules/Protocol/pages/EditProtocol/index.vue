@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { fetchProtokol, updateProtokol, uploadPartitionFile } from 'src/Modules/Protocol/api/protocol.js'
+import { fetchProtokol, updateProtokol } from 'src/Modules/Protocol/api/protocol.js'
 import QSelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
 import ShowTypeProtocol from 'src/Modules/Protocol/components/ShowTypeProtocol/index.vue'
@@ -267,29 +267,6 @@ export default {
       this.showFormUpload = true
       this.fileUploadTo = partition.id
       console.log(partition.id)
-    },
-    UploadFile() {
-      if (this.fileUploadTo) {
-        console.log('file')
-        if (this.$refs.file.files[0].name) {
-          const formData = new FormData()
-          formData.append('file', this.$refs.file.files[0])
-          formData.append('partition', this.fileUploadTo)
-          formData.append('type', 'uploadPartitionFile')
-          uploadPartitionFile(this.fileUploadTo, formData).then(response => {
-            this.showFormUpload = false
-            this.$message({
-              message: 'Ok',
-              type: 'success',
-              showClose: true,
-              duration: 3000
-            })
-            this.getProtokolInfo()
-          })
-          this.$refs.file.value = ''
-        }
-        this.fileUploadTo = false
-      }
     },
     selectFile(event) {
       this.$message({

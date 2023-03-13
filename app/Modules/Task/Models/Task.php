@@ -2,7 +2,6 @@
 
 namespace App\Modules\Task\Models;
 
-use App\Models\ViewReport;
 use App\MyModel;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +48,7 @@ class Task extends MyModel
      */
     public function viewReport()
     {
-        return $this->hasMany('App\Models\ViewReport', 'task_id', 'id');
+        return $this->hasMany('App\Modules\Task\Models\ViewReport', 'task_id', 'id');
     }
 
     /**

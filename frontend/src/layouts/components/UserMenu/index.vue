@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { SessionStorage } from 'quasar'
+
 export default {
   computed: {
     name() {
@@ -28,6 +30,7 @@ export default {
     logout() {
       this.$store.dispatch('user/userLogout')
         .then(() => {
+          SessionStorage.clear();
           this.$router.push('/auth/login')
         })
     }

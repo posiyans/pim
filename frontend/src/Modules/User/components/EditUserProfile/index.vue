@@ -69,8 +69,8 @@ export default {
         name: '',
         phone: '',
         aliases: [],
-        login_by_sms: 0,
-        hide: 1
+        hide: true,
+        moderator: false
       }
     }
   },

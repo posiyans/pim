@@ -13,7 +13,7 @@ class CreateVievReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('viev_reports', function (Blueprint $table) {
+        Schema::create('view_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('tasks');
@@ -33,6 +33,6 @@ class CreateVievReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('viev_reports');
+        Schema::dropIfExists('view_reports');
     }
 }

@@ -40,6 +40,7 @@ export default {
       calendar.opt = SessionStorage.has(storageKey) ? SessionStorage.getItem(storageKey).opt : calendar.opt
       calendar.selectedDate = SessionStorage.has(storageKey) ? SessionStorage.getItem(storageKey).selectedDate : today()
       calendar.view = SessionStorage.has(storageKey) ? SessionStorage.getItem(storageKey).view : calendar.view
+      calendar.key++
     })
 
     return {

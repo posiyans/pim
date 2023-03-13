@@ -58,8 +58,7 @@ export function changeUserPassword(data) {
 
 export function fetchExecutors() {
   return request({
-    url: '/api/user/list',
-    method: 'get',
-    params: { field: { 'key': 'id', 'display_name': 'name' } }
+    url: '/api/user/get-executors',
+    method: 'get'
   })
 }

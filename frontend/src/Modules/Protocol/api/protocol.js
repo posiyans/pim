@@ -1,18 +1,8 @@
 import request from 'src/utils/request'
 
-
-export function test(params) {
-  return request({
-    url: '/api/test',
-    method: 'get',
-    params
-  })
-}
-
-
-export function uploadProtocol(formData) {
+export function parseProtocol(formData) {
   return request.post(
-    '/api/test',
+    '/api/protocol/parse-file',
     formData,
     {
       headers: {
@@ -37,15 +27,6 @@ export function fetchProtokol(params) {
   })
 }
 
-export function downloadProtocol(params) {
-  return request({
-    url: '/api/protocol/get-file',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
-
 export function publishProtokol(data) {
   return request.post(
     '/api/protocol/create',
@@ -55,14 +36,6 @@ export function publishProtokol(data) {
         'Content-Type': 'multipart/form-data'
       }
     })
-}
-
-export function fetchArticle(id) {
-  return request({
-    url: '/api/article/detail',
-    method: 'get',
-    params: { id }
-  })
 }
 
 export function protokolToArchiv(data) {
@@ -79,15 +52,4 @@ export function updateProtokol(data) {
     method: 'post',
     data
   })
-}
-
-export function uploadPartitionFile(id, formData) {
-  return request.post(
-    '/api/partition',
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
 }

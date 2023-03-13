@@ -3,13 +3,13 @@
 namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
-use App\Models\ViewReport;
 use App\Modules\File\Models\File;
 use App\Modules\File\Repositories\FileRepository;
 use App\Modules\Log\Classes\CreateInfoLog;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
+use App\Modules\Task\Models\ViewReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -89,7 +89,7 @@ class CreateProtocolController extends MyController
                     }
                 }
                 DB::commit();
-                return response([$protokol]);
+                return response($protokol);
             } catch (\Exception $e) {
                 DB::rollback();
                 $text = 'При сохранении произошла ошибка, проверте данные протокола. ' . $e->getMessage();

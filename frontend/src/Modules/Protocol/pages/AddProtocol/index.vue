@@ -12,14 +12,16 @@
         />
       </div>
 
-      <div class="form-group">
-        <label>Загрузить из файла</label>
-        <div class="input-group">
-          <div class="custom-file">
-            <input ref="file" type="file" name="file"
-                   @change="parseFile">
-          </div>
+      <div>
+        <div class="hidden">
+          <input
+            ref="file"
+            type="file"
+            class="hidden"
+            @change="parseFile"
+          >
         </div>
+        <q-btn outline color="primary" label="Загрузить из файла" @click="$refs.file.click()" />
       </div>
     </div>
     <div v-if="loading">
@@ -253,7 +255,7 @@
 <script>
 import SelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import SelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
-import { publishProtokol, uploadProtocol } from 'src/Modules/Protocol/api/protocol.js'
+import { parseProtocol, publishProtokol } from 'src/Modules/Protocol/api/protocol.js'
 import { date } from 'quasar'
 import ShowTime from 'components/ShowTime/index.vue'
 import ShowTaskText from './componets/ShowTaskText/index.vue'
@@ -282,16 +284,14 @@ export default {
       temp: {},
       oldProtokol: {},
       protokol: {
-        title: 'Протокол планового заседания',
+        title: 'Протокол',
         type: 'psd',
         number: '00/00/00',
-        descriptions: {
-          date: date.formatDate(new Date(), 'DD MMMM YYYY'),
-          region: 'Место проведения',
-          president: 'Председатель',
-          secretary: 'Секретарь',
-          composition: 'Присутствовали'
-        },
+        date: date.formatDate(new Date(), 'DD MMMM YYYY'),
+        region: 'Место проведения',
+        president: 'Председатель',
+        secretary: 'Секретарь',
+        composition: 'Присутствовали',
         partition: [
           {
             number: 1,
@@ -344,7 +344,6 @@ export default {
       this.changeSortTask()
     },
     changeSortTask() {
-      console.log('changesrot')
       this.protokol.partition = this.protokol.partition.sort((a, b) => {
         return a.number - b.number
       })
@@ -370,78 +369,6 @@ export default {
       })
       this.changeSortTask()
     },
-    getPartitions() {
-      const temp = this.text.split('\n')
-      let part_i = 0
-      const partitions = []
-      let tmp = null
-      let findNull = false
-      temp.forEach((p, index) => {
-        // console.log(p)
-        // console.log(index)
-        if (~p.toLowerCase().indexOf('докладчик')) {
-          tmp = {
-            number: ++part_i,
-            speaker: p.split(':')[1].trim(),
-            text: temp[index - 1],
-            task: []
-          }
-        } else if (tmp) {
-          const field = p.replace(/<\/?[^>]+>/g, '')
-          if (p.replace(/ /g, '').length > 0) {
-            if (field.toLowerCase().indexOf('поставленные задачи')) {
-              const task = this.parseTask(field)
-              const i = tmp.task.length + 1
-              task.number = i
-              tmp.task.push(task)
-            } else {
-              findNull = true
-            }
-          } else if (findNull) {
-            partitions.push(tmp)
-            tmp = null
-            findNull = false
-          }
-        }
-      })
-      if (tmp) {
-        partitions.push(tmp)
-      }
-      this.protokol.partition = Object.assign({}, this.protokol.partition, partitions)
-    },
-    parseTask(line) {
-      let title = ''
-      let date_ispoln = ''
-      let executor = ''
-      const temptask = line.replace(' - ', ' – ').split('–')
-      let successfull = false
-      if (temptask.length > 2 && temptask[1].length < 11) {
-        executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
-        const temp_d = temptask[1].replace(/<\/?[^>]+>/g, '').trim().split('.');
-        if (temp_d.length === 2) {
-          date_ispoln = temptask[1].replace(/<\/?[^>]+>/g, '').trim()
-          const nowMonth = date.formatDate(new Date(), 'M')
-          let year = date.formatDate(new Date(), 'YYYY')
-          if (nowMonth > +temp_d[1]) {
-            year++
-          }
-          date_ispoln = date.formatDate(new Date(year, temp_d[1] - 1, temp_d[0]), 'YYYY-MM-DD')
-        }
-        temptask.shift()
-        temptask.shift()
-        title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
-        successfull = true
-      }
-      if (!successfull) {
-        if (temptask[1] && temptask[1].length > 11) {
-          executor = temptask[0].replace(/<\/?[^>]+>/g, '').trim()
-          temptask.shift()
-          title = temptask.join('–').replace(/<\/?[^>]+>/g, '').trim()
-          date_ispoln = ''
-        }
-      }
-      return { text: title, executor: executor, data_ispoln: date_ispoln, users: [] }
-    },
     parseFile() {
       const file = this.$refs.file.files[0]
       if (file) {
@@ -449,44 +376,16 @@ export default {
         const formData = new FormData()
         formData.append('uid', 'this.uid')
         formData.append('file', file)
-        uploadProtocol(formData)
+        parseProtocol(formData)
           .then(res => {
             const type = this.protokol.type
             this.protokol = Object.assign({}, res.data)
             this.protokol.type = type
-            // this.text = res.data
-            // this.parserOk = true
-            // this.parseHeader()
-            // this.getPartitions()
-            // this.parserButton = true
           })
           .finally(() => {
             this.loading = false
           })
       }
-    },
-    parseHeader() {
-      const text = this.text.replace('Председатель Совета Директоров', '')
-      const line = text.split('\n')
-      line.forEach((item, index) => {
-        const field = item.replace(/<\/?[^>]+>/g, '')
-        if (field.length > 0) {
-          if (~field.toLowerCase().indexOf('протокол')) {
-            this.protokol.title = field.trim()
-            this.protokol.number = field.split('№')[1].trim()
-          } else if (~field.toLowerCase().indexOf('место')) {
-            this.protokol.descriptions.region = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('председатель')) {
-            this.protokol.descriptions.president = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('секретарь')) {
-            this.protokol.descriptions.secretary = field.split(':')[1].trim()
-          } else if (~field.toLowerCase().indexOf('присутствовали')) {
-            this.protokol.descriptions.composition = field.split(':')[1].trim()
-          } else if (index === 3) {
-            this.protokol.descriptions.date = field.trim()
-          }
-        }
-      })
     },
     publishProtokol() {
       const data = new FormData()
@@ -494,8 +393,7 @@ export default {
       data.append('protocol', JSON.stringify(this.protokol))
       publishProtokol(data)
         .then(response => {
-          const protokol = response.data[0]
-          this.$router.push('/protocol/show/' + protokol.id)
+          this.$router.push('/protocol/show/' + response.data.id)
         }, error => {
           this.$notify({
             title: 'Ошибка',
