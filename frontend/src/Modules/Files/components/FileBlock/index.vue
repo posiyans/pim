@@ -71,7 +71,16 @@ export default {
       }
       downloadFile(data)
         .then(response => {
-          const fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0]
+          let fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0]
+          try {
+            fileName = decodeURIComponent(response.headers['content-disposition'].split("filename*=utf-8''")[1].split(';')[0])
+            // fileName  =
+          } catch (e) {
+
+          }
+          // console.log(response.headers['content-disposition'])
+          console.log(fileName)
+          // console.log(decodeURIComponent(fileName))
           exportFile(fileName, response.data)
         })
         .catch(er => {
