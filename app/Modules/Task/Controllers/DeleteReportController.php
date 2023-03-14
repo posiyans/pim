@@ -3,6 +3,7 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
+use App\Modules\Log\Classes\CreateInfoLog;
 use App\Modules\Log\Models\Log;
 use App\Modules\Task\Models\Report;
 use Illuminate\Http\Request;
@@ -18,7 +19,6 @@ class DeleteReportController extends MyController
         $id = $request->id;
         $report = Report::find($id);
         if ($report) {
-//            if ($report->user_id == $user->id or $user->moderator) {
             if ($user->moderator) {
                 $access = true;
             }
@@ -29,15 +29,10 @@ class DeleteReportController extends MyController
                 $log->type = 'ok';
                 $report->log()->save($log);
                 $report->delete();
-                return response();
+                $log_text = 'Удалил отчет ' . $report->user->name . ' от ' . $report->created_at;
+                (new CreateInfoLog($report->task))->text($log_text)->run();
+                return response(true);
             }
-//            else {
-//                $log = new Log();
-//                $log->description = 'Access is denied';
-//                $log->value = $report;
-//                $log->type = 'alert';
-//                $report->log()->save($log);
-//            }
             return response('', 405);
         }
         return response('', 404);

@@ -201,7 +201,6 @@ export default {
   },
   methods: {
     changeSortTask() {
-      console.log('changesrot')
       this.protokol.partition = this.protokol.partition.sort((a, b) => {
         return a.number - b.number
       })
@@ -222,7 +221,6 @@ export default {
       // })
     },
     done(task) {
-      // console.log(task.view_report)
       const report = task.view_report
       let done = 0
       let not_performed = 0
@@ -263,10 +261,8 @@ export default {
         })
     },
     showUploadFileForm(partition) {
-      console.log('upload')
       this.showFormUpload = true
       this.fileUploadTo = partition.id
-      console.log(partition.id)
     },
     selectFile(event) {
       this.$message({
@@ -275,8 +271,6 @@ export default {
         showClose: true,
         duration: 1000
       })
-      // this.fileName = event.target.files[0].name
-      // this.newMessage.file = event.target.files[0]
     }
   }
 }

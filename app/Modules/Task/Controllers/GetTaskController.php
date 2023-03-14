@@ -5,14 +5,16 @@ namespace App\Modules\Task\Controllers;
 use App\Http\Controllers\MyController;
 use App\Modules\Task\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GetTaskController extends MyController
 {
 
     public function index(Request $request)
     {
-        $data = [];
+        $data = false;
         $id = $request->id;
+        $user = Auth::user();
         if ($id) {
             $id = (int)$id;
             $task = Task::find($id);
@@ -20,7 +22,7 @@ class GetTaskController extends MyController
             if (isset($task) and $task->isAccess()) {
                 $task->protokol;
                 $task->partition;
-                if ($request->showdeleted == 'true') {
+                if ($request->showdeleted == 'true' && $user->moderator) {
                     $task->allReportAndUser();
                 } else {
                     $task->reportAndUser();

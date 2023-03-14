@@ -13,6 +13,7 @@ export function loginUser({ commit }, data) {
           const user = data.user
           user.roles = ['user']
           if (user.moderator) {
+            data.roles.push('moderator')
             user.roles.push('admin')
           }
           commit('setInfo', user)
@@ -28,14 +29,13 @@ export function getInfo({ commit }) {
   return new Promise((resolve, reject) => {
     getMyInfo()
       .then(response => {
-        console.log(response)
         const { data } = response
         if (!data) {
           reject('Ошибка попробуйте позже')
         }
-        console.log(data)
         data.roles = ['user']
         if (data.moderator) {
+          data.roles.push('moderator')
           data.roles.push('admin')
         }
         commit('setInfo', data)

@@ -3,6 +3,7 @@
 namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
+use App\Modules\Log\Classes\CreateInfoLog;
 use App\Modules\Log\Models\Log;
 use App\Modules\Task\Models\Task;
 use App\Modules\Task\Models\ViewReport;
@@ -44,6 +45,7 @@ class UpdateTaskController extends MyController
                     $executor->executor = 1;
                     $task->viewReport()->save($executor);
                 }
+                (new CreateInfoLog($task))->text('Измененил задачу')->run();
             }
             Log::saveDiff($task, $task_old);
             return response(['user' => $user, 'task' => $task]);

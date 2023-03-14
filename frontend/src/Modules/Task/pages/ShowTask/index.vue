@@ -7,7 +7,7 @@
         </div>
         <q-space />
         <MoveTaskToArchiveBtn v-if="!task.arxiv" :task-id="task.id" @reload="getTask" />
-        <div v-if="!task.arxiv">
+        <div v-if="!task.arxiv && isModerator">
           <q-btn icon="edit" color="primary" flat :to="'/task/edit/' + task.id" />
         </div>
       </div>
@@ -87,12 +87,20 @@
         </div>
       </DropDownBlock>
       <q-card class="">
-        <q-card-section class="q-pb-none">
-          <div class="text-weight-bold">
+        <q-toolbar class="">
+          <q-toolbar-title>
             Отчет
-            <el-checkbox v-model="listQuery.showdeleted" class="filter-item" style="margin-left:15px;" @change="getTask">Показать удаленные</el-checkbox>
-          </div>
-        </q-card-section>
+          </q-toolbar-title>
+          <q-btn v-if="isModerator" flat round dense icon="more_vert">
+            <q-menu>
+              <q-list style="min-width: 100px">
+                <q-item clickable v-close-popup>
+                  <q-checkbox v-model="listQuery.showdeleted" @update:model-value="getTask">Показать удаленные</q-checkbox>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-toolbar>
         <q-card-section>
           <div>
             <div class="bg-blue-1 q-pa-md">
@@ -168,6 +176,9 @@ export default {
     },
     roles() {
       return this.user.roles
+    },
+    isModerator() {
+      return this.roles.includes('moderator')
     }
   },
   mounted() {

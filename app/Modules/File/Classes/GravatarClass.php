@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common\modules\Avatar\Classes;
+namespace App\Modules\File\Classes;
 
 use Exception;
 use Intervention\Image\Image;
@@ -110,7 +110,7 @@ class GravatarClass
 
     /**
      * Sets a new driver for the image generation and re-created the image manager
-     * @param  string  $driver
+     * @param string $driver
      * @return $this
      * @throws Exception
      */
@@ -145,7 +145,7 @@ class GravatarClass
 
     /**
      * Sets the height for the generated avatar
-     * @param  int  $height
+     * @param int $height
      * @return $this
      */
     public function height($height = 0)
@@ -156,7 +156,7 @@ class GravatarClass
 
     /**
      * Sets the width for the generated avatar
-     * @param  int  $width
+     * @param int $width
      * @return $this
      */
     public function width($width = 0)
@@ -167,8 +167,8 @@ class GravatarClass
 
     /**
      * Sets the dimensions for the avatar in case the default is not used
-     * @param  int  $width
-     * @param  int  $height
+     * @param int $width
+     * @param int $height
      * @return $this
      */
     public function dimensions($width = 0, $height = 0)
@@ -279,7 +279,7 @@ class GravatarClass
 
     /**
      * Creates a WEBP string from the image
-     * @param  int  $quality
+     * @param int $quality
      * @return Image
      */
     public function toWebp($quality = 100): Image
@@ -298,7 +298,7 @@ class GravatarClass
 
     /**
      * Creates a JPEG string from the image
-     * @param  int  $quality
+     * @param int $quality
      * @return Image
      */
     public function toJpeg($quality = 100): Image

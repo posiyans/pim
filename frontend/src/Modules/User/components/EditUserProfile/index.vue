@@ -17,9 +17,6 @@
       <q-input v-model="user.full_name" label="Полное имя" outlined />
     </div>
     <div>
-      <q-input v-model="user.phone" label="Телефон" outlined />
-    </div>
-    <div>
       <QSelectExecutor v-model="user.aliases" outlined multiple label="Доступ к " />
     </div>
     <div class="row items-center q-col-gutter-md q-pa-md">

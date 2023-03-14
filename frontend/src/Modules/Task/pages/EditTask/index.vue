@@ -1,53 +1,113 @@
 <template>
-  <div>
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">
-                  <i class="fa fa-tasks" />
-                  Задача:
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div>
-                  <div><b>Протокол:</b> {{ task.protokol.nomer }}</div>
-                  <div><b>От:</b> {{ task.protokol.descriptions.date }}</div>
-                  <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
-                  <divs><b>Тема:</b> {{ task.partition.text }}</divs>
-                </div>
-                <h6 v-if="task.arxiv" class="text-danger" v-html="task.arxiv" />
-                <div class="q-mb-md">
-                  <q-input v-model="task.number" outlined label="№" />
-                </div>
-                <div class="q-mb-md">
-                  <div class="q-pa-sm text-weight-bolder">Задача:</div>
-                  <q-editor v-model="task.text" min-height="5rem" label="dsada" />
-                </div>
-                <div class="q-mb-md">
-                  <q-input v-model="task.executor" outlined label="Исполнители" />
-                </div>
-                <div class="q-mb-md">
-                  <InputDate v-model="task.data_ispoln" placeholder="Укажите дату" label="Выполнить до" outlined clearable />
-                </div>
-                <div class="q-mb-md">
-                  <QSelectExecutor
-                    v-model="executors"
-                    multiple
-                    outlined
-                  />
-                </div>
-              </div>
+  <div v-if="task">
+    <q-card class="q-mb-sm">
+      <q-card-section>
+        <div>
+          <div class="">
+            <b>Задача id: </b>{{ task.id }}
+          </div>
+          <div class="row items-center q-col-gutter-sm">
+            <div class="text-weight-bold">Протокол:</div>
+            <div>
+              {{ task.protokol.title }}
+            </div>
+            <div>от</div>
+            <div>
+              {{ task.protokol.descriptions.date }}
             </div>
           </div>
+          <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
+          <div><b>Тема:</b> {{ task.partition.number }}. {{ task.partition.text }}</div>
         </div>
-        <q-btn flat color="negative" label="Отмена" :to="'/task/show/' + task.id" />
-        <q-btn color="primary" label="Сохранить" @click="save" />
-      </div>
-    </section>
+      </q-card-section>
+    </q-card>
+    <q-card class="">
+      <q-card-section>
+        <div class="q-gutter-sm">
+          <div v-if="task.arxiv" class="text-negative" v-html="task.arxiv" />
+          <div class="q-pa-sm row items-center q-col-gutter-sm">
+            <div class="text-weight-bolder">
+              Задача №
+            </div>
+            <div class="text-secondary">
+              {{ task.partition.number }}.{{ task.number }}.
+              <q-popup-edit v-model="task.number" auto-save v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus type="number" @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </div>
+          </div>
+
+          <div class="text-secondary">
+            {{ task.text }}
+            <q-popup-edit v-model="task.text" auto-save v-slot="scope">
+              <q-editor
+                v-model="scope.value"
+                dense
+                autofocus
+                :toolbar="[
+                  ['bold', 'italic', 'strike', 'underline'],
+                  ['cancel', 'save']
+                ]"
+                :definitions="{
+                  cancel: {
+                    tip: 'Отмена',
+                    icon: 'cancel',
+                    color: 'negative',
+                    handler: scope.cancel
+                  },
+                  save: {
+                    tip: 'Сохранить',
+                    icon: 'done',
+                    color: 'secondary',
+                    handler: scope.set,
+                    disable: scope.validate(scope.value) === false || scope.initialValue === scope.value
+                  }
+                }"
+              >
+              </q-editor>
+            </q-popup-edit>
+          </div>
+          <div class="text-no-wrap">
+            Исполнители:
+            <span class="text-secondary">
+              {{ task.executor }}
+          </span>
+            <q-popup-edit v-model="task.executor" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus autogrow @keyup.enter="scope.set">
+                <template v-slot:after>
+                  <q-btn
+                    flat dense color="negative" icon="cancel"
+                    @click.stop.prevent="scope.cancel"
+                  />
+
+                  <q-btn
+                    flat dense color="positive" icon="save"
+                    @click.stop.prevent="scope.set"
+                    :disable="scope.validate(scope.value) === false || scope.initialValue === scope.value"
+                  />
+                </template>
+              </q-input>
+            </q-popup-edit>
+          </div>
+          <div class="q-mb-md">
+            <InputDate v-model="task.data_ispoln" placeholder="Укажите дату" label="Выполнить до" outlined clearable />
+          </div>
+          <div class="q-mb-md">
+            <QSelectExecutor
+              v-model="executors"
+              multiple
+              outlined
+            />
+          </div>
+        </div>
+      </q-card-section>
+      <q-card-actions>
+        <div>
+          <q-btn flat color="negative" label="Отмена" :to="'/task/show/' + task.id" />
+          <q-btn color="primary" label="Сохранить" @click="save" />
+        </div>
+      </q-card-actions>
+    </q-card>
   </div>
 </template>
 
@@ -80,39 +140,13 @@ export default {
   },
   data() {
     return {
-      time: '',
-      allExecutor: [],
-      newMessage: {
-        text: '',
-        file: ''
-      },
       listQuery: {
-        showdeleted: false,
         id: this.$route.params.id
       },
-      fileName: 'Выберите файл',
-      task: {
-        protokol: {
-          descriptions: {}
-        },
-        partition: {},
-        users: [],
-        data_ispoln: ''
-      },
-      executors: [],
-      test: 3,
-      files: ''
+      task: null,
+      executors: []
     }
   },
-  computed: {
-    user() {
-      return this.$store.state.user.info
-    },
-    roles() {
-      return this.user.roles
-    }
-  },
-  watch: {},
   mounted() {
     this.getTask()
   },
@@ -124,26 +158,17 @@ export default {
         .then(response => {
           this.task = response.data
           this.executors = this.task.executors.map(item => item.user_id)
+        })
+        .finally(() => {
           this.listLoading = false
         })
     },
     save() {
-      console.log('save')
       this.task.users = this.executors
       updateTask(this.task)
         .then(response => {
           this.$router.push('/task/show/' + this.task.id)
         })
-    },
-    accessFilter(user) {
-      var access = false
-      if (user.id === this.userId) {
-        access = true
-      }
-      if (this.roles.includes('admin')) {
-        access = true
-      }
-      return access
     }
   }
 }

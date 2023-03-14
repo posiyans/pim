@@ -23,7 +23,12 @@
             style="margin-bottom: 1px;"
             @click="showTask(item)"
           >
-            {{ item.executor }}
+            <div class="row items-center">
+              <div class="q-mr-sm">
+                {{ item.executor }}
+              </div>
+              <ExecutorsAvatar :executors="item.view_report" />
+            </div>
           </div>
         </template>
       </QCalendarMonth>
@@ -54,6 +59,7 @@ import { defineComponent, onMounted, ref } from 'vue'
 import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
 import ShowTime from 'src/components/ShowTime/index.vue'
 import ShowTaskInfo from 'src/Modules/Task/components/ShowTaskInfo/index.vue'
+import ExecutorsAvatar from 'src/Modules/Calendar/pages/ShowCalendar/components/Calendar/components/ExecutorsAvatar/index.vue'
 
 const moment = require('moment')
 // const momentTz = require('moment-timezone')
@@ -70,6 +76,7 @@ export default defineComponent({
     ShowTaskInfo,
     QCalendarMonth,
     QCalendarDay,
+    ExecutorsAvatar
 
   },
   setup() {

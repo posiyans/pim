@@ -71,7 +71,6 @@ export default {
       this.$store.commit('avatar/increment')
     },
     close() {
-      console.log('close')
       this.imagecropperShow = false
       this.$store.commit('avatar/increment')
     }

@@ -109,22 +109,12 @@ export default {
       }
     },
     handleLogin() {
-
       this.$refs.inputForm.validate()
         .then(() => {
           this.loading = true
           this.$store.dispatch('user/loginUser', this.loginForm)
             .then(res => {
               if (res === 'send') {
-                this.showSms = true;
-              } else if (res === 'bad_sms') {
-                Notify.create({
-                  type: 'negative',
-                  message: 'Неверный код'
-                })
-              } else {
-                console.log('login')
-                console.log(this.$store.state.user.info)
                 this.$router.push('/')
               }
             })

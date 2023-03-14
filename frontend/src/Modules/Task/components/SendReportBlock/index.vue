@@ -98,7 +98,6 @@ export default {
     },
     deleteFile() {
       this.file = null
-      console.log(this.$refs.file)
     },
     attacheFile() {
       this.$refs.file.click()

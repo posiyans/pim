@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+//Route::Get('/user/avatar-get', [\App\Modules\User\Controllers\GetUserAvatarController::class, 'index']);
 //Auth::routes();
 
 

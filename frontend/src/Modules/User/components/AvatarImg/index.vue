@@ -8,6 +8,7 @@
 </template>
 
 <script>
+
 import { getUserAvatar } from 'src/Modules/User/api/user'
 
 export default {
@@ -19,35 +20,78 @@ export default {
   },
   data() {
     return {
-      url: null
+      url: null,
+      keyCache: '/user_avatar_'
     }
   },
   computed: {
     key() {
       return this.$store.state.avatar.key
+    },
+    kk() {
+      return this.keyCache + this.id + '_' + this.key
     }
   },
   mounted() {
     this.getData()
   },
   watch: {
-    key() {
+    async key() {
+      await caches.delete('avatar-cache');
       this.getData()
     }
   },
   methods: {
-    getData() {
-      const data = {
-        id: this.id,
-        sail: this.sail
-      }
-      getUserAvatar(data)
-        .then(res => {
-          this.url = URL.createObjectURL(res.data)
+    async getData() {
+      const avatarCache = await caches.open('avatar-cache');
+      const options = {
+        ignoreSearch: true,
+        ignoreMethod: true,
+        ignoreVary: true
+      };
+      const res = avatarCache.match(this.kk, options);
+      res
+        .then((response) => {
+          console.log(response)
+          if (response) {
+            const reader = response.body.getReader();
+            return new ReadableStream({
+              start(controller) {
+                return pump()
+
+                function pump() {
+                  return reader.read().then(({ done, value }) => {
+                    if (done) {
+                      controller.close()
+                      return
+                    }
+                    controller.enqueue(value);
+                    return pump()
+                  });
+                }
+              }
+            })
+          } else {
+            const data = {
+              id: this.id,
+              sail: this.sail
+            }
+            getUserAvatar(data)
+              .then(res => {
+                this.url = URL.createObjectURL(res.data)
+                avatarCache.put(this.kk, new Response(res.data))
+              })
+          }
         })
-        .catch(() => {
-          this.getData()
+        .then((stream) => new Response(stream))
+        .then((response) => response.blob())
+        .then((blob) => {
+          return URL.createObjectURL(blob)
         })
+        .then((url) => {
+          this.url = url
+        })
+        .catch((err) => console.error(err));
     }
   }
 }

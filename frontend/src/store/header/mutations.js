@@ -3,7 +3,6 @@ export function setTitle(state, val) {
 }
 
 export function toggleLeftDrawer(state) {
-  console.log('ckckc')
   state.leftDrawerOpen = !state.leftDrawerOpen
 }
 

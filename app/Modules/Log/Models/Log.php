@@ -67,9 +67,11 @@ class Log extends MyModel
                 }
             } else {
                 if (isset($objOld[$key])) {
-                    $val = $this->diff($objNew[$key], $objOld[$key]);
-                    if ($val and count($val) > 0) {
-                        $diff[$key] = $val;
+                    if (isset($objNew[$key]) && isset($objOld[$key])) {
+                        $val = $this->diff($objNew[$key], $objOld[$key]);
+                        if ($val and count($val) > 0) {
+                            $diff[$key] = $val;
+                        }
                     }
                 } else {
                     $diff[$key] = ['old' => '', 'new' => $objNew[$key]];

@@ -13,21 +13,24 @@ const Protocol = {
       path: 'edit/:id',
       component: () => import('src/Modules/Protocol/pages/EditProtocol/index.vue'),
       meta: {
-        title: 'Протокол'
+        title: 'Протокол',
+        roles: ['moderator']
       }
     },
     {
       path: 'list',
       component: () => import('src/Modules/Protocol/pages/ListProtocol/index.vue'),
       meta: {
-        title: 'Протоколы'
+        title: 'Протоколы',
+        roles: ['moderator']
       }
     },
     {
       path: 'add',
       component: () => import('src/Modules/Protocol/pages/AddProtocol/index.vue'),
       meta: {
-        title: 'Добавить протокол'
+        title: 'Добавить протокол',
+        roles: ['moderator']
       }
     }
   ]

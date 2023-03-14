@@ -4,7 +4,7 @@
       color="white"
       no-caps
       flat
-      :label="name.name"
+      :label="user.name"
     >
       <q-list>
         <q-item clickable v-close-popup @click="logout">
@@ -22,7 +22,7 @@ import { SessionStorage } from 'quasar'
 
 export default {
   computed: {
-    name() {
+    user() {
       return this.$store.state.user.info
     }
   },
@@ -30,7 +30,8 @@ export default {
     logout() {
       this.$store.dispatch('user/userLogout')
         .then(() => {
-          SessionStorage.clear();
+          SessionStorage.clear()
+          caches.delete('avatar-cache')
           this.$router.push('/auth/login')
         })
     }

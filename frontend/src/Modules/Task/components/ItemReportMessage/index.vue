@@ -1,10 +1,12 @@
 <template>
   <q-chat-message
-    :name="item.user.name"
     :sent="send"
     :text-color="item.deleted_at ? 'grey' : 'black'"
     bg-color="grey-2"
   >
+    <template v-slot:name>
+      <UserNameById :id="item.user_id" />
+    </template>
     <template v-slot:avatar>
       <AvatarById :id="item.user_id" class="q-message-avatar" :class="send ? 'q-message-avatar--sent' : 'q-message-avatar--received'" />
     </template>
@@ -40,11 +42,13 @@ import { exportFile } from 'quasar'
 import ShowTime from 'src/components/ShowTime/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
 import AvatarById from 'src/Modules/User/components/AvatarById/index.vue'
+import UserNameById from 'src/Modules/User/components/UserNameById/index.vue'
 
 export default {
   components: {
     ShowTime,
     AvatarById,
+    UserNameById,
     FileBlock
   },
   props: {

@@ -17,7 +17,6 @@
 
 <script>
 import { sizeFilter } from 'src/utils/file'
-import { downloadReport } from 'src/Modules/Task/api/task'
 import { exportFile } from 'quasar'
 import { deleteFile, downloadFile } from 'src/Modules/Files/api/file'
 
@@ -74,13 +73,8 @@ export default {
           let fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0]
           try {
             fileName = decodeURIComponent(response.headers['content-disposition'].split("filename*=utf-8''")[1].split(';')[0])
-            // fileName  =
           } catch (e) {
-
           }
-          // console.log(response.headers['content-disposition'])
-          console.log(fileName)
-          // console.log(decodeURIComponent(fileName))
           exportFile(fileName, response.data)
         })
         .catch(er => {
@@ -91,14 +85,7 @@ export default {
             duration: 3000
           })
         })
-    },
-    getUrlFile(file) {
-      console.log(file)
-
-      downloadReport(file.hash).then(response => {
-        exportFile(file.name, response.data)
-      })
-    },
+    }
   }
 }
 </script>

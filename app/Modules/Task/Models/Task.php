@@ -71,7 +71,7 @@ class Task extends MyModel
     public function reportAndUser()
     {
         foreach ($this->report as $report) {
-            $report->user;
+//            $report->user;
             $report->file;
         }
         return $this;
@@ -85,7 +85,7 @@ class Task extends MyModel
     {
         $this->remove = true;
         foreach ($this->report as $report) {
-            $report->user;
+//            $report->user;
             $report->file;
         }
         return $this;

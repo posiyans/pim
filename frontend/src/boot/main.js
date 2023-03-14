@@ -1,6 +1,6 @@
 export default async ({ store, router }) => {
 
-  let timer = null
+  // let timer = null
   await store.dispatch('user/getInfo')
 
   router.beforeEach(async (to, from, next) => {
@@ -14,26 +14,20 @@ export default async ({ store, router }) => {
 
 
     const hasRole = !!store.state.user.info.roles
-    console.log('hasRole')
-    console.log(hasRole)
     if (hasRole) {
       if (to.meta && to.meta.roles) {
-        if (to.meta.roles.includes(store.state.user.info.roles)) {
+        if (to.meta.roles.filter(x => store.state.user.info.roles.includes(x)).length > 0) {
           next(true)
-          return true
         } else {
           next('/page/403')
         }
         return true
       }
-      console.log(to)
       store.dispatch('header/fetchCountMyNoReadReport')
       store.commit('header/setTitle', to.meta.title)
       next()
       return true
     }
-    console.log('to')
-    console.log(to)
     if (to.path === '/auth/login') {
       next(true)
       return true
