@@ -8,6 +8,7 @@ use App\Modules\File\Repositories\FileRepository;
 use App\Modules\Log\Models\Log;
 use App\Modules\Protocol\Models\Partition;
 use App\Modules\Protocol\Models\Protocol;
+use App\Modules\Protocol\Models\TypeProtocolModel;
 use App\Modules\Task\Models\Report;
 use App\Modules\Task\Models\Task;
 use App\Modules\Task\Models\ViewReport;
@@ -43,6 +44,7 @@ class Migration extends Command
     public function handle(): void
     {
         $this->CreateConnection();
+        $this->migrateTypeProtocol();
         $this->migrateUsers();
         $this->migrateProtocol();
         $this->migratePartitions();
@@ -53,6 +55,19 @@ class Migration extends Command
         $this->fixFileSize();
         return;
     }
+
+    private function migrateTypeProtocol()
+    {
+        $ar = [
+            'Протоколы СД'
+        ];
+        foreach ($ar as $item) {
+            $type = new TypeProtocolModel();
+            $type->name = $item;
+            $type->save();
+        }
+    }
+
 
     private function fixFileSize()
     {
@@ -319,6 +334,7 @@ class Migration extends Command
             $descriptions['date'] = $item->data;
             $descriptions['composition'] = $item->sostav;
             $protokol->descriptions = $descriptions;
+            $protokol->type_id = 1;
             $protokol->save();
             if ($item->file_md5) {
                 $file = new File();

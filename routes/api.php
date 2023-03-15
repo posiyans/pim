@@ -51,8 +51,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Post('/protocol/move-to-archive', [\App\Modules\Protocol\Controllers\MoveProtocolToArchiveController::class, 'index']);
     Route::Post('/protocol/update', [\App\Modules\Protocol\Controllers\UpdateProtocolController::class, 'index']);
     Route::Post('/protocol/create', [\App\Modules\Protocol\Controllers\CreateProtocolController::class, 'index']);
-    Route::Get('/protocol/get-file', [\App\Modules\Protocol\Controllers\GetProtocolFileController::class, 'index']);
+    Route::Post('/protocol/create-type', [\App\Modules\Protocol\Controllers\CreateTypeProtocolController::class, 'index']);
+    Route::Get('/protocol/get-type', [\App\Modules\Protocol\Controllers\GetTypesProtocolController::class, 'index']);
+
     Route::Post('/protocol/parse-file', [\App\Modules\Docx\Controllers\ParseDocxController::class, 'index']);
+
     Route::Post('/report/create', [\App\Modules\Task\Controllers\CreateReportController::class, 'index']);
 //    Route::Get('/sms/balance/get', [GetSmsBalanceController::class, 'index']);
 

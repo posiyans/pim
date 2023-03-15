@@ -4,11 +4,12 @@
       <div class="text-teal text-weight-bold">
         Добавить протокол
       </div>
-      <div style="min-width: 150px;">
+      <div style="min-width: 220px;">
         <SelectTypeProtocol
           v-model="protokol.type"
           outlined
           dense
+          add
         />
       </div>
 
@@ -285,7 +286,7 @@ export default {
       oldProtokol: {},
       protokol: {
         title: 'Протокол',
-        type: 'psd',
+        type: 1,
         number: '00/00/00',
         date: date.formatDate(new Date(), 'DD MMMM YYYY'),
         region: 'Место проведения',

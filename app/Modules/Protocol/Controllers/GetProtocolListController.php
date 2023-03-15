@@ -31,7 +31,7 @@ class GetProtocolListController extends MyController
         }
         if ($request->type) {
             $type = $request->type;
-            $query->where('type', $type);
+            $query->where('type_id', $type);
         }
         if ($request->find) {
             $query->where('title', 'like', '%' . $request->find . '%');

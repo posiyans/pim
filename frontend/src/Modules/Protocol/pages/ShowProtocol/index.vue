@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <div class="row items-center q-col-gutter-md">
       <div class="row items-center q-col-gutter-md">
         <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
@@ -15,6 +15,7 @@
       </div>
     </div>
     <div v-if="protokol.arxiv" class="text-red text-weight-bold" v-html="protokol.arxiv" />
+    <ShowTypeProtocol :type="protokol.type_id" class="text-primary" />
     <div :class="protokol.arxiv ? 'text-red' : ''">
       <b>{{ protokol.title }}</b> {{ protokol.descriptions.date }}
     </div>
@@ -63,9 +64,11 @@ import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
 import DropDownBlock from 'components/DropDownBlock/index.vue'
 import ShowProtocolHistory from 'src/Modules/Log/components/ShowProtocolHistory/index.vue'
+import ShowTypeProtocol from 'src/Modules/Protocol/components/ShowTypeProtocol/index.vue'
 
 export default {
   components: {
+    ShowTypeProtocol,
     FileBlock,
     ShowProtocolHistory,
     DropDownBlock,

@@ -53,3 +53,18 @@ export function updateProtokol(data) {
     data
   })
 }
+
+export function getTypeProtocol() {
+  return request({
+    url: '/api/protocol/get-type',
+    method: 'get',
+  })
+}
+
+export function createTypeProtocol(data) {
+  return request({
+    url: '/api/protocol/create-type',
+    method: 'post',
+    data
+  })
+}

@@ -20,7 +20,7 @@ class CreateProtokolsTable extends Migration
 //            $table->string('file_hash')->nullable();
 //            $table->string('file_name')->nullable();
             $table->json('descriptions')->nullable();
-            $table->string('type')->default('psd');
+            $table->foreignId('type_id')->default('1');
             $table->string('arxiv')->nullable();
             $table->timestamps();
         });

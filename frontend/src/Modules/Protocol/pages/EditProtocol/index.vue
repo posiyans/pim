@@ -2,17 +2,18 @@
   <div>
     <div class="row items-center q-col-gutter-sm q-pb-xs">
       <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
-      <div v-if="noSave">
-        <q-btn label="Отмена" color="negative" flat @click="getProtokolInfo" />
-      </div>
-      <div v-if="noSave">
-        <q-btn label="Сохранить" color="primary" />
+      <div class="row items-center q-mr-md" :class="{ 'o-20': !noSave }">
+        <div>
+          <q-btn label="Отмена" :disable="!noSave" color="negative" flat @click="getProtokolInfo" />
+        </div>
+        <div>
+          <q-btn label="Сохранить" :disable="!noSave" color="primary" />
+        </div>
       </div>
     </div>
     <div v-if="protokol.arxiv" class="text-red q-pa-md" v-html="protokol.arxiv" />
     <q-card class="q-mb-sm">
       <q-card-section>
-
         <div class="row items-center q-col-gutter-md">
           <div class="text-teal">
             {{ protokol.title }}
@@ -23,7 +24,7 @@
           <div>
             от
           </div>
-          <div class="text-teal">
+          <div class="text-teal" style="flex-grow: 1;">
             {{ protokol.descriptions.date }}
             <q-popup-edit v-model="protokol.descriptions.date" auto-save v-slot="scope">
               <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -34,7 +35,7 @@
           <div class="field-header">
             Место проведения:
           </div>
-          <div class="text-teal">
+          <div class="text-teal" style="flex-grow: 1;">
             {{ protokol.descriptions.region }}
             <q-popup-edit v-model="protokol.descriptions.region" auto-save v-slot="scope">
               <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -45,7 +46,7 @@
           <div class="field-header">
             Председатель:
           </div>
-          <div class="text-teal">
+          <div class="text-teal" style="flex-grow: 1;">
             {{ protokol.descriptions.president }}
             <q-popup-edit v-model="protokol.descriptions.president" auto-save v-slot="scope">
               <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -56,7 +57,7 @@
           <div class="field-header">
             Секретарь:
           </div>
-          <div class="text-teal">
+          <div class="text-teal" style="flex-grow: 1;">
             {{ protokol.descriptions.secretary }}
             <q-popup-edit v-model="protokol.descriptions.secretary" auto-save v-slot="scope">
               <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -67,7 +68,7 @@
           <div class="field-header">
             Присутствовали:
           </div>
-          <div class="text-teal">
+          <div class="text-teal" style="flex-grow: 1;">
             {{ protokol.descriptions.composition }}
             <q-popup-edit v-model="protokol.descriptions.composition" auto-save v-slot="scope">
               <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -78,9 +79,9 @@
           <div class="field-header">
             Тип протокола:
           </div>
-          <div class="text-teal">
-            <ShowTypeProtocol :type="protokol.type" />
-            <q-popup-edit v-model="protokol.type" auto-save v-slot="scope">
+          <div class="text-teal" style="flex-grow: 1;">
+            <ShowTypeProtocol :type="protokol.type_id" />
+            <q-popup-edit v-model="protokol.type_id" auto-save v-slot="scope">
               <QSelectTypeProtocol v-model="scope.value" />
             </q-popup-edit>
           </div>

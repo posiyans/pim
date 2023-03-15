@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { useProtocol } from 'src/Modules/Protocol/api/useProtocol.js'
+import { getTypeProtocol } from 'src/Modules/Protocol/api/protocol'
 
 export default {
   props: {
@@ -16,26 +16,29 @@ export default {
   },
   data() {
     return {
-      protokolTypeOptions: [
-        { key: 'psd', display_name: 'Протоколы СД' },
-        { key: 'skype', display_name: 'Скайп Протоколы' },
-        { key: 'year', display_name: 'Готодовые протоколы' }
-      ]
+      protokolTypeOptions: []
     }
   },
   computed: {
     showTitle() {
-      const pr = this.protokolTypeOptions.find(item => item.key === this.type)
+      const pr = this.protokolTypeOptions.find(item => item.id === this.type)
       if (pr) {
-        return pr.display_name
+        return pr.name
       }
       return ''
     }
   },
   mounted() {
-    const { typeProtocol } = useProtocol()
-    this.protokolTypeOptions = typeProtocol
+    this.getData()
   },
+  methods: {
+    getData() {
+      getTypeProtocol()
+        .then(res => {
+          this.protokolTypeOptions = res.data
+        })
+    },
+  }
 }
 </script>
 

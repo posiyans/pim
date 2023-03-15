@@ -9,19 +9,46 @@
       emit-value
       :dense="dense"
       :outlined="outlined"
-      option-label="display_name"
-      option-value="key"
+      option-label="name"
+      option-value="id"
       @update:model-value="setValue"
-    />
+    >
+      <template v-if="add" v-slot:append>
+        <q-btn round dense flat icon="add" @click.stop.prevent="dialogVisible = true" />
+      </template>
+    </q-select>
+    <q-dialog v-model="dialogVisible">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Добавить тип протокола</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pa-lg">
+          <q-input outlined v-model="name" dense label="Название типа" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn color="negative" flan label="Отмена" v-close-popup />
+          <q-btn color="primary" label="Добавить" @click="addType" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import { createTypeProtocol, getTypeProtocol } from 'src/Modules/Protocol/api/protocol'
+
 export default {
   props: {
     modelValue: {
-      type: String,
+      type: [String, Number],
       default: ''
+    },
+    add: {
+      type: Boolean,
+      default: false
     },
     clearable: {
       type: Boolean,
@@ -42,16 +69,36 @@ export default {
   },
   data() {
     return {
-      protokolTypeOptions: [
-        { key: 'psd', display_name: 'Протоколы СД' },
-        { key: 'skype', display_name: 'Скайп Протоколы' },
-        { key: 'year', display_name: 'Готодовые протоколы' }
-      ]
+      protokolTypeOptions: [],
+      dialogVisible: false,
+      name: ''
     }
+  },
+  mounted() {
+    this.getData()
   },
   methods: {
     setValue(val) {
       this.$emit('update:model-value', val)
+    },
+    getData() {
+      getTypeProtocol()
+        .then(res => {
+          this.protokolTypeOptions = res.data
+        })
+    },
+    addType() {
+      if (this.name !== '') {
+        const data = {
+          name: this.name
+        }
+        createTypeProtocol(data)
+          .then(res => {
+            this.setValue(res.data.id)
+            this.getData()
+            this.dialogVisible = false
+          })
+      }
     }
   }
 }
