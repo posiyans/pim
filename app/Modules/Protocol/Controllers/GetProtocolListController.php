@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Input;
 
 class GetProtocolListController extends MyController
 {
-
+    public function __construct()
+    {
+        $this->middleware('only_moderator');
+    }
 
     /**
      * Display a listing of the resource.

@@ -38,7 +38,7 @@
           </div>
 
           <div class="text-secondary">
-            {{ task.text }}
+            <div v-html="task.text" />
             <q-popup-edit v-model="task.text" auto-save v-slot="scope">
               <q-editor
                 v-model="scope.value"

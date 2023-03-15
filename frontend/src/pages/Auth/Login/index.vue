@@ -114,15 +114,16 @@ export default {
           this.loading = true
           this.$store.dispatch('user/loginUser', this.loginForm)
             .then(res => {
-              if (res === 'send') {
-                this.$router.push('/')
-              }
+              this.$router.push('/')
             })
             .catch((error) => {
-              this.$q.notify({
-                message: error.response.data.error,
-                color: 'negative'
-              })
+              console.log(error)
+              if (error) {
+                this.$q.notify({
+                  message: error.response.data.error,
+                  color: 'negative'
+                })
+              }
             })
             .finally(() => {
               this.loading = false

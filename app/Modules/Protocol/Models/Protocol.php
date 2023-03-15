@@ -37,7 +37,17 @@ class Protocol extends MyModel
         return $partitions;
     }
 
+    /**
+     * @return Collection
+     * @deprecated
+     *
+     */
     public function task()
+    {
+        return $this->tasks();
+    }
+
+    public function tasks()
     {
         $partitions = $this->partition;
         $task = new Collection;

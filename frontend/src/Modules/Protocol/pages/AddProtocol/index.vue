@@ -235,7 +235,7 @@
                   </q-popup-edit>
                 </div>
                 <div class="row items-center no-wrap">
-                  <SelectExecutor v-model="task.users" multiple dense outlined style="min-width:150px;" :class="task.users.length === 0 ? 'bg-red-2' : ''" />
+                  <SelectExecutor v-model="task.users" multiple dense outlined style="min-width:150px;" options-dense :class="task.users.length === 0 ? 'bg-red-2' : ''" />
                   <div>
                     <q-btn icon="delete" flat color="negative" @click="deleteTask(partition, task)" />
                   </div>

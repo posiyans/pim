@@ -22,7 +22,6 @@ class DownloadFileController extends MyController
     public function index(Request $request)
     {
         $uid = $request->uid;
-//        $hash = $request->hash;
         $file = File::where('uid', $uid)->first();
         if ($file) {
             if (!$this->checkAccess($file)) {

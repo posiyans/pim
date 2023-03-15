@@ -25,6 +25,9 @@ export default async ({ store, router }) => {
       }
       store.dispatch('header/fetchCountMyNoReadReport')
       store.commit('header/setTitle', to.meta.title)
+      if (to.path === '/auth/login') {
+        next('/')
+      }
       next()
       return true
     }

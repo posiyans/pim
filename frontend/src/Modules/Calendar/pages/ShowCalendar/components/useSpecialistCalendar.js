@@ -24,7 +24,7 @@ const calendar = reactive({
   loading: false,
   selectedDate: today(),
   view: 'month',
-  events: [],
+  events: {},
   opt: {
     executor: [1, 2, 3],
   }
@@ -65,7 +65,10 @@ const getData = () => {
           tmp[task.data_ispoln].push(task)
         }
       })
-      calendar.events = tmp
+      for (const [key, value] of Object.entries(tmp)) {
+        calendar.events[key] = value
+      }
+      // calendar.events = tmp
     })
     .finally(() => {
       calendar.loading = false

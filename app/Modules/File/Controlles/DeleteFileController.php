@@ -5,26 +5,26 @@ namespace App\Modules\File\Controlles;
 use App\Http\Controllers\MyController;
 use App\Modules\File\Models\File;
 use App\Modules\Log\Classes\CreateInfoLog;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
 class DeleteFileController extends MyController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function __construct()
+    {
+        $this->middleware('only_moderator');
+    }
 
     public function index(Request $request)
     {
         $uid = $request->uid;
         $file = File::where('uid', $uid)->first();
         if ($file) {
-            if (!$this->checkAccess($file)) {
-                return response('', 405);
-            }
+//            if (!$this->checkAccess($file)) {
+//                return response('', 405);
+//            }
             $model = $file->commentable;
             $file->delete();
             (new CreateInfoLog($model))->text('Удалил файл ' . $file->name)->run();

@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class ParseDocxController extends MyController
 {
+    public function __construct()
+    {
+        $this->middleware('only_moderator');
+    }
 
     private $protokol;
 

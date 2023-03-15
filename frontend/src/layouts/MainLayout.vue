@@ -30,33 +30,33 @@ import { useStore } from 'vuex'
 const linksList = [
   {
     title: 'Главная',
-    icon: 'school',
+    icon: 'home',
     link: '/',
     roles: ['user']
 
   },
   {
     title: 'Задачи',
-    icon: 'code',
+    icon: 'task_alt',
     link: '/task/list',
     roles: ['user']
   },
   {
     title: 'Протоколы',
-    icon: 'record_voice_over',
+    icon: 'receipt',
     link: '/protocol/list',
-    roles: ['admin']
+    roles: ['moderator']
   },
   {
     title: 'Календарь',
-    icon: 'chat',
+    icon: 'calendar_month',
     link: '/calendar/show',
     roles: ['user']
   },
   {
     title: 'Пользователи',
-    roles: ['admin', 'moderator'],
-    icon: 'rss_feed',
+    roles: ['moderator'],
+    icon: 'manage_accounts',
     link: '/user/list',
   }
 ]

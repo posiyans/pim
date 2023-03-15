@@ -42,8 +42,11 @@
 
       <el-table-column label="Задача" max-width="50vw">
         <template #default="scope">
-          <div class="link-type ellipsis no-wrap cursor-pointer text-small-80" @click="getTaskInfo(scope.row)">
-            {{ scope.row.partition.number }}.{{ scope.row.number }}. {{ scope.row.text }}
+          <div class="link-type ellipsis no-wrap cursor-pointer text-small-80 row" @click="getTaskInfo(scope.row)">
+            <div class="q-mr-xs">
+              {{ scope.row.partition.number }}.{{ scope.row.number }}.
+            </div>
+            <div v-html="scope.row.text" />
             <q-tooltip v-if="scope.row.text.length > 100">
               {{ scope.row.text }}
             </q-tooltip>

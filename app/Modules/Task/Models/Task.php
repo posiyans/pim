@@ -10,6 +10,16 @@ class Task extends MyModel
     //
     public $remove = false;
 
+
+    public function __construct(array $attributes = [])
+    {
+        if (Auth::check()) {
+            $this->autor_id = Auth::user()->id;
+        }
+        return parent::__construct($attributes);
+    }
+
+
     /**
      * отношения с отчетами текущие и удаленные
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

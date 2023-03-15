@@ -11,12 +11,15 @@ use App\Modules\Protocol\Models\Protocol;
 use App\Modules\Task\Models\Task;
 use App\Modules\Task\Models\ViewReport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CreateProtocolController extends MyController
 {
+    public function __construct()
+    {
+        $this->middleware('only_moderator');
+    }
 
 
     /**
@@ -26,8 +29,7 @@ class CreateProtocolController extends MyController
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
-        if ($user->moderator and $request->has('protocol') and $request->hasFile('file')) {
+        if ($request->has('protocol') and $request->hasFile('file')) {
             DB::beginTransaction();
             try {
                 $protokol_json = json_decode($request->get('protocol'));
@@ -71,7 +73,6 @@ class CreateProtocolController extends MyController
                         $task->data_ispoln = $task_json->data_ispoln ?? null;
                         $task->number = $task_json->number;
                         $task->text = $task_json->text;
-                        $task->autor_id = $user->id;
                         $task->executor = $task_json->executor;
                         $task->protocol_id = $protokol->id;
                         $partition->tasks()->save($task);
