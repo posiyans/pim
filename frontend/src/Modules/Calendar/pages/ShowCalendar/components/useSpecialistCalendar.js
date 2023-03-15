@@ -68,7 +68,6 @@ const getData = () => {
       for (const [key, value] of Object.entries(tmp)) {
         calendar.events[key] = value
       }
-      // calendar.events = tmp
     })
     .finally(() => {
       calendar.loading = false
