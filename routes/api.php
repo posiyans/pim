@@ -30,6 +30,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Post('/user/password-change', [\App\Modules\User\Controllers\ChangeUserPasswordController::class, 'index']);
     Route::Get('/user/get-executors', [\App\Modules\User\Controllers\GetUsersExecutorsController::class, 'index']);
     Route::get('/user/get-last-user-from-telegram', [\App\Modules\Telegram\Controllers\GetLastMessageUserIdController::class, 'index']);
+    Route::get('/user/get-two-factor-setting', [\App\Modules\User\Controllers\GetUserTwoFactorSettingController::class, 'index']);
+    Route::post('/user/update-two-factor-setting', [\App\Modules\User\Controllers\UpdateUserTwoFactorSettingController::class, 'index']);
+    Route::post('/user/change-google-secret-key', [\App\Modules\User\Controllers\ChangeTwoFactorSecretKeyController::class, 'index']);
 
     // Задачи для календаря
     Route::Get('/calendar/get-tasks', [\App\Modules\Task\Controllers\GetTasksForCalendarController::class, 'index']);

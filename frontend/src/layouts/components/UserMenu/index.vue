@@ -7,6 +7,11 @@
       :label="user.name"
     >
       <q-list>
+        <q-item clickable v-close-popup to="/user/profile">
+          <q-item-section>
+            <q-item-label>Профиль</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item clickable v-close-popup @click="logout">
           <q-item-section>
             <q-item-label>Выйти</q-item-label>
@@ -21,6 +26,7 @@
 import { SessionStorage } from 'quasar'
 
 export default {
+  components: {},
   computed: {
     user() {
       return this.$store.state.user.info

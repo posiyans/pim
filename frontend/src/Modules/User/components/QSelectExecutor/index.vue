@@ -8,6 +8,7 @@
       :label="label"
       :outlined="outlined"
       map-options
+      :readonly="readonly"
       :options-dense="optionsDense"
       :dense="dense"
       option-value="id"
@@ -27,6 +28,10 @@ export default {
       default: ''
     },
     clearable: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
       type: Boolean,
       default: false
     },

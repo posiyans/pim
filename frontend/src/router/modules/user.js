@@ -9,6 +9,14 @@ const User = {
         title: 'Пользователи',
         roles: ['moderator']
       }
+    },
+    {
+      path: 'profile',
+      component: () => import('src/Modules/User/pages/MyProfile/index.vue'),
+      meta: {
+        title: 'Профиль',
+        roles: ['user']
+      }
     }
   ]
 }

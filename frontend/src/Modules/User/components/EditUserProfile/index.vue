@@ -8,6 +8,16 @@
         <div>
           <q-input v-model="user.login" label="Login" outlined />
         </div>
+        <div>
+          <q-input v-model="user.email" label="E-mail" outlined />
+        </div>
+        <div>
+          <q-input v-model="user.options.telegram" label="Telegram Id" outlined>
+            <template v-slot:append>
+              <q-btn round dense flat icon="add" @click="getTelegramId" />
+            </template>
+          </q-input>
+        </div>
       </div>
       <div class="q-pa-md">
         <ChangeAvatar v-if="user.id" :id="user.id" size="120px" />
@@ -32,6 +42,7 @@
           v-model="user.two_factor"
           label="Двухэтапная аутентификация "
           color="negative"
+          @update:model-value="setTwoFactor"
         />
       </div>
       <div>
@@ -44,15 +55,33 @@
     </div>
     <div v-if="user.two_factor">
       <div class="text-grey q-pa-sm">Двухэтапная аутентификация через</div>
-      <div class="q-mb-sm">
-        <q-input v-model="user.options.telegram" label="Telegram Id" outlined >
-          <template v-slot:append>
-            <q-btn round dense flat icon="add" @click="getTelegramId"/>
-          </template>
-        </q-input>
+      {{ user.options.two_factor_enable }}
+      <div class="q-mb-sm row items-center">
+        <div>
+          <q-checkbox v-model="user.options.two_factor_enable" val="telegram" />
+        </div>
+        <div style="flex-grow: 1;">
+          Telegram
+        </div>
       </div>
-      <div>
-        <q-input v-model="user.email" label="E-mail" outlined />
+      <div class="row items-center">
+        <div>
+          <q-checkbox v-model="user.options.two_factor_enable" val="mail" />
+        </div>
+        <div>
+          E-mail
+        </div>
+      </div>
+      <div class="row items-center">
+        <div>
+          <q-checkbox v-model="user.options.two_factor_enable" val="google2fa" />
+        </div>
+        <div class="q-py-md">
+          Google Authenticator
+        </div>
+        <div>
+          <q-btn label="Обновитить" />
+        </div>
       </div>
     </div>
     <div class="text-right q-gutter-md">
@@ -86,6 +115,7 @@ export default {
         name: '',
         phone: '',
         aliases: [],
+        options: {},
         hide: true,
         moderator: false
       }
@@ -95,6 +125,11 @@ export default {
     this.getData()
   },
   methods: {
+    setTwoFactor(val) {
+      if (val === true) {
+        this.user.options.two_factor_enable = []
+      }
+    },
     getTelegramId() {
       getLastUserFromTelegram()
         .then(res => {

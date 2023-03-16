@@ -70,3 +70,18 @@ export function getLastUserFromTelegram() {
     method: 'get'
   })
 }
+
+export function getTwoFactorSettingsForUser(params) {
+  return request({
+    url: '/api/user/get-two-factor-setting',
+    method: 'get'
+  })
+}
+
+export function updateTwoFactorSettingsForUser(data) {
+  return request({
+    url: '/api/user/update-two-factor-setting',
+    method: 'post',
+    data
+  })
+}
