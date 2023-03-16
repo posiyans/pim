@@ -29,10 +29,30 @@
       </div>
       <div>
         <q-checkbox
+          v-model="user.two_factor"
+          label="Двухэтапная аутентификация "
+          color="negative"
+        />
+      </div>
+      <div>
+        <q-checkbox
           v-model="user.moderator"
           label="Модератор"
           color="teal"
         />
+      </div>
+    </div>
+    <div v-if="user.two_factor">
+      <div class="text-grey q-pa-sm">Двухэтапная аутентификация через</div>
+      <div class="q-mb-sm">
+        <q-input v-model="user.options.telegram" label="Telegram Id" outlined >
+          <template v-slot:append>
+            <q-btn round dense flat icon="add" @click="getTelegramId"/>
+          </template>
+        </q-input>
+      </div>
+      <div>
+        <q-input v-model="user.email" label="E-mail" outlined />
       </div>
     </div>
     <div class="text-right q-gutter-md">
@@ -43,7 +63,7 @@
 </template>
 
 <script>
-import { getUserInfo, updateUser } from 'src/Modules/User/api/user'
+import { getLastUserFromTelegram, getUserInfo, updateUser } from 'src/Modules/User/api/user'
 import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import ChangeAvatar from 'src/Modules/User/components/ChangeAvatar/index.vue'
 
@@ -75,6 +95,17 @@ export default {
     this.getData()
   },
   methods: {
+    getTelegramId() {
+      getLastUserFromTelegram()
+        .then(res => {
+          this.$q.dialog({
+            title: 'Последний id: ' + res.data.id,
+            message: 'Проверьте у пользователя: ' + res.data.first_name
+          }).onOk(() => {
+            this.user.options.telegram = res.data.id
+          })
+        })
+    },
     editCancel() {
       this.$emit('cancel')
     },

@@ -34,6 +34,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'twofa_secret',
     ];
 
     /**
@@ -47,7 +48,7 @@ class User extends Authenticatable
         'aliases' => 'array',
         'moderator' => 'boolean',
         'hide' => 'boolean',
-        'login_by_sms' => 'boolean',
+        'two_factor' => 'boolean',
     ];
 
 

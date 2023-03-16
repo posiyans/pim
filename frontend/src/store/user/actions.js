@@ -6,18 +6,23 @@ export function loginUser({ commit }, data) {
     loginByUsername(data)
       .then(response => {
         const data = response.data
-        SessionStorage.set('UserToken', data.token)
-        const user = data.user
-        user.roles = ['user']
-        if (user.moderator) {
-          user.roles.push('moderator')
-          user.roles.push('admin')
+        if (data.status === 'done') {
+          SessionStorage.set('UserToken', data.token)
+          const user = data.user
+          user.roles = ['user']
+          if (user.moderator) {
+            user.roles.push('moderator')
+            user.roles.push('admin')
+          }
+          commit('setInfo', user)
+          resolve(data)
+        } else {
+          resolve(data)
         }
-        commit('setInfo', user)
-        resolve(data)
-      }).catch(error => {
-      reject(error)
-    })
+      })
+      .catch(error => {
+        reject(error)
+      })
   })
 }
 

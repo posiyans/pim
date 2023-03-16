@@ -27,10 +27,12 @@ class UpdateUserController extends MyController
             $user->name = $request->name ?? $user->name;
             $user->full_name = $request->full_name ?? $user->full_name;
             $user->login = $request->login ?? $user->login;
+            $user->email = $request->email ?? $user->email;
+            $user->two_factor = $request->two_factor ?? $user->two_factor;
             $opt = $user->options;
             $opt['phone'] = $request->phone ?? $opt['phone'] ?? '';
             $opt['color'] = $request->color ?? $opt['color'] ?? '';
-            $opt['telegram'] = $request->telegram ?? $opt['telegram'] ?? '';
+            $opt['telegram'] = $request->options['telegram'] ?? $opt['telegram'] ?? '';
             $user->options = $opt;
 //                $user->login_by_sms = $request->login_by_sms ?? $user->login_by_sms;
             $user->aliases = $request->aliases ?? $user->aliases;

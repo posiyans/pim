@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Post('/user/avatar-upload', [\App\Modules\User\Controllers\UploadUserAvatarController::class, 'index']);
     Route::Post('/user/password-change', [\App\Modules\User\Controllers\ChangeUserPasswordController::class, 'index']);
     Route::Get('/user/get-executors', [\App\Modules\User\Controllers\GetUsersExecutorsController::class, 'index']);
-
+    Route::get('/user/get-last-user-from-telegram', [\App\Modules\Telegram\Controllers\GetLastMessageUserIdController::class, 'index']);
 
     // Задачи для календаря
     Route::Get('/calendar/get-tasks', [\App\Modules\Task\Controllers\GetTasksForCalendarController::class, 'index']);

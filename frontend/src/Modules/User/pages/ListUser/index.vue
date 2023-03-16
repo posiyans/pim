@@ -33,6 +33,9 @@
             <div v-if="scope.row.moderator">
               <q-icon name="perm_identity" color="secondary" />
             </div>
+            <div v-if="scope.row.two_factor">
+              <q-icon name="filter_2" color="secondary" />
+            </div>
           </div>
         </template>
       </el-table-column>

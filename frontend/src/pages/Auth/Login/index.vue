@@ -34,15 +34,15 @@
           />
 
           <q-input
-            v-if="showSms"
+            v-if="showCodeForm"
             outlined
-            v-model="loginForm.sms"
-            label="Код из СМС"
-            type="password"
+            v-model="loginForm.code"
+            label="Код подтверждения"
             class="text-blue-10"
             dense
             bg-color="white"
             lazy-rules
+            maxlength="6"
             @update:model-value="setSms"
           />
 
@@ -59,17 +59,15 @@
 
 <script>
 
-import { Notify } from 'quasar'
-
 export default {
   components: {},
   data() {
     return {
-      showSms: false,
+      showCodeForm: false,
       loginForm: {
         username: '',
         password: '',
-        sms: ''
+        code: ''
       },
       loading: false,
       showDialog: false,
@@ -93,12 +91,8 @@ export default {
   },
   methods: {
     setSms(val) {
-      if (val.length === 4) {
+      if (val.length === 6) {
         this.handleLogin()
-        Notify.create({
-          type: 'negative',
-          message: 'ok'
-        })
       }
     },
     showPwd() {
@@ -114,10 +108,18 @@ export default {
           this.loading = true
           this.$store.dispatch('user/loginUser', this.loginForm)
             .then(res => {
-              this.$router.push('/')
+              if (res.status === 'done') {
+                this.$router.push('/')
+              } else if (res.status === 'sendCode') {
+                this.showCodeForm = true
+              } else if (res.status === 'errorCode') {
+                this.$q.notify({
+                  message: res.error,
+                  color: 'negative'
+                })
+              }
             })
             .catch((error) => {
-              console.log(error)
               if (error) {
                 this.$q.notify({
                   message: error.response.data.error,
