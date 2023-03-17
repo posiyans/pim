@@ -17,10 +17,3 @@ Route::get('/', function () {
     return '';
 });
 
-Route::get('/test', [\App\Modules\Telegram\Controllers\TestController::class, 'index']);
-
-
-//Route::Get('/user/avatar-get', [\App\Modules\User\Controllers\GetUserAvatarController::class, 'index']);
-//Auth::routes();
-
-

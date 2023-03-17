@@ -1,6 +1,6 @@
 <template>
   <div class="q-gutter-md q-pa-md">
-    <div class="row items-center">
+    <div class="row">
       <div class="col-grow q-gutter-md">
         <div>
           <q-input v-model="user.name" label="Имя" outlined />
@@ -9,14 +9,7 @@
           <q-input v-model="user.login" label="Login" outlined />
         </div>
         <div>
-          <q-input v-model="user.email" label="E-mail" outlined />
-        </div>
-        <div>
-          <q-input v-model="user.options.telegram" label="Telegram Id" outlined>
-            <template v-slot:append>
-              <q-btn round dense flat icon="add" @click="getTelegramId" />
-            </template>
-          </q-input>
+          <q-input v-model="user.full_name" label="Полное имя" outlined />
         </div>
       </div>
       <div class="q-pa-md">
@@ -24,7 +17,14 @@
       </div>
     </div>
     <div>
-      <q-input v-model="user.full_name" label="Полное имя" outlined />
+      <q-input v-model="user.options.telegram" label="Telegram Id" outlined>
+        <template v-slot:append>
+          <q-btn round dense flat icon="add" @click="getTelegramId" />
+        </template>
+      </q-input>
+    </div>
+    <div>
+      <q-input v-model="user.email" label="E-mail" outlined />
     </div>
     <div>
       <QSelectExecutor v-model="user.aliases" outlined multiple label="Доступ к " />
@@ -55,7 +55,6 @@
     </div>
     <div v-if="user.two_factor">
       <div class="text-grey q-pa-sm">Двухэтапная аутентификация через</div>
-      {{ user.options.two_factor_enable }}
       <div class="q-mb-sm row items-center">
         <div>
           <q-checkbox v-model="user.options.two_factor_enable" val="telegram" />
@@ -78,9 +77,6 @@
         </div>
         <div class="q-py-md">
           Google Authenticator
-        </div>
-        <div>
-          <q-btn label="Обновитить" />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
   <div>
     <div @click="changeKey">
       <slot>
-        <q-btn label="Обновить SecretKey" flat />
+        <q-btn label="Обновить SecretKey" flat color="primary" />
       </slot>
     </div>
     <q-dialog v-model="dialogVisible" persistent maximized>
@@ -14,12 +14,15 @@
         </q-card-section>
         <q-card-section v-if="secret">
           <div class="text-center">
-            <div class="q-pa-lg text-weight-bold text-h6" style="font-family: monospace;">
+            Ваш секретный ключ
+          </div>
+          <div class="text-center">
+            <div class="q-pa-md text-weight-bold text-h6" style="font-family: monospace;">
               <div v-for="line in showText" :key="line" class="row items-center q-col-gutter-md justify-center">
                 <div v-for="item in line" :key="item">{{ item }}</div>
               </div>
             </div>
-            <div class="row justify-center q-pa-lg">
+            <div class="row justify-center q-pa-md">
               <VueQRCodeComponent :text="qrCodeText" />
             </div>
             <div>
@@ -31,21 +34,24 @@
             <div>
               3. Отсканируйте Qr-code или введите ключ, чтобы добавить свою учетную запись в Google Authenticator.
             </div>
+            <div class="q-pa-md">
+              <q-btn color="negative" label="Закрыть" v-close-popup />
+            </div>
           </div>
         </q-card-section>
-        <q-card-section v-else>
-          <div>
-            <div>
+        <q-card-section v-else class="row justify-center">
+          <div class="text-center" style="max-width: 600px;">
+            <div class="q-pa-lg">
               Для смены SecretKey введите текущий пароль от учетной записи
             </div>
             <div>
               <q-input v-model="password" label="Пароль" outlined dense type="password" />
             </div>
+            <div class="text-right q-pa-md">
+              <q-btn color="primary" :disable="!password" label="Обновить" @click="updateKey" />
+            </div>
           </div>
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn color="primary" :disable="!password" label="Обновить" @click="updateKey" />
-        </q-card-actions>
       </q-card>
     </q-dialog>
   </div>
@@ -94,6 +100,7 @@ export default {
   methods: {
     changeKey() {
       console.log('click')
+      this.secret = null
       this.dialogVisible = true
       console.log(this.dialogVisible)
     },
@@ -104,6 +111,12 @@ export default {
       changeGoogle2FaSecretKey(data)
         .then(res => {
           this.secret = res.data.secret
+        })
+        .catch(er => {
+          this.$q.notify({
+            message: er.response.data.error,
+            type: 'negative'
+          })
         })
 
     }

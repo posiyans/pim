@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\Telegram\TelegramMessage;
 
 class TwoFactorAuthentication extends Notification
@@ -30,10 +31,13 @@ class TwoFactorAuthentication extends Notification
     public function via(object $notifiable): array
     {
         $route = [];
-        if (isset($notifiable->options['telegram']) && !empty($notifiable->options['telegram'])) {
+        if (isset($notifiable->options['telegram']) &&
+            !empty($notifiable->options['telegram']) &&
+            in_array('telegram', $notifiable->options['two_factor_enable'])
+        ) {
             $route[] = 'telegram';
         }
-        if ($notifiable->email) {
+        if ($notifiable->email && in_array('mail', $notifiable->options['two_factor_enable'])) {
             $route[] = 'mail';
         }
         return $route;
@@ -45,10 +49,11 @@ class TwoFactorAuthentication extends Notification
      */
     public function toTelegram(object $notifiable)
     {
+        Log::error($this->code);
         return TelegramMessage::create()
             ->to($notifiable->options['telegram'])
-            ->line("Код для входа")
-            ->line($this->code);
+            ->line($this->code)
+            ->line("Код для входа");
     }
 
     /**
@@ -57,7 +62,7 @@ class TwoFactorAuthentication extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Код для входа')
+            ->subject('Код для входа ' . $this->code)
             ->greeting('Код для входа')
             ->action($this->code, '#')
             ->line('Для входа в систему введите данный код!');

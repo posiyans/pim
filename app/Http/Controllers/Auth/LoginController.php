@@ -29,14 +29,19 @@ class LoginController extends MyController
             $user = Auth::user();
             if ($user->two_factor) {
                 if ($request->code) {
-                      try {
-                          (new CheckUserTwoFactorCodeClass($user, $request->code))->run();
-                      } catch (\Exception $e) {
-                          return response(['status' => 'errorCode', 'error'=> $e->getMessage()], 200);
-                      }
+                    try {
+                        (new CheckUserTwoFactorCodeClass($user, $request->code))->run();
+                    } catch (\Exception $e) {
+                        return response(['status' => 'errorCode', 'error' => $e->getMessage()], 200);
+                    }
                 } else {
                     $code = (new CreateUserTwoFactorCodeClass($user))->run();
-                    $user->notify((new TwoFactorAuthentication($code)));
+                    try {
+                        $user->notify((new TwoFactorAuthentication($code)));
+//                        event(new LogNotification());
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error($e->getMessage());
+                    }
                     return response(['status' => 'sendCode'], 200);
                 }
             }

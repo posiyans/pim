@@ -43,6 +43,14 @@ export function updateUser(data) {
   })
 }
 
+export function updateUserField(data) {
+  return request({
+    url: '/api/user/update-field',
+    method: 'post',
+    data
+  })
+}
+
 export function createUser(user) {
   return request.post('/api/user',
     { user: user })

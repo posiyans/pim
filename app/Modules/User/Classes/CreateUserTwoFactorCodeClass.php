@@ -4,6 +4,7 @@
 namespace App\Modules\User\Classes;
 
 use App\Models\User;
+use App\Modules\Telegram\Classes\TelegramDeleteLoginCodeMessage;
 
 class CreateUserTwoFactorCodeClass
 {
@@ -22,7 +23,7 @@ class CreateUserTwoFactorCodeClass
         $opt['two_code'] = $code;
         $this->user->options = $opt;
         $this->user->save();
+        (new TelegramDeleteLoginCodeMessage($this->user))->run();
         return $code;
     }
-
 }

@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/user/get-list', [\App\Modules\User\Controllers\GetUsersListController::class, 'index']);
     Route::Get('/user/get', [\App\Modules\User\Controllers\GetUserInfoController::class, 'index']);
     Route::Post('/user/update', [\App\Modules\User\Controllers\UpdateUserController::class, 'index']);
+    Route::post('/user/update-field', [\App\Modules\User\Controllers\UpdateUserFieldController::class, 'index']);
     Route::Get('/user/avatar-get', [\App\Modules\User\Controllers\GetUserAvatarController::class, 'index']);
     Route::Post('/user/avatar-upload', [\App\Modules\User\Controllers\UploadUserAvatarController::class, 'index']);
     Route::Post('/user/password-change', [\App\Modules\User\Controllers\ChangeUserPasswordController::class, 'index']);

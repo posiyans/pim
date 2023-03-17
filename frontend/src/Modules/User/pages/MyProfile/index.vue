@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div v-if="user" :key="key">
     <q-card>
       <q-card-section class="">
         <div class="row">
@@ -25,92 +25,65 @@
           </div>
         </div>
         <div class="q-mt-md q-gutter-md">
-          <div>
-            <q-input v-model="user.email" label="E-mail" outlined />
-          </div>
-          <div>
-            <q-input v-model="user.options.telegram" label="Telegram Id" outlined>
-              <template v-slot:append>
-                <q-btn round dense flat icon="add" @click="getTelegramId" />
-              </template>
-            </q-input>
-          </div>
+          <EmailField
+            v-model="user.email"
+            :user-id='user.id'
+            :func="updateUserField"
+            name="email"
+            outlined label="E-mail"
+            @reload="reload"
+          />
+        </div>
+        <div>
+          <TelegramIdFiled
+            v-model="user.options.telegram"
+            :user-id='user.id'
+            :func="updateUserField"
+            name="telegram"
+            outlined label="Telegram Id"
+            @reload="reload"
+          />
         </div>
         <User2FaSetting :user-id="user.id" />
-
-        <div class="text-right q-gutter-md">
-          <q-btn color="negative" flat label="Отмена" @click="editCancel" />
-          <q-btn color="primary" :label="user.id ? 'Сохранить' : 'Добавить'" @click="saveData" />
-        </div>
       </q-card-section>
-
     </q-card>
   </div>
 </template>
 
 <script>
-import { getLastUserFromTelegram, updateUser } from 'src/Modules/User/api/user'
+import { updateUserField } from 'src/Modules/User/api/user'
 import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import ChangeAvatar from 'src/Modules/User/components/ChangeAvatar/index.vue'
 import User2FaSetting from 'src/Modules/User/components/User2FaSetting/index.vue'
+import EmailField from 'src/components/Fields/EmailField.vue'
+import TelegramIdFiled from 'src/components/Fields/TelegramIdFiled.vue'
 
 export default {
   components: {
+    EmailField,
+    TelegramIdFiled,
     QSelectExecutor,
     ChangeAvatar,
     User2FaSetting
   },
-  props: {
-    userId: {
-      type: [String, Number],
-      required: true
-    }
-  },
   data() {
     return {
-      user: {
-        login: '',
-        full_name: '',
-        name: '',
-        phone: '',
-        aliases: [],
-        options: {},
-        hide: true,
-        moderator: false
-      }
+      updateUserField,
+      user: null,
+      key: 1
     }
   },
   mounted() {
-    // this.getData()
     this.user = Object.assign({}, this.$store.state.user.info)
   },
   methods: {
-    setTwoFactor(val) {
-      if (val === true) {
-        this.user.options.two_factor_enable = []
-      }
-    },
-    getTelegramId() {
-      getLastUserFromTelegram()
-        .then(res => {
-          this.$q.dialog({
-            title: 'Последний id: ' + res.data.id,
-            message: 'Проверьте у пользователя: ' + res.data.first_name
-          }).onOk(() => {
-            this.user.options.telegram = res.data.id
-          })
-        })
-    },
-    editCancel() {
-      this.$emit('cancel')
-    },
-    saveData() {
-      updateUser(this.user)
-        .then(() => {
-          this.$emit('success')
+    reload() {
+      this.$store.dispatch('user/getInfo')
+        .finally(() => {
+          this.user = Object.assign({}, this.$store.state.user.info)
+          this.key++
         })
     }
-
   }
 }
 </script>
