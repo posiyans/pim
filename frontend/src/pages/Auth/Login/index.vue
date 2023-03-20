@@ -122,7 +122,7 @@ export default {
             .catch((error) => {
               if (error) {
                 this.$q.notify({
-                  message: error.response.data.error,
+                  message: 'Ошибка, обратититеь к системному администратору',
                   color: 'negative'
                 })
               }
