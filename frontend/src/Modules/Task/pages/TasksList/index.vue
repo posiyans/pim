@@ -11,7 +11,7 @@
         <q-btn color="primary" label="Найти" @click="handleFilter" />
       </div>
       <div>
-        <q-checkbox v-if="roles.includes('admin')" v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
+        <q-checkbox v-if="roles.includes('moderator')" v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
       </div>
     </div>
 

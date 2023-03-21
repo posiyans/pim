@@ -51,7 +51,7 @@
               <ShowTime :time="task.data_ispoln" />
             </b>
           </div>
-          <div v-if="roles.includes('admin') && task.data_ispoln && !task.arxiv">
+          <div v-if="roles.includes('moderator') && task.data_ispoln && !task.arxiv">
             <MoveDateTaskBtn :task-id="task.id" @reload="getTask" />
           </div>
         </div>
@@ -201,13 +201,13 @@ export default {
       if (user.id === this.userId) {
         access = true
       }
-      if (this.roles.includes('admin')) {
+      if (this.roles.includes('moderator')) {
         access = true
       }
       return access
     },
     changeStatus(executor) {
-      if (executor.user_id === this.userId || this.roles.includes('admin')) {
+      if (executor.user_id === this.userId || this.roles.includes('moderator')) {
         executor.loading = true
         if (executor.done) {
           executor.done = null

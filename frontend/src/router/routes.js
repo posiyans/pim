@@ -3,6 +3,7 @@ import Tasks from './modules/task.js'
 import Protocol from './modules/protocol.js'
 import User from './modules/user.js'
 import Calendar from './modules/calendar.js'
+import Setting from './modules/setting.js'
 
 const routes = [
   {
@@ -24,7 +25,8 @@ const routes = [
   Tasks,
   Protocol,
   User,
-  Calendar
+  Calendar,
+  Setting
 ]
 
 export default routes

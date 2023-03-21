@@ -5,6 +5,7 @@ namespace App\Modules\User\Controllers;
 use App\Http\Controllers\MyController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserController extends MyController
 {
@@ -16,11 +17,14 @@ class UpdateUserController extends MyController
     public function index(Request $request)
     {
         $edit = false;
+        $myUser = Auth::user();
         if ($request->id) {
             $user = User::find($request->id);
             $edit = true;
         } else {
             $user = new User();
+            $user->roles = ['user'];
+            $user->two_factor = false;
         }
         if ($user) {
             $user_old = clone $user;
@@ -34,12 +38,14 @@ class UpdateUserController extends MyController
             $opt['color'] = $request->color ?? $opt['color'] ?? '';
             $opt['telegram'] = $request->options['telegram'] ?? $opt['telegram'] ?? '';
             $user->options = $opt;
-//                $user->login_by_sms = $request->login_by_sms ?? $user->login_by_sms;
             $user->aliases = $request->aliases ?? $user->aliases;
             if ($request->has('hide')) {
                 $user->hide = $request->hide ?? null;
             }
             $user->moderator = $request->moderator ?? $user->moderator;
+            if ($myUser->admin) {
+                $user->admin = $request->admin ?? $user->admin;
+            }
             if ($user->save()) {
 //                    if ($edit) {
 //                        Log::saveDiff($user, $user_old);

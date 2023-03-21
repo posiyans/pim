@@ -58,6 +58,12 @@ const linksList = [
     roles: ['moderator'],
     icon: 'manage_accounts',
     link: '/user/list',
+  },
+  {
+    title: 'Настройки',
+    roles: ['admin'],
+    icon: 'settings',
+    link: '/setting/info',
   }
 ]
 

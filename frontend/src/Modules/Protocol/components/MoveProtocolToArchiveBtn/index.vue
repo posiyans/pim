@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn v-if="roles.includes('admin')" :loading="loading" color="negative" label="В архив" @click="showFormStatus = true" />
+    <q-btn v-if="roles.includes('moderator')" :loading="loading" color="negative" label="В архив" @click="showFormStatus = true" />
 
     <el-dialog v-model="showFormStatus" title="Отправить протокол и ВСЕ его задачи в Архив?" class="dialog">
       <template #footer>

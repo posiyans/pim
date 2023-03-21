@@ -70,7 +70,7 @@ export default {
       this.$store.dispatch('users/getInfo', this.uid)
       this.newValue = this.modelValue
     },
-    async rule(value) {
+    rule(value) {
       // eslint-disable-next-line
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
       if (value.length === 0) {

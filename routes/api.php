@@ -70,4 +70,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::Get('/log/task/get', [\App\Modules\Log\Controllers\GetTaskLogController::class, 'index']);
     Route::Get('/log/protocol/get', [\App\Modules\Log\Controllers\GetProtocolLogController::class, 'index']);
+
+    Route::Get('/setting/get-telegram-bot-token', [\App\Modules\GlobalOptions\Controllers\GetTelegramTokenController::class, 'index']);
+    Route::Post('/setting/update-telegram-bot-token', [\App\Modules\GlobalOptions\Controllers\UpdateTelegramTokenController::class, 'index']);
+    Route::Get('/telegram/get-bot-info', [\App\Modules\Telegram\Controllers\GetBotInfoController::class, 'index']);
+    Route::Get('/setting/get-mail', [\App\Modules\GlobalOptions\Controllers\GetMailSettingController::class, 'index']);
+    Route::Post('/setting/update-mail', [\App\Modules\GlobalOptions\Controllers\UpdateMailSettingController::class, 'index']);
+    Route::Post('/setting/send-test-mail', [\App\Modules\GlobalOptions\Controllers\SendTestMailController::class, 'index']);
 });

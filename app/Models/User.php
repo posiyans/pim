@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -46,9 +45,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'options' => 'array',
         'aliases' => 'array',
+        'roles' => 'array',
         'moderator' => 'boolean',
         'hide' => 'boolean',
         'two_factor' => 'boolean',
+        'twofa_secret' => 'encrypted',
     ];
 
 
@@ -59,6 +60,52 @@ class User extends Authenticatable
     {
         return $this->morphMany('App\Modules\Log\Models\Log', 'commentable');
     }
+
+    public function getModeratorAttribute()
+    {
+        return in_array('moderator', $this->roles);
+    }
+
+
+    public function setModeratorAttribute($val)
+    {
+        if ($val) {
+            if (!$this->moderator) {
+                $roles = $this->roles;
+                $roles[] = 'moderator';
+                $this->roles = $roles;
+            }
+        } else {
+            if ($this->moderator) {
+                $roles = $this->roles;
+                unset($roles[array_search('moderator', $roles)]);
+                $this->roles = $roles;
+            }
+        }
+    }
+
+    public function getAdminAttribute()
+    {
+        return in_array('admin', $this->roles);
+    }
+
+    public function setAdminAttribute($val)
+    {
+        if ($val) {
+            if (!$this->admin) {
+                $roles = $this->roles;
+                $roles[] = 'admin';
+                $this->roles = $roles;
+            }
+        } else {
+            if ($this->admin) {
+                $roles = $this->roles;
+                unset($roles[array_search('admin', $roles)]);
+                $this->roles = $roles;
+            }
+        }
+    }
+
 
     public function sendCodeSms()
     {

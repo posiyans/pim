@@ -9,11 +9,11 @@ export function loginUser({ commit }, data) {
         if (data.status === 'done') {
           SessionStorage.set('UserToken', data.token)
           const user = data.user
-          user.roles = ['user']
-          if (user.moderator) {
-            user.roles.push('moderator')
-            user.roles.push('admin')
-          }
+          // user.roles = ['user']
+          // if (user.moderator) {
+          //   user.roles.push('moderator')
+          //   // user.roles.push('admin')
+          // }
           commit('setInfo', user)
           resolve(data)
         } else {
@@ -34,11 +34,11 @@ export function getInfo({ commit }) {
         if (!data) {
           reject('Ошибка попробуйте позже')
         }
-        data.roles = ['user']
-        if (data.moderator) {
-          data.roles.push('moderator')
-          data.roles.push('admin')
-        }
+        // data.roles = ['user']
+        // if (data.moderator) {
+        //   data.roles.push('moderator')
+        //   // data.roles.push('admin')
+        // }
         commit('setInfo', data)
         resolve(data)
       })

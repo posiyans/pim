@@ -17,3 +17,5 @@ Route::get('/', function () {
     return '';
 });
 
+Route::get('/test', [\App\Modules\Telegram\Controllers\TestController::class, 'index']);
+

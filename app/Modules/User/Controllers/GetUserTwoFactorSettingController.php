@@ -23,9 +23,24 @@ class GetUserTwoFactorSettingController extends MyController
             'two_factor' => $user->two_factor,
             'two_factor_enable' => $user->options['two_factor_enable'] ?? [],
             'two_factor_valid' => [
-                'mail' => !!$user->email,
-                'telegram' => !!$user->options['telegram'],
-                'google2fa' => !!$user->twofa_secret,
+                [
+                    'key' => 'mail',
+                    'label' => 'E-mail',
+                    'error' => !$user->email,
+                    'error_message' => 'Не указан адрес почты',
+                ],
+                [
+                    'key' => 'telegram',
+                    'label' => 'Telegram ',
+                    'error' => !$user->options['telegram'],
+                    'error_message' => 'Не указан id в Telegram',
+                ],
+                [
+                    'key' => 'google2fa',
+                    'label' => 'Google Authenticator',
+                    'error' => !$user->twofa_secret,
+                    'error_message' => 'Не утановлен SecretKey',
+                ]
             ]
         ];
         return response($data);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="user">
     <div class="row items-center q-col-gutter-md q-pa-md">
       <div>
         <q-checkbox
@@ -12,49 +12,20 @@
     </div>
     <div v-if="user.two_factor">
       <div class="text-grey q-pa-sm">Двухэтапная аутентификация через</div>
-      <div class="q-mb-sm row items-center">
-        <div :class="{ 'text-negative': !user.two_factor_valid.mail}">
-          <q-checkbox v-model="user.two_factor_enable" val="telegram" @update:model-value="saveData" />
-          <div v-if="!user.two_factor_valid.telegram">
-            sfsfsdf
-          </div>
-        </div>
-        <div :class="{ 'text-negative': !user.two_factor_valid.telegram}">
-          <div>
-            Telegram
-          </div>
-          <div v-if="!user.two_factor_valid.telegram" class="text-small-80">
-            Не указан id в Telegram
-          </div>
-        </div>
-      </div>
-      <div class="row items-center">
+      <div v-for="item in user.two_factor_valid" :key="item.key" class="row items-center">
         <div>
-          <q-checkbox v-model="user.two_factor_enable" val="mail" @update:model-value="saveData" />
+          <q-checkbox v-model="user.two_factor_enable" :val="item.key" @update:model-value="saveData" />
         </div>
-        <div :class="{ 'text-negative': !user.two_factor_valid.mail}">
+        <div class="q-py-md q-mr-lg" :class="{ 'text-negative': item.error}">
           <div>
-            E-mail
+            {{ item.label }}
           </div>
-          <div v-if="!user.two_factor_valid.mail" class="text-small-80">
-            Не указан адрес почты
-          </div>
-        </div>
-      </div>
-      <div class="row items-center">
-        <div>
-          <q-checkbox v-model="user.two_factor_enable" val="google2fa" @update:model-value="saveData" />
-        </div>
-        <div class="q-py-md q-mr-lg" :class="{ 'text-negative': !user.two_factor_valid.google2fa}">
-          <div>
-            Google Authenticator
-          </div>
-          <div v-if="!user.two_factor_valid.google2fa" class="text-small-80">
-            Не утановлен SecretKey
+          <div v-if="item.error" class="text-small-80">
+            {{ item.error_message }}
           </div>
         </div>
-        <div>
-          <ChangeSecretKey />
+        <div v-if="item.key === 'google2fa'">
+          <ChangeSecretKey v-if="showChangeSecret" />
         </div>
       </div>
     </div>
@@ -77,7 +48,12 @@ export default {
   },
   data() {
     return {
-      user: {}
+      user: null
+    }
+  },
+  computed: {
+    showChangeSecret() {
+      return this.$store.state.user.info.id === this.userId
     }
   },
   mounted() {

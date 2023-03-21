@@ -82,7 +82,8 @@ export function getLastUserFromTelegram() {
 export function getTwoFactorSettingsForUser(params) {
   return request({
     url: '/api/user/get-two-factor-setting',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

@@ -2,11 +2,11 @@
 
 namespace App\Modules\Telegram\Classes;
 
-use App\Modules\Telegram\Controllers\Exception;
+use App\Modules\GlobalOptions\Repositories\SettingRepository;
+use App\Modules\Telegram\Exceptions\CouldNotSendNotification;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Str;
-use NotificationChannels\Telegram\Exceptions\CouldNotSendNotification;
 use Psr\Http\Message\ResponseInterface;
 
 use function blank;
@@ -23,11 +23,11 @@ class TelegramClass
     /** @var string Telegram Bot API Base URI */
     protected string $apiBaseUri;
 
-    public function __construct(string $token = null, HttpClient $httpClient = null, string $apiBaseUri = null)
+    public function __construct()
     {
-        $this->token = $token;
-        $this->http = $httpClient ?? new HttpClient();
-        $this->setApiBaseUri($apiBaseUri ?? 'https://api.telegram.org');
+        $this->token = (new SettingRepository())->getOptionValue('telegram_token', '', true);
+        $this->http = new HttpClient();
+        $this->setApiBaseUri('https://api.telegram.org');
     }
 
     /**
@@ -233,7 +233,7 @@ class TelegramClass
             ]);
         } catch (ClientException $exception) {
             throw CouldNotSendNotification::telegramRespondedWithAnError($exception);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             throw CouldNotSendNotification::couldNotCommunicateWithTelegram($exception);
         }
     }

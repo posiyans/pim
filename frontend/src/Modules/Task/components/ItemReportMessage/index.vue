@@ -94,7 +94,7 @@ export default {
       })
     },
     removeReport(report) {
-      if (report.user_id === this.userId || this.roles.includes('admin')) {
+      if (report.user_id === this.userId || this.roles.includes('moderator')) {
         let isRemote = confirm('Удалить отчет????')
         if (isRemote) {
           delReport(report.id).then(response => {

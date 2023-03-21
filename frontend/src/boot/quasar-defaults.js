@@ -14,6 +14,10 @@ QTabs.props.activeColor = {
   type: QTabs.props.activeColor,
   default: 'teal'
 }
+QTabs.props.noCaps = {
+  type: QTabs.props.noCaps,
+  default: true
+}
 
 QTabs.props.narrowIndicator = {
   type: QTabs.props.narrowIndicator,

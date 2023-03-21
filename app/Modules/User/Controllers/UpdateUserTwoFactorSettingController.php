@@ -12,9 +12,9 @@ class UpdateUserTwoFactorSettingController extends MyController
     //
     public function index(Request $request)
     {
-        $avtor = Auth::user();
-        $id = $avtor->id;
-        if ($avtor->moderator && $request->id) {
+        $myUser = Auth::user();
+        $id = $myUser->id;
+        if ($myUser->moderator && $request->id) {
             $id = $request->id;
         }
         $user = User::find($id);

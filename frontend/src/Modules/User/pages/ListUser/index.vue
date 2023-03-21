@@ -30,7 +30,10 @@
             <div v-if="scope.row.hide">
               <q-icon name="visibility_off" color="negative" />
             </div>
-            <div v-if="scope.row.moderator">
+            <div v-if="scope.row.roles.includes('admin')">
+              <q-icon name="people_alt" color="secondary" />
+            </div>
+            <div v-else-if="scope.row.roles.includes('moderator')">
               <q-icon name="perm_identity" color="secondary" />
             </div>
             <div v-if="scope.row.two_factor">
@@ -66,9 +69,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <LoadMore :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" />
+    <LoadMore :key="key" v-model:list-query="listQuery" :auto-scroll="false" :func="func" @setList="setList" />
 
-    <q-dialog v-model="dialogFormVisible" maximized>
+    <q-dialog v-model="dialogFormVisible" maximized @hide="reload">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ selectUser.full_name }}</div>
@@ -79,7 +82,6 @@
         <q-card-section>
           <EditUserProfile
             :user-id="selectUser.id"
-            @success="reload"
             @cancel="dialogFormVisible = false"
           />
         </q-card-section>

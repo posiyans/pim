@@ -38,7 +38,6 @@ class LoginController extends MyController
                     $code = (new CreateUserTwoFactorCodeClass($user))->run();
                     try {
                         $user->notify((new TwoFactorAuthentication($code)));
-//                        event(new LogNotification());
                     } catch (\Exception $e) {
                         \Illuminate\Support\Facades\Log::error($e->getMessage());
                     }

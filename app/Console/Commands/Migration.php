@@ -383,12 +383,20 @@ class Migration extends Command
             $user->login = $item->user_login;
             $user->name = $item->name;
             $user->full_name = $item->full_name;
-            $user->moderator = $item->moderator ?? false;
+            $roles = ['user'];
+            if ($item->moderator) {
+                $roles[] = 'moderator';
+            }
+            if ($item->user_id == 15) {
+                $roles[] = 'admin';
+            }
+            $user->roles = $roles;
+//            $user->moderator = $roles
             $user->last_connect = $item->last_conect;
             $options = [
-                'phone' => $item->phone,
+                'phone' => '',
                 'color' => $item->color,
-                'telegram' => $item->telegram
+                'telegram' => ''
             ];
             $user->hide = $item->hide > 0 ? true : false;
             $user->options = $options;

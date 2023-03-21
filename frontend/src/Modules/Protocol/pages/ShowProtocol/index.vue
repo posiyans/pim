@@ -5,7 +5,7 @@
         <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
         <div>
           <q-btn
-            v-if="roles.includes('admin') && !protokol.arxiv"
+            v-if="roles.includes('moderator') && !protokol.arxiv"
             class="filter-item"
             color="secondary"
             label="Edit"

@@ -18,12 +18,14 @@ return new class extends Migration {
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->boolean('moderator')->nullable();
-            $table->boolean('two_factor')->default(false);
+//            $table->boolean('moderator')->nullable();
+            $table->json('roles');
             $table->dateTime('last_connect')->nullable();
             $table->json('options')->nullable();
             $table->integer('hide')->nullable();
             $table->json('aliases')->nullable();
+            $table->boolean('two_factor')->default(false);
+            $table->string('twofa_secret', 255)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
