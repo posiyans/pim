@@ -45,7 +45,7 @@ class TelegramMessage
     {
         try {
             $telegram = new TelegramClass();
-            $telegram->sendMessage($this->payload);
+            return $telegram->sendMessage($this->payload);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

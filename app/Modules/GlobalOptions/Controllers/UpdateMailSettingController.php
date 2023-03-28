@@ -5,6 +5,7 @@ namespace App\Modules\GlobalOptions\Controllers;
 use App\Http\Controllers\MyController;
 use App\Modules\GlobalOptions\Classes\UpdateSetting;
 use App\Modules\GlobalOptions\Models\Setting;
+use App\Modules\GlobalOptions\Repositories\MailSettingRepository;
 use App\Modules\GlobalOptions\Repositories\SettingRepository;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,7 @@ class UpdateMailSettingController extends MyController
             $opt->field = 'mail_setting';
         }
         $opt = (new UpdateSetting($opt))->value($data)->update();
+        MailSettingRepository::clearCache();
         return response($opt);
     }
 

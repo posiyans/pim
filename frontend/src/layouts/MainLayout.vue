@@ -45,7 +45,7 @@ const linksList = [
     title: 'Протоколы',
     icon: 'receipt',
     link: '/protocol/list',
-    roles: ['moderator']
+    roles: ['moderator', 'admin']
   },
   {
     title: 'Календарь',
@@ -55,7 +55,7 @@ const linksList = [
   },
   {
     title: 'Пользователи',
-    roles: ['moderator'],
+    roles: ['moderator', 'admin'],
     icon: 'manage_accounts',
     link: '/user/list',
   },

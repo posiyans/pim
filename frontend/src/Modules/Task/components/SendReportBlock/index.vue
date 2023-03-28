@@ -131,11 +131,11 @@ export default {
         .then(response => {
           this.message = ''
           this.file = null
-          this.$message({
+          this.$q.notify({
             message: 'Ok',
-            type: 'success',
-            showClose: true,
-            duration: 1000
+            position: 'top',
+            color: 'secondary',
+            timeout: 500
           })
           this.$emit('reload')
         })

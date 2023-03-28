@@ -20,6 +20,9 @@ class OnlyModerator
         if (in_array('moderator', $user->roles)) {
             return $next($request);
         }
+        if (in_array('admin', $user->roles)) {
+            return $next($request);
+        }
         abort(403, 'Access denied');
     }
 }

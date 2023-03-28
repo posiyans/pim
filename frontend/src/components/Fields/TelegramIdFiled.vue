@@ -14,16 +14,19 @@
       </q-btn-group>
     </template>
     <template v-slot:append>
-      <q-btn round dense flat icon="add" @click="getTelegramId" />
+      <GetLastUserIdBtn @setId="setTelegramId" />
     </template>
   </q-input>
 </template>
 
 <script>
 
-import { getLastUserFromTelegram } from 'src/Modules/User/api/user'
+import GetLastUserIdBtn from 'src/Modules/Telegram/components/GetLastUserIdBtn/index.vue'
 
 export default {
+  components: {
+    GetLastUserIdBtn
+  },
   props: {
     modelValue: {
       type: String,
@@ -68,18 +71,10 @@ export default {
     this.newValue = this.modelValue
   },
   methods: {
-    getTelegramId() {
-      getLastUserFromTelegram()
-        .then(res => {
-          this.$q.dialog({
-            title: 'Последний id: ' + res.data.id,
-            message: 'Проверьте у пользователя: ' + res.data.first_name
-          }).onOk(() => {
-            if (this.newValue !== res.data.id) {
-              this.setValue(res.data.id)
-            }
-          })
-        })
+    setTelegramId(val) {
+      if (this.newValue !== val) {
+        this.setValue(val)
+      }
     },
     restoreData() {
       this.newValue = this.modelValue
@@ -94,7 +89,7 @@ export default {
         value: this.newValue,
       }
       this.func(data)
-        .then(response => {
+        .then(() => {
           this.$emit('reload')
         })
         .catch(error => {

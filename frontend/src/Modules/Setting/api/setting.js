@@ -44,3 +44,11 @@ export function sendTestEmail(data) {
     data
   })
 }
+
+export function changeTwoFactorEnable(data) {
+  return request({
+    url: '/api/setting/change-two-factor-enable',
+    method: 'post',
+    data
+  })
+}

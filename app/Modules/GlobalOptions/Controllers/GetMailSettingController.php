@@ -23,6 +23,7 @@ class GetMailSettingController extends MyController
             'MAIL_ENCRYPTION' => 'tls',
         ];
         $opt = (new SettingRepository())->getOptionValue('mail_setting', $def);
+        $opt['two_factor_mail'] = (new SettingRepository())->getOptionValue('two_factor_mail_enable', false);
 //        print_r($opt);
         return response($opt);
     }

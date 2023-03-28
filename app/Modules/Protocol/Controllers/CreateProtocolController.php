@@ -36,7 +36,7 @@ class CreateProtocolController extends MyController
                 $protokol = new Protocol();
                 $protokol->number = $protokol_json->number;
                 $protokol->title = $protokol_json->title;
-                $protokol->type = $protokol_json->type;
+                $protokol->type_id = $protokol_json->type_id;
                 $description = [
                     'date' => $protokol_json->date ?? '',
                     'region' => $protokol_json->region ?? '',

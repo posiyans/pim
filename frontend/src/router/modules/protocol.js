@@ -14,7 +14,7 @@ const Protocol = {
       component: () => import('src/Modules/Protocol/pages/EditProtocol/index.vue'),
       meta: {
         title: 'Протокол',
-        roles: ['moderator']
+        roles: ['moderator', 'admin']
       }
     },
     {
@@ -22,7 +22,7 @@ const Protocol = {
       component: () => import('src/Modules/Protocol/pages/ListProtocol/index.vue'),
       meta: {
         title: 'Протоколы',
-        roles: ['moderator']
+        roles: ['moderator', 'admin']
       }
     },
     {
@@ -30,7 +30,7 @@ const Protocol = {
       component: () => import('src/Modules/Protocol/pages/AddProtocol/index.vue'),
       meta: {
         title: 'Добавить протокол',
-        roles: ['moderator']
+        roles: ['moderator', 'admin']
       }
     }
   ]

@@ -65,7 +65,8 @@ export default {
       return this.$store.state.user.info
     },
     moderator() {
-      return !!this.user.moderator
+      // return !!this.user.moderator
+      return !!this.user.roles.includes('moderator') || !!this.user.roles.includes('admin')
     },
     send() {
       return this.user.id === this.item.user_id

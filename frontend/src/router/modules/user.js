@@ -7,7 +7,7 @@ const User = {
       component: () => import('src/Modules/User/pages/ListUser/index.vue'),
       meta: {
         title: 'Пользователи',
-        roles: ['moderator']
+        roles: ['moderator', 'admin']
       }
     },
     {

@@ -27,12 +27,15 @@
         <q-space />
         <SendTestMailBlock class="row q-col-gutter-sm" />
       </div>
+      <div>
+        <q-checkbox v-model="mail.two_factor_mail" label="Двухэтапная аутентификация через Email" @update:model-value="changeBotEnable" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getMailSetting, updateMailSetting } from 'src/Modules/Setting/api/setting'
+import { changeTwoFactorEnable, getMailSetting, updateMailSetting } from 'src/Modules/Setting/api/setting'
 import SendTestMailBlock from 'src/Modules/Setting/components/SendTestMailBlock/index.vue'
 
 export default {
@@ -50,6 +53,16 @@ export default {
     this.getData()
   },
   methods: {
+    changeBotEnable() {
+      const data = {
+        name: 'mail',
+        value: this.mail.two_factor_mail
+      }
+      changeTwoFactorEnable(data)
+        .then(() => {
+          this.getInfo()
+        })
+    },
     getData() {
       getMailSetting()
         .then(res => {

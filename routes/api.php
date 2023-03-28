@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\File\Controlles\DownloadFileController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::Post('/auth/login', [\App\Http\Controllers\Auth\LoginController::class, 'index']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::Get('/my-user', function (Request $request) {
-        return $request->user();
-    });
+    Route::Get('/my-user', [\App\Modules\User\Controllers\GetMyInfoController::class, 'index']);
     Route::Get('/auth/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'index']);
     Route::Get('/user/get-list', [\App\Modules\User\Controllers\GetUsersListController::class, 'index']);
     Route::Get('/user/get', [\App\Modules\User\Controllers\GetUserInfoController::class, 'index']);
@@ -77,4 +74,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/setting/get-mail', [\App\Modules\GlobalOptions\Controllers\GetMailSettingController::class, 'index']);
     Route::Post('/setting/update-mail', [\App\Modules\GlobalOptions\Controllers\UpdateMailSettingController::class, 'index']);
     Route::Post('/setting/send-test-mail', [\App\Modules\GlobalOptions\Controllers\SendTestMailController::class, 'index']);
+    Route::Post('/setting/change-two-factor-enable', [\App\Modules\GlobalOptions\Controllers\ChangeTwoFactorEnableController::class, 'index']);
 });

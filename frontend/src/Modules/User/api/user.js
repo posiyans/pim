@@ -71,14 +71,6 @@ export function fetchExecutors() {
   })
 }
 
-
-export function getLastUserFromTelegram() {
-  return request({
-    url: '/api/user/get-last-user-from-telegram',
-    method: 'get'
-  })
-}
-
 export function getTwoFactorSettingsForUser(params) {
   return request({
     url: '/api/user/get-two-factor-setting',

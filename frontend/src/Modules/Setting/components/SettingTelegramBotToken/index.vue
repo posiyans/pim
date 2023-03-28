@@ -21,6 +21,9 @@
         </span>
         </span>
       </div>
+      <div>
+        <q-checkbox v-model="bot.two_factor_telegram" label="Двухэтапная аутентификация через бота" @update:model-value="changeBotEnable" />
+      </div>
     </div>
     <div v-else-if="!loading" class="text-red q-pa-md">
       Бот недоступен
@@ -29,7 +32,7 @@
 </template>
 
 <script>
-import { getTelegramBotInfo, getTelegramBotToken, updateTelegramBotToken } from 'src/Modules/Setting/api/setting'
+import { changeTwoFactorEnable, getTelegramBotInfo, getTelegramBotToken, updateTelegramBotToken } from 'src/Modules/Setting/api/setting'
 
 export default {
   data() {
@@ -44,6 +47,16 @@ export default {
     this.getInfo()
   },
   methods: {
+    changeBotEnable() {
+      const data = {
+        name: 'telegram',
+        value: this.bot.two_factor_telegram
+      }
+      changeTwoFactorEnable(data)
+        .then(() => {
+          this.getInfo()
+        })
+    },
     openBot() {
       window.open('https://t.me/' + this.bot.username, '_blank')
     },

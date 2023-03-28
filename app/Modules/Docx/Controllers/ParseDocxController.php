@@ -27,18 +27,7 @@ class ParseDocxController extends MyController
             'composition' => '',
             'date' => ''
         ];
-        $file = $request->file('file');
-        $type = $file->getMimeType();
-//        return $type;
-        $tmp_name = tempnam(sys_get_temp_dir(), 'php_docx');
-        move_uploaded_file($file->getRealPath(), $tmp_name);
-//        $tmp_name = __DIR__ . '/2.docx';
-//        $type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        $html = DocumentParser::parseFromFile($tmp_name, $type);
-//        echo $html;
-        $html = str_replace('</p>', '</p>' . PHP_EOL, $html);
-        $html = strip_tags($html, '');
-        $html_array = explode(PHP_EOL, $html);
+        $html_array = $this->fileToData($request);
 
         $partition = [];
         $p_number = 1;
@@ -46,37 +35,50 @@ class ParseDocxController extends MyController
         $i_noempty = 1;
         foreach ($html_array as $key => $value) {
             $item = trim($value);
+            // если не пустая строка
             if (!empty($item)) {
                 if ($i_noempty == 2) {
+                    // вытаскиваем дату из 2 строки
                     $this->protokol['date'] = $value;
                 }
                 $i_noempty++;
+                // получаем номер протокола
                 $this->parseNumber($item);
+                // получаем шапку протокола
                 $this->parseHeader($item);
+                // получаем разделы
                 if ($this->parsePartitionIndex($item)) {
                     if (isset($partition['number'])) {
                         $this->protokol['partition'][] = $partition;
-                        $partition = [];
+                        $partition = [
+                            'speaker' => '',
+                            'text' => '',
+                            'tasks' => []
+                        ];
                         $i = 1;
                     }
                     $partition['number'] = $p_number++;
                     $partition['tasks'] = [];
                     $l = 1;
+                    // пропускаем пустые строки
                     while (empty(trim($html_array[$key - $l]))) {
                         $l++;
                     }
+                    // получаем докладчика
                     $partition['speaker'] = $this->parseValue($html_array[$key - $l]);
                     $l++;
+                    // получем тему доклада
                     $partition['text'] = $html_array[$key - $l];
                 } else {
                     if (isset($partition['number'])) {
                         $task = $this->parseTask($item);
-                        if ($task || count($partition['task']) == 0) {
+//                        dump($partition);
+                        if ($task || count($partition['tasks']) == 0) {
                             $task['number'] = $i++;
-                            $task['users'] = [];
+                            $task['users'] = [1];
                             $partition['tasks'][] = $task;
                         } else {
-                            $last_key = count($partition['task']) - 1;
+                            $last_key = count($partition['tasks']) - 1;
                             $text = $partition['tasks'][$last_key]['text'];
                             $text .= "\n" . $item;
                             $partition['tasks'][$last_key]['text'] = $text;
@@ -86,17 +88,35 @@ class ParseDocxController extends MyController
             } else {
                 if (isset($partition['number']) && count($partition['tasks']) > 0) {
                     $this->protokol['partition'][] = $partition;
-                    $partition = [];
+                    $partition = [
+                        'speaker' => '',
+                        'text' => '',
+                        'tasks' => []
+                    ];
                     $i = 1;
                 }
             }
-//            dump($item);
-//            echo '<br>';
         }
 
-//        dump($this->protokol);
-//        dump($html_array);
         return $this->protokol;
+    }
+
+    /**
+     * преобразуем фаил в массив сток
+     *
+     * @param $request
+     * @return string[]
+     */
+    private function fileToData($request)
+    {
+        $file = $request->file('file');
+        $type = $file->getMimeType();
+        $tmp_name = tempnam(sys_get_temp_dir(), 'php_docx');
+        move_uploaded_file($file->getRealPath(), $tmp_name);
+        $html = DocumentParser::parseFromFile($tmp_name, $type);
+        $html = str_replace('</p>', '</p>' . PHP_EOL, $html);
+        $html = strip_tags($html, '');
+        return explode(PHP_EOL, $html);
     }
 
     private function parseDate($value)
@@ -164,7 +184,12 @@ class ParseDocxController extends MyController
         return false;
     }
 
-
+    /**
+     * парсим заголовок
+     *
+     * @param $value
+     * @return void
+     */
     private function parseHeader($value)
     {
         $ar = [

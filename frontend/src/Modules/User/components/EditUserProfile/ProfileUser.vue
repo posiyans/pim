@@ -32,14 +32,14 @@
           />
         </div>
       </div>
-      <div class="q-pa-md">
+      <div class="q-pa-md" style="min-width: 150px;">
         <ChangeAvatar v-if="user.id" :id="user.id" size="120px" />
       </div>
     </div>
     <div>
       <q-input v-model="user.options.telegram" label="Telegram Id" outlined>
         <template v-slot:append>
-          <q-btn round dense flat icon="add" @click="getTelegramId" />
+          <GetLastUserIdBtn @setId="setTelegramId" />
         </template>
       </q-input>
     </div>
@@ -80,14 +80,16 @@
 </template>
 
 <script>
-import { getLastUserFromTelegram, getUserInfo, updateUser } from 'src/Modules/User/api/user'
+import { getUserInfo, updateUser } from 'src/Modules/User/api/user'
 import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
 import ChangeAvatar from 'src/Modules/User/components/ChangeAvatar/index.vue'
+import GetLastUserIdBtn from 'src/Modules/Telegram/components/GetLastUserIdBtn/index.vue'
 
 export default {
   components: {
     QSelectExecutor,
-    ChangeAvatar
+    ChangeAvatar,
+    GetLastUserIdBtn
   },
   props: {
     userId: {
@@ -125,16 +127,8 @@ export default {
     this.getData()
   },
   methods: {
-    getTelegramId() {
-      getLastUserFromTelegram()
-        .then(res => {
-          this.$q.dialog({
-            title: 'Последний id: ' + res.data.id,
-            message: 'Проверьте у пользователя: ' + res.data.first_name
-          }).onOk(() => {
-            this.user.options.telegram = res.data.id
-          })
-        })
+    setTelegramId(val) {
+      this.user.options.telegram = val
     },
     editCancel() {
       this.$emit('cancel')

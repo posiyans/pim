@@ -18,7 +18,7 @@ const Tasks = {
       component: () => import('src/Modules/Task/pages/EditTask/index.vue'),
       meta: {
         title: 'Редактировать задачу',
-        roles: ['moderator']
+        roles: ['moderator', 'admin']
       }
     }
   ]

@@ -1,7 +1,6 @@
 <template>
   <div>
     <q-btn label="Пароль" outline color="negative" @click="showDialog" />
-
     <q-dialog v-model="dialogVisible">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -56,6 +55,12 @@ export default {
       changeUserPassword(data)
         .then(res => {
           this.dialogVisible = false
+          this.$q.notify({
+            message: 'Ok',
+            position: 'top',
+            color: 'secondary',
+            timeout: 500
+          })
         })
     },
     showDialog() {

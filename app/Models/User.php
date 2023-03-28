@@ -73,13 +73,13 @@ class User extends Authenticatable
             if (!$this->moderator) {
                 $roles = $this->roles;
                 $roles[] = 'moderator';
-                $this->roles = $roles;
+                $this->roles = array_values($roles);
             }
         } else {
             if ($this->moderator) {
                 $roles = $this->roles;
                 unset($roles[array_search('moderator', $roles)]);
-                $this->roles = $roles;
+                $this->roles = array_values($roles);
             }
         }
     }
@@ -95,13 +95,13 @@ class User extends Authenticatable
             if (!$this->admin) {
                 $roles = $this->roles;
                 $roles[] = 'admin';
-                $this->roles = $roles;
+                $this->roles = array_values($roles);
             }
         } else {
             if ($this->admin) {
                 $roles = $this->roles;
                 unset($roles[array_search('admin', $roles)]);
-                $this->roles = $roles;
+                $this->roles = array_values($roles);
             }
         }
     }

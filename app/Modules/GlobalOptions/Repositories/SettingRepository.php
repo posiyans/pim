@@ -32,6 +32,9 @@ class SettingRepository
         if ($opt->type == 'string') {
             return $opt->value;
         }
+        if ($opt->type == 'boolean') {
+            return (boolean)$opt->value;
+        }
         if ($opt->type == 'array') {
             return $opt->value;
 //            return json_decode($opt->value, true);

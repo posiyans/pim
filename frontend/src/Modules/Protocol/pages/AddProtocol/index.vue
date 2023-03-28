@@ -6,7 +6,7 @@
       </div>
       <div style="min-width: 220px;">
         <SelectTypeProtocol
-          v-model="protokol.type"
+          v-model="type"
           outlined
           dense
           add
@@ -281,12 +281,13 @@ export default {
       parserOk: false,
       parserButton: false,
       text: '',
+      type: 1,
       infoMessage: 'Проверить протокол и нажать Потвердить',
       temp: {},
       oldProtokol: {},
       protokol: {
         title: 'Протокол',
-        type: 1,
+        type_id: 1,
         number: '00/00/00',
         date: date.formatDate(new Date(), 'DD MMMM YYYY'),
         region: 'Место проведения',
@@ -390,6 +391,7 @@ export default {
     },
     publishProtokol() {
       const data = new FormData()
+      this.protokol.type_id = this.type
       data.append('file', this.$refs.file.files[0])
       data.append('protocol', JSON.stringify(this.protokol))
       publishProtokol(data)

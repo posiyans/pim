@@ -20,19 +20,22 @@ class GetLastMessageUserIdController extends MyController
     {
         $updates = TelegramUpdates::create()
             ->latest()
-
             ->options([
                 'timeout' => 0,
             ])
             ->get();
         if ($updates['ok']) {
-            $userTelegram = $updates['result'][0]['message']['from'];
-            TelegramMessage::create()
-                ->to($userTelegram['id'])
-                ->line("Ваш id:")
-                ->line($userTelegram['id'])
-                ->send();
-            return $userTelegram;
+            if (isset($updates['result'][0])) {
+                $userTelegram = $updates['result'][0]['message']['from'];
+                TelegramMessage::create()
+                    ->to($userTelegram['id'])
+                    ->line("Ваш id:")
+                    ->line($userTelegram['id'])
+                    ->send();
+                return ['status' => true, 'data' => $userTelegram];
+            } else {
+                return ['status' => false, 'error' => 'Нет сообщений'];
+            }
         }
     }
 

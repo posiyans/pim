@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->integer('hide')->nullable();
             $table->json('aliases')->nullable();
             $table->boolean('two_factor')->default(false);
-            $table->string('twofa_secret', 255)->nullable();
+            $table->text('twofa_secret')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

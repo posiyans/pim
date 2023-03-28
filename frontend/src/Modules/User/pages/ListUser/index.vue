@@ -64,7 +64,6 @@
               <q-btn color="primary" outline label="Edit" @click="handleUpdate(scope.row)" />
             </div>
             <ChangeUserPasswordBtn :user-id="scope.row.id" :user-name="scope.row.full_name" />
-
           </div>
         </template>
       </el-table-column>

@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\MyController;
 use App\Modules\Log\Models\Log;
-use App\Modules\User\Classes\CheckUserTwoFactorCodeClass;
-use App\Modules\User\Classes\CreateUserTwoFactorCodeClass;
-use App\Notifications\TwoFactorAuthentication;
+use App\Modules\User\Classes\SendOrCheckTwoFactorCodeClass;
+use App\Modules\User\Classes\SendTwoFactorCodeClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,23 +26,11 @@ class LoginController extends MyController
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->two_factor) {
-                if ($request->code) {
-                    try {
-                        (new CheckUserTwoFactorCodeClass($user, $request->code))->run();
-                    } catch (\Exception $e) {
-                        return response(['status' => 'errorCode', 'error' => $e->getMessage()], 200);
-                    }
-                } else {
-                    $code = (new CreateUserTwoFactorCodeClass($user))->run();
-                    try {
-                        $user->notify((new TwoFactorAuthentication($code)));
-                    } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\Log::error($e->getMessage());
-                    }
-                    return response(['status' => 'sendCode'], 200);
-                }
+            try {
+                return (new SendOrCheckTwoFactorCodeClass($user))->code($request->code)->run();
+            } catch (\Exception $e) {
             }
+
 //            $user = Auth::user();
             $log = new Log();
             $log->description = 'login by login, password';
