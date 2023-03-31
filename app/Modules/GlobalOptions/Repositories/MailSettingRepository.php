@@ -24,14 +24,17 @@ class MailSettingRepository
 
     public static function setMailConfig()
     {
-        $opt = self::getSetting();
-        if ($opt) {
-            config(['mail.mailers.smtp.host' => $opt['MAIL_HOST']]);
-            config(['mail.mailers.smtp.port' => $opt['MAIL_PORT']]);
-            config(['mail.from.address' => $opt['MAIL_USERNAME']]);
-            config(['mail.mailers.smtp.username' => $opt['MAIL_USERNAME']]);
-            config(['mail.mailers.smtp.password' => $opt['MAIL_PASSWORD']]);
-            config(['mail.mailers.smtp.encryption' => $opt['MAIL_ENCRYPTION']]);
+        try {
+            $opt = self::getSetting();
+            if ($opt) {
+                config(['mail.mailers.smtp.host' => $opt['MAIL_HOST']]);
+                config(['mail.mailers.smtp.port' => $opt['MAIL_PORT']]);
+                config(['mail.from.address' => $opt['MAIL_USERNAME']]);
+                config(['mail.mailers.smtp.username' => $opt['MAIL_USERNAME']]);
+                config(['mail.mailers.smtp.password' => $opt['MAIL_PASSWORD']]);
+                config(['mail.mailers.smtp.encryption' => $opt['MAIL_ENCRYPTION']]);
+            }
+        } catch (\Exception $e) {
         }
     }
 
