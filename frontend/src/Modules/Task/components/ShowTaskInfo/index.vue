@@ -71,7 +71,7 @@
         <q-card-section class="q-pb-none">
           <div class="text-weight-bold">
             Отчет
-            <el-checkbox v-model="listQuery.showdeleted" class="filter-item" style="margin-left:15px;" @change="getTask">Показать удаленные</el-checkbox>
+            <q-checkbox v-model="listQuery.showdeleted" label="Показать удаленные" @update:model-value="getTask" />
           </div>
         </q-card-section>
         <q-card-section>

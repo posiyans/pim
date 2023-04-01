@@ -2,12 +2,23 @@
   <div>
     <q-btn v-if="roles.includes('moderator')" :loading="loading" color="negative" label="В архив" @click="showFormStatus = true" />
 
-    <el-dialog v-model="showFormStatus" title="Отправить протокол и ВСЕ его задачи в Архив?" class="dialog">
-      <template #footer>
-        <el-button @click="showFormStatus = false">Отмена</el-button>
-        <el-button type="danger" @click="sendToArchiv">В архив</el-button>
-      </template>
-    </el-dialog>
+    <q-dialog v-model="showFormStatus">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none" style="min-width: 400px;">
+          <div class="text-h6">Отправить протокол и ВСЕ его задачи в Архив?</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <div class="text-right q-gutter-md">
+
+            <q-btn color="negative" flat label="Отмена" v-close-popup />
+            <q-btn color="negative" label="В архив" @click="sendToArchiv" />
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -55,29 +66,5 @@ export default {
 </script>
 
 <style scoped>
-.task-text {
-  padding: 1px;
-  font-style: italic;
-}
-
-.link {
-  color: #000061;
-  padding: 0 15px;
-}
-
-.link:hover {
-  color: #0000ff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.edit-button {
-  padding-left: 200px;
-}
-
-.dialog {
-  background-color: #ffeaea;
-  color: green;
-}
 
 </style>

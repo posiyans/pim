@@ -29,7 +29,7 @@ class Partition extends MyModel
     public function getPercentComplete()
     {
         $PercentComplete = [];
-        foreach ($this->task as $task) {
+        foreach ($this->tasks as $task) {
             $PercentComplete[] = $task->getPercentComplete();
         }
         if (count($PercentComplete) != 0) {

@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { SessionStorage } from 'quasar'
+import { LocalStorage } from 'quasar'
 
-// create an axios instance
+let timer = null
 const service = axios.create({
   baseURL: process.env.API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
@@ -10,7 +10,20 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    const token = SessionStorage.getItem('UserToken') || ''
+    setTimeout(() => {
+      LocalStorage.set('tokenExpired', new Date())
+      // LocalStorage.set('tokenExpired', date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss'))
+    }, 500)
+
+    // if (timer) {
+    //   clearTimeout(timer)
+    // }
+    //
+    // timer = setTimeout(() => {
+    //   LocalStorage.remove('UserToken')
+    //   window.location = '/auth/login'
+    // }, 20 * 60 * 1000)
+    const token = LocalStorage.getItem('UserToken') || ''
     if (token) {
       config.headers.Authorization = 'Bearer ' + token
     }
@@ -27,7 +40,7 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response.status === 401) {
-      SessionStorage.remove('UserToken')
+      LocalStorage.remove('UserToken')
       if (window.location.pathname !== '/auth/login') {
         window.location = '/auth/login'
       }

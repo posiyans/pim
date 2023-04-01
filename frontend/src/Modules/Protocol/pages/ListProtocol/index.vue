@@ -18,35 +18,38 @@
         <q-checkbox v-model="listQuery.archiv" label="Архив" @update:model-value="handleFilter" />
       </div>
       <div>
-        <q-btn icon="add" color="primary" flat @click="addProtokol" />
+        <q-btn icon="add" color="primary" flat to="/protocol/add" />
       </div>
     </div>
-
-    <el-table
-      :key="tableKey"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
+    <q-table
+      :rows="list"
+      :columns="columns"
+      separator="cell"
+      bordered
+      hide-bottom
+      :pagination="{rowsPerPage: 0}"
+      flat
+      row-key="name"
     >
-      <el-table-column label="№" prop="id" align="center" width="65">
-        <template #default="scope">
+      <template v-slot:body-cell-id="scope">
+        <q-td :props="scope" auto-width>
           <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Протокол" min-width="200px">
-        <template #default="scope">
-          <span class="link-type cursor-pointer" @click="getProtokolInfo(scope.row)">{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Дата" align="center" min-width="200px">
-        <template #default="scope">
+        </q-td>
+      </template>
+      <template v-slot:body-cell-protocol="scope">
+        <q-td :props="scope">
+          <router-link class="link-type" :to="'/protocol/show/' + scope.row.id">
+            {{ scope.row.title }}
+          </router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-date="scope">
+        <q-td :props="scope">
           <span>{{ scope.row.descriptions.region }} {{ scope.row.descriptions.date }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="%" align="center" width="80px">
-        <template #default="scope">
+        </q-td>
+      </template>
+      <template v-slot:body-cell-status="scope">
+        <q-td :props="scope" auto-width>
           <q-knob
             disable
             v-model="scope.row.PercentComplete"
@@ -57,31 +60,17 @@
             track-color="red-1"
             :class="scope.row.PercentComplete >90 ? 'text-primary' : 'text-negative'"
           />
-        </template>
-      </el-table-column>
-    </el-table>
-
+        </q-td>
+      </template>
+    </q-table>
     <LoadMore :key="key" v-model:list-query="listQuery" :func="func" @setList="setList" />
-
   </div>
 </template>
 
 <script>
-import { fetchList, fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
+import { fetchList } from 'src/Modules/Protocol/api/protocol.js'
 import QSelectTypeProtocol from 'src/Modules/Protocol/components/QSelectTypeProtocol/index.vue'
 import LoadMore from 'src/components/LoadMore/index.vue'
-
-const calendarTypeOptions = [
-  { key: 'psd', display_name: 'Протоколы' },
-  { key: 'skype', display_name: 'Скайп Протоколы' },
-  { key: 'year', display_name: 'Готодовые протоколы' }
-]
-
-// arr to obj ,such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   components: { LoadMore, QSelectTypeProtocol },
@@ -89,130 +78,50 @@ export default {
     return {
       key: 1,
       func: fetchList,
-      tableKey: 0,
       list: [],
+      columns: [
+        {
+          name: 'id',
+          label: '№',
+          align: 'center'
+        },
+        {
+          name: 'protocol',
+          label: 'Протокол',
+          align: 'left'
+        },
+        {
+          name: 'date',
+          label: 'Дата',
+          align: 'center'
+        },
+        {
+          name: 'status',
+          label: '%',
+          align: 'center'
+        },
+      ],
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
         find: '',
-        year: undefined,
-        title: undefined,
         type: undefined,
         archiv: false,
         sort: '+id'
       },
-      yearAll: [],
-      calendarTypeOptions,
-      sortOptions: [{ label: 'Сначало новые', key: '+id' }, { label: 'Сначало старые', key: '-id' }],
-      statusOptions: ['published', 'draft', 'deleted'],
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
-      },
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: 'Edit',
-        create: 'Create'
-      },
-      dialogPvVisible: false,
-      pvData: [],
-      rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-      },
-      downloadLoading: false,
-      expandAll: false,
-      data: {},
-      protokol: {
-        title: '',
-        descriptions: {}
-      },
-      args: [null, null, 'timeLine']
+
+
     }
   },
   methods: {
     setList(val) {
       this.list = val
     },
-    getList() {
-      this.key++
-      this.listLoading = true
-    },
     handleFilter() {
       this.listQuery.page = 1
-      this.getList()
-    },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: 'Успешная операция',
-        type: 'success'
-      })
-      row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-    },
-    getProtokolInfo2(row) {
-      this.temp = Object.assign({}, row)
-      fetchProtokol({ 'id': this.temp.id }).then(response => {
-        this.data = response.data.items
-        this.protokol = response.data.protokol
-        // this.listLoading = false
-        // Just to simulate the time of the request
-        // setTimeout(() => {
-        //   this.listLoading = false
-        // }, 0.5 * 1000)
-      })
-      this.dialogFormVisible = true
-    },
-    getProtokolInfo(row) {
-      this.$router.push('/protocol/show/' + row.id)
-    },
-
-    addProtokol() {
-      this.$router.push('/protocol/add')
+      this.key++
     }
   }
 }

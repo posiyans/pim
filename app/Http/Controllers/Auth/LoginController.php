@@ -31,7 +31,6 @@ class LoginController extends MyController
             } catch (\Exception $e) {
             }
 
-//            $user = Auth::user();
             $log = new Log();
             $log->description = 'login by login, password';
             $log->type = 'ok';
@@ -46,7 +45,7 @@ class LoginController extends MyController
         $log->value = $credentials;
         $log->type = 'alert';
         $log->save();
-        return response(['error' => 'Не верный логин или пароль'], 401);
+        return response(['status' => 'errorCode', 'error' => 'Не верный логин или пароль']);
     }
 
 

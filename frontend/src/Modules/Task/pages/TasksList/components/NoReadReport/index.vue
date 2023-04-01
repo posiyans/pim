@@ -1,6 +1,6 @@
 <template>
-  <div v-if="show">
-    (+{{ report.show }})
+  <div v-if="show" class="q-pa-xs ">
+    +{{ report.show }}
   </div>
 </template>
 

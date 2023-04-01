@@ -7,6 +7,7 @@ use App\Modules\Log\Classes\CreateInfoLog;
 use App\Modules\Task\Models\ViewReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class SetTaskIsDoneController extends MyController
 {
@@ -36,6 +37,7 @@ class SetTaskIsDoneController extends MyController
                 (new CreateInfoLog($task))->text($text_log)->run();
             }
         }
+        Cache::flush();
         return response([]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Modules\Protocol\Models;
 
 use App\MyModel;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class Protocol extends MyModel
 {
@@ -59,15 +60,18 @@ class Protocol extends MyModel
 
     public function getPercentComplete()
     {
-        $PercentComplete = [];
-        foreach ($this->partition as $partition) {
-            $PercentComplete[] = $partition->getPercentComplete();
-        }
-        if (count($PercentComplete) == 0) {
-            return 0;
-        } else {
-            return round(array_sum($PercentComplete) / count($PercentComplete), 0);
-        }
+        $cacheName = 'ProtocolPercentComplete_' . $this->id;
+        return Cache::remember($cacheName, 3600, function () {
+            $PercentComplete = [];
+            foreach ($this->partition as $partition) {
+                $PercentComplete[] = $partition->getPercentComplete();
+            }
+            if (count($PercentComplete) == 0) {
+                return 0;
+            } else {
+                return round(array_sum($PercentComplete) / count($PercentComplete), 0);
+            }
+        });
     }
 
 }

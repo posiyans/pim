@@ -157,16 +157,14 @@ class Migration extends Command
                     if ($item->del != null) {
                         $task->deleted_at = date("Y-m-d H:i:s");
                     }
-                    if ($item->avtor != 15) {
-                        $task->save();
-                        if ($item->file_md5) {
-                            $file = new File();
-                            $file->name = $item->file_name;
-                            $file->hash = $item->file_md5;
-                            $file->uid = Uuid::uuid4()->toString();
-                            $file->user_id = $item->avtor;
-                            $task->files()->save($file);
-                        }
+                    $task->save();
+                    if ($item->file_md5) {
+                        $file = new File();
+                        $file->name = $item->file_name;
+                        $file->hash = $item->file_md5;
+                        $file->uid = Uuid::uuid4()->toString();
+                        $file->user_id = $item->avtor;
+                        $task->files()->save($file);
                     }
                     $i++;
                 } catch (\Exception $e) {

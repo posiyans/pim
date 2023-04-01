@@ -14,15 +14,15 @@
 
       <div class="card-body">
         <div>
-          <div class="row items-center q-col-gutter-sm cursor-pointer hover-opacity-80" @click="$router.push('/protocol/show/' + task.protokol.id)">
+          <router-link class="link-type text-black row items-center q-col-gutter-sm hover-opacity-80" :to="'/protocol/show/' + task.protokol.id">
             <div class="text-weight-bold">
               Протокол:
             </div>
             <div>
               {{ task.protokol.number }}
             </div>
-            <div class="text-weight-bold">
-              От:
+            <div>
+              от
             </div>
             <div>
               {{ task.protokol.descriptions.date }}
@@ -30,7 +30,7 @@
             <div>
               {{ task.protokol.descriptions.region }}
             </div>
-          </div>
+          </router-link>
           <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
           <div><b>Тема:</b> {{ task.partition.number }}.{{ task.partition.text }}</div>
         </div>

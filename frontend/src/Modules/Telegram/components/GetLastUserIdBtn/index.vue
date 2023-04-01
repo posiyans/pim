@@ -40,6 +40,7 @@ export default defineComponent({
     TelegramBotInfo
   },
   props: {},
+  emits: ['setId'],
   setup(props, { emit }) {
     const data = ref(null)
     const $q = useQuasar();

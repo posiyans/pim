@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="row items-center q-col-gutter-md">
+  <div class="relative-position">
+    <div class="row items-center q-col-gutter-md absolute-top-right">
       <div class="row items-center q-col-gutter-md">
         <MoveProtocolToArchiveBtn v-if="!protokol.arxiv" :protocol-id="protokol.id" @reload="getProtokolInfo" />
         <div>
@@ -15,10 +15,10 @@
       </div>
     </div>
     <div v-if="protokol.arxiv" class="text-red text-weight-bold" v-html="protokol.arxiv" />
-    <ShowTypeProtocol :type="protokol.type_id" class="text-primary" />
     <div :class="protokol.arxiv ? 'text-red' : ''">
-      <b>{{ protokol.title }}</b> {{ protokol.descriptions.date }}
+      <b>{{ protokol.title }}</b> от {{ protokol.descriptions.date }}
     </div>
+    <ShowTypeProtocol :type="protokol.type_id" class="text-primary" />
     <div>
       Место проведения: {{ protokol.descriptions.region }}
     </div>

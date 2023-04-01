@@ -1,18 +1,39 @@
-export default async ({ store, router }) => {
+import { date, LocalStorage } from 'quasar'
 
-  // let timer = null
+
+export default async ({ store, router }) => {
+  let route = '/'
+  const checkExpiredToken = async () => {
+    if (LocalStorage.has('UserToken')) {
+      const close = LocalStorage.getItem('tokenExpired')
+      if (close) {
+        const now = new Date()
+        const diff = date.getDateDiff(now, close, 'seconds')
+        // последнее получение даныых больше 20 минут выходим из систему
+        if (diff > 20 * 60) {
+          LocalStorage.remove('UserToken')
+          LocalStorage.remove('tokenExpired')
+          await store.dispatch('user/getInfo')
+        }
+      }
+    } else {
+      if (route !== '/auth/login') {
+        router.push('/auth/login')
+      }
+    }
+  }
+
+
+  checkExpiredToken()
   await store.dispatch('user/getInfo')
 
+  setInterval(() => {
+    // проверка каждую минуту на время жизни токена
+    checkExpiredToken()
+  }, 60 * 1000)
+
   router.beforeEach(async (to, from, next) => {
-    // if (timer) clearTimeout(timer)
-    // timer = setTimeout(() => {
-    //   store.dispatch('user/userLogout')
-    //     .then(() => {
-    //       router.push('/auth/login')
-    //     })
-    // }, 15 * 60 * 1000)
-
-
+    route = to.fullPath
     const hasRole = !!store.state.user.info.roles
     if (hasRole) {
       if (to.meta && to.meta.roles) {

@@ -24,9 +24,9 @@
           -
         </div>
         <div v-html="task.text" />
-        <div class="cursor-pointer" @click="$router.push('/task/show/' + task.id)">
+        <router-link class="cursor-pointer" :to="'/task/show/' + task.id">
           <q-icon name="east" color="primary" />
-        </div>
+        </router-link>
       </div>
     </div>
   </div>

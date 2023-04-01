@@ -52,7 +52,6 @@ export default {
       const res = avatarCache.match(this.kk, options);
       res
         .then((response) => {
-          console.log(response)
           if (response) {
             const reader = response.body.getReader();
             return new ReadableStream({
