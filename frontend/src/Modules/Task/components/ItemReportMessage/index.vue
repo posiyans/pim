@@ -11,7 +11,7 @@
       <AvatarById :id="item.user_id" class="q-message-avatar" :class="send ? 'q-message-avatar--sent' : 'q-message-avatar--received'" />
     </template>
     <div class="relative-position q-pr-md">
-      <div v-if="moderator && !item.deleted_at" class="absolute-top-right">
+      <div v-if="removed" class="absolute-top-right">
         <q-btn
           round
           flat
@@ -58,6 +58,18 @@ export default {
     }
   },
   computed: {
+    removed() {
+      if (this.item.deleted_at) {
+        return false
+      }
+      if (this.moderator) {
+        return true
+      }
+      if (this.item.user_id === this.user.id) {
+        return true
+      }
+      return false
+    },
     showText() {
       return this.item.text.replace(/\n/g, "<br />");
     },
