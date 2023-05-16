@@ -37,22 +37,11 @@ class DeleteFileController extends MyController
     private function checkAccess($file)
     {
         $user = Auth::user();
-//        if ($user->moderator) {
-//            return true;
-//        }
+
         if ($file->commentable_type == 'App\Modules\Protocol\Models\Protocol') {
             return $user->moderator;
         }
-//        if ($file->commentable_type == 'App\Modules\Task\Models\Report') {
-//            $report = Report::find($file);
-//            if ($report->user_id == $user->id) {
-//                return true;
-//            }
-//            $executor = $report->task->executor->where('user_id', $user->id)->first();
-//            if ($executor) {
-//                return true;
-//            }
-//        }
+
         if ($file->commentable_type == 'App\Modules\Protocol\Models\Partition') {
             return $user->moderator;
         }

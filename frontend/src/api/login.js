@@ -8,6 +8,14 @@ export function loginByUsername(data) {
   })
 }
 
+export function creteNewUser(data) {
+  return request({
+    url: '/api/auth/create-user',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/api/auth/logout',

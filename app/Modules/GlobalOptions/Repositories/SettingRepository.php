@@ -37,7 +37,6 @@ class SettingRepository
         }
         if ($opt->type == 'array') {
             return $opt->value;
-//            return json_decode($opt->value, true);
         }
         if ($opt->type == 'password') {
             if ($opt->value) {

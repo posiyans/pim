@@ -59,7 +59,6 @@
 <script>
 import { fetchProtokol } from 'src/Modules/Protocol/api/protocol.js'
 import MoveProtocolToArchiveBtn from 'src/Modules/Protocol/components/MoveProtocolToArchiveBtn/index.vue'
-// import ShowTime from 'src/components/ShowTime/index.vue'
 import ShowTaskList from 'src/Modules/Task/components/ShowTaskList/index.vue'
 import FileBlock from 'src/Modules/Files/components/FileBlock/index.vue'
 import DropDownBlock from 'components/DropDownBlock/index.vue'
@@ -73,7 +72,6 @@ export default {
     ShowProtocolHistory,
     DropDownBlock,
     MoveProtocolToArchiveBtn,
-    // ShowTime,
     ShowTaskList
   },
   data() {

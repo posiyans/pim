@@ -30,7 +30,7 @@ export default {
       required: true
     },
     userId: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     label: {
@@ -61,7 +61,6 @@ export default {
     }
   },
   mounted() {
-    // this.getData()
     this.newValue = this.modelValue
   },
   methods: {

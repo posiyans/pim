@@ -62,6 +62,7 @@ class Task extends MyModel
     }
 
     /**
+     * todo переделать одно название с свойством
      * возвращает исполнителей для задачи
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
@@ -81,7 +82,6 @@ class Task extends MyModel
     public function reportAndUser()
     {
         foreach ($this->report as $report) {
-//            $report->user;
             $report->file;
         }
         return $this;
@@ -95,7 +95,6 @@ class Task extends MyModel
     {
         $this->remove = true;
         foreach ($this->report as $report) {
-//            $report->user;
             $report->file;
         }
         return $this;

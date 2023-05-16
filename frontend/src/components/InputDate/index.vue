@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { date } from 'quasar'
+
 export default {
   props: {
     modelValue: {
@@ -97,8 +99,8 @@ export default {
   computed: {
     showDate: {
       get() {
-        if (this.$moment(this.modelValue).isValid()) {
-          return this.$moment(this.modelValue).format(this.format)
+        if (date.isValid(this.modelValue)) {
+          return date.formatDate(this.modelValue, this.format)
         }
         return this.modelValue
       },

@@ -29,7 +29,7 @@ export default {
   },
   props: {
     modelValue: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     func: {
@@ -37,7 +37,7 @@ export default {
       required: true
     },
     userId: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     label: {

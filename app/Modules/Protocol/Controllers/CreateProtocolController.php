@@ -29,7 +29,7 @@ class CreateProtocolController extends MyController
      */
     public function index(Request $request)
     {
-        if ($request->has('protocol') and $request->hasFile('file')) {
+        if ($request->has('protocol')) {
             DB::beginTransaction();
             try {
                 $protokol_json = json_decode($request->get('protocol'));

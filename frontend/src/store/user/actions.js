@@ -1,4 +1,4 @@
-import { getMyInfo, loginByUsername, logout } from 'src/api/login'
+import { creteNewUser, getMyInfo, loginByUsername, logout } from 'src/api/login'
 import { LocalStorage } from 'quasar'
 
 export function loginUser({ commit }, data) {
@@ -9,11 +9,6 @@ export function loginUser({ commit }, data) {
         if (data.status === 'done') {
           LocalStorage.set('UserToken', data.token)
           const user = data.user
-          // user.roles = ['user']
-          // if (user.moderator) {
-          //   user.roles.push('moderator')
-          //   // user.roles.push('admin')
-          // }
           commit('setInfo', user)
           resolve(data)
         } else {
@@ -37,7 +32,11 @@ export function getInfo({ commit }) {
         commit('setInfo', data)
         resolve(data)
       })
-      .catch(() => {
+      .catch(er => {
+        // if (er.response.status === 410) {
+        reject(er.response)
+        // }
+        // console.log(er.response.status)
         resolve({ role: 'guest' })
       })
   })
@@ -55,6 +54,21 @@ export function userLogout({ commit }, data) {
     })
   })
 }
+
+
+export function createUser({ commit }, data) {
+  return new Promise((resolve, reject) => {
+    creteNewUser(data)
+      .then(response => {
+        const data = response.data
+        resolve(data)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+}
+
 
 
 

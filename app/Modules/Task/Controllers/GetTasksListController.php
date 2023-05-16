@@ -65,14 +65,7 @@ class GetTasksListController extends MyController
                 $last_report->files;
             }
             $task->last_report = $last_report;
-//            if ($last_report) {
-//                if ($last_report->text) {
-//                    $task->last_report = $last_report->text;
-//                }
-//                if ($last_report->file) {
-//                    $task->last_report = 'Добавлен файл';
-//                }
-//            }
+
             $task->partition;
 
 

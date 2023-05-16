@@ -10,7 +10,7 @@ import { getTypeProtocol } from 'src/Modules/Protocol/api/protocol'
 export default {
   props: {
     type: {
-      type: String,
+      type: [String, Number],
       default: ''
     }
   },

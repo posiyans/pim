@@ -3,15 +3,6 @@ import { date, SessionStorage } from 'quasar'
 import { today } from '@quasar/quasar-ui-qcalendar/src/index'
 import { getTasksForCalendar } from 'src/Modules/Calendar/api/calendar'
 
-const moment = require('moment')
-// const momentTz = require('moment-timezone')
-require('moment/locale/ru')
-require('moment/locale/en-au')
-moment.locale('ru')
-// momentTz.locale('ru')
-// momentTz.suppressDeprecationWarnings = true
-// momentTz.tz.setDefault('UTC')
-
 const storageKey = 'SpecialistCalendarStorageKey'
 const timer = ref(null)
 
@@ -44,7 +35,6 @@ watch(() => [calendar.opt, calendar.key, calendar.selectedDate, calendar.view],
 
 const getData = () => {
   const data = {}
-  // data.executor = calendar.opt.executor
   data.date_start = date.formatDate(calendar.start, 'YYYY-MM-DD')
   data.date_end = date.formatDate(date.addToDate(calendar.end, { days: 1 }), 'YYYY-MM-DD')
   data.type = calendar.view

@@ -7,7 +7,7 @@
         round
         icon="menu"
         aria-label="Menu"
-        @click="$store.commit('header/toggleLeftDrawer')"
+        @click="drawerToggle"
       />
 
       <q-toolbar-title>
@@ -31,6 +31,15 @@ export default {
   computed: {
     headTitle() {
       return this.$store.state.header.title || 'Задачник'
+    }
+  },
+  methods: {
+    drawerToggle() {
+      console.log('drawerToggle')
+      console.log(this.$store.state.header.leftDrawerOpen)
+      this.$store.commit('header/toggleLeftDrawer')
+      console.log(this.$store.state.header.leftDrawerOpen)
+
     }
   }
 }

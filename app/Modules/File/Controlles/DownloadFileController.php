@@ -47,13 +47,15 @@ class DownloadFileController extends MyController
             return $user->moderator;
         }
         if ($file->commentable_type == 'App\Modules\Task\Models\Report') {
-            $report = Report::find($file);
+            $report = Report::find($file->commentable_id);
             if ($report->user_id == $user->id) {
                 return true;
             }
-            $executor = $report->task->executor->where('user_id', $user->id)->first();
-            if ($executor) {
-                return true;
+            $executors = $report->task->getExecutor();
+            foreach ($executors as $executor) {
+                if ($executor->user->id == $user->id) {
+                    return true;
+                }
             }
         }
         if ($file->commentable_type == 'App\Modules\Protocol\Models\Partition') {

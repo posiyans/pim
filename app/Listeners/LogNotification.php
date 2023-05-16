@@ -23,8 +23,6 @@ class LogNotification
         if (get_class($event->notification) == 'App\Notifications\TwoFactorAuthentication' &&
             $event->channel == 'telegram') {
             $opt = $event->notifiable->options;
-//            dd($event);
-//            dd($event->response->getBody()->getContents());
             $opt['telegram_login_message_id'] = $event->response['result']['message_id'];
             $event->notifiable->options = $opt;
             $event->notifiable->save();

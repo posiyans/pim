@@ -210,16 +210,6 @@ export default {
         item.number = i++
         return item
       })
-      // this.protokol.partition.forEach(part => {
-      //   part.tasks = part.tasks.sort((a, b) => {
-      //     return a.number - b.number
-      //   })
-      //   let i = 1
-      //   part.tasks = part.tasks.map(item => {
-      //     item.number = i++
-      //     return item
-      //   })
-      // })
     },
     done(task) {
       const report = task.view_report

@@ -22,10 +22,16 @@ export default async ({ store, router }) => {
       }
     }
   }
-
-
   checkExpiredToken()
-  await store.dispatch('user/getInfo')
+
+  try {
+    await store.dispatch('user/getInfo')
+  } catch (e) {
+    console.log(e.status)
+    if (e.status === 410) {
+      store.commit('user/newUser', true)
+    }
+  }
 
   setInterval(() => {
     // проверка каждую минуту на время жизни токена

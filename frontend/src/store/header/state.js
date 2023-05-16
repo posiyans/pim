@@ -1,7 +1,7 @@
 export default function () {
   return {
     title: 'Задачник',
-    leftDrawerOpen: false,
+    leftDrawerOpen: true,
     countNoReadReport: 0
   }
 }

@@ -35,7 +35,6 @@ class UpdateUserController extends MyController
             $user->two_factor = $request->two_factor ?? $user->two_factor;
             $opt = $user->options;
             $opt['phone'] = $request->phone ?? $opt['phone'] ?? '';
-            $opt['color'] = $request->color ?? $opt['color'] ?? '';
             $opt['telegram'] = $request->options['telegram'] ?? $opt['telegram'] ?? '';
             $user->options = $opt;
             $user->aliases = $request->aliases ?? $user->aliases;
@@ -47,12 +46,8 @@ class UpdateUserController extends MyController
                 $user->admin = $request->admin ?? $user->admin;
             }
             if ($user->save()) {
-//                    if ($edit) {
-//                        Log::saveDiff($user, $user_old);
-//                    }
+                return response('');
             }
-
-            return response('');
         }
         return response('', 404);
     }

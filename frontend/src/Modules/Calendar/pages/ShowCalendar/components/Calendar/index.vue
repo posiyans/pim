@@ -33,7 +33,7 @@
         </template>
       </QCalendarMonth>
     </div>
-    <q-dialog v-model="showForm" title="Задача">
+    <q-dialog v-model="showForm" full-width>
       <q-card>
         <q-card-section class="row items-center">
           <div class="text-h6">Задача</div>
@@ -54,35 +54,24 @@
 <script>
 /* eslint-disable */
 
-import { QCalendarDay, QCalendarMonth } from '@quasar/quasar-ui-qcalendar/src/index'
+import { QCalendarMonth } from '@quasar/quasar-ui-qcalendar/src/index'
 import { defineComponent, onMounted, ref } from 'vue'
-import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
+import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useCalendar.js'
 import ShowTime from 'src/components/ShowTime/index.vue'
 import ShowTaskInfo from 'src/Modules/Task/components/ShowTaskInfo/index.vue'
 import ExecutorsAvatar from 'src/Modules/Calendar/pages/ShowCalendar/components/Calendar/components/ExecutorsAvatar/index.vue'
-
-const moment = require('moment')
-// const momentTz = require('moment-timezone')
-require('moment/locale/ru')
-require('moment/locale/en-au')
-moment.locale('ru')
-// momentTz.suppressDeprecationWarnings = true
-// momentTz.tz.setDefault('UTC')
-
 
 export default defineComponent({
   components: {
     ShowTime,
     ShowTaskInfo,
     QCalendarMonth,
-    QCalendarDay,
     ExecutorsAvatar
 
   },
   setup() {
     const show = ref(false)
     onMounted(() => {
-      // calendar.selectedDate = today()
       show.value = true
     })
     const getEventsGroup = (dt) => {

@@ -9,6 +9,7 @@
           v-model="type"
           outlined
           dense
+          autoSelect
           add
         />
       </div>
@@ -281,13 +282,13 @@ export default {
       parserOk: false,
       parserButton: false,
       text: '',
-      type: 1,
+      type: '',
       infoMessage: 'Проверить протокол и нажать Потвердить',
       temp: {},
       oldProtokol: {},
       protokol: {
         title: 'Протокол',
-        type_id: 1,
+        type_id: '',
         number: '00/00/00',
         date: date.formatDate(new Date(), 'DD MMMM YYYY'),
         region: 'Место проведения',
@@ -390,21 +391,26 @@ export default {
       }
     },
     publishProtokol() {
-      const data = new FormData()
-      this.protokol.type_id = this.type
-      data.append('file', this.$refs.file.files[0])
-      data.append('protocol', JSON.stringify(this.protokol))
-      publishProtokol(data)
-        .then(response => {
-          this.$router.push('/protocol/show/' + response.data.id)
-        }, error => {
-          this.$notify({
-            title: 'Ошибка',
-            message: error.response.data.message,
-            type: 'error',
-            duration: 15000
-          })
+      if (!this.type) {
+        this.$q.notify({
+          message: 'Укажите тип протокола',
+          color: 'negative'
         })
+      } else {
+        const data = new FormData()
+        this.protokol.type_id = this.type
+        data.append('file', this.$refs.file.files[0])
+        data.append('protocol', JSON.stringify(this.protokol))
+        publishProtokol(data)
+          .then(response => {
+            this.$router.push('/protocol/show/' + response.data.id)
+          }, error => {
+            this.$q.notify({
+              message: error.response.data.message,
+              color: 'negative'
+            })
+          })
+      }
     }
   }
 }

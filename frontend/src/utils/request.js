@@ -12,17 +12,8 @@ service.interceptors.request.use(
   config => {
     setTimeout(() => {
       LocalStorage.set('tokenExpired', new Date())
-      // LocalStorage.set('tokenExpired', date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss'))
     }, 500)
 
-    // if (timer) {
-    //   clearTimeout(timer)
-    // }
-    //
-    // timer = setTimeout(() => {
-    //   LocalStorage.remove('UserToken')
-    //   window.location = '/auth/login'
-    // }, 20 * 60 * 1000)
     const token = LocalStorage.getItem('UserToken') || ''
     if (token) {
       config.headers.Authorization = 'Bearer ' + token
@@ -46,7 +37,6 @@ service.interceptors.response.use(
       }
     }
     return Promise.reject(error)
-    // return error
   }
 )
 export default service

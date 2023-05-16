@@ -21,7 +21,6 @@ class LoginController extends MyController
     {
         $login = trim($request->username);
         $password = $request->password;
-        // нет смс проверям логин и пароль
         $credentials = ['login' => $login, 'password' => $password];
 
         if (Auth::attempt($credentials)) {

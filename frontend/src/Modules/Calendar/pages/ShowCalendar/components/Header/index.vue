@@ -21,7 +21,7 @@
 <script>
 import TypeCalendar from './components/TypeCalendar'
 import ShowTime from 'src/components/ShowTime/index.vue'
-import { calendar, storageKey } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
+import { calendar, storageKey } from 'src/Modules/Calendar/pages/ShowCalendar/components/useCalendar.js'
 import NavigationBar from 'src/Modules/Calendar/pages/ShowCalendar/components/NavigationBar/index.vue'
 import { onMounted } from 'vue'
 import { SessionStorage } from 'quasar'

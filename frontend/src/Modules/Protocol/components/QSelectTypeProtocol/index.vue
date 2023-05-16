@@ -11,6 +11,7 @@
       :outlined="outlined"
       option-label="name"
       option-value="id"
+      :rules="rules"
       @update:model-value="setValue"
     >
       <template v-if="add" v-slot:append>
@@ -54,6 +55,10 @@ export default {
       type: Boolean,
       default: false
     },
+    autoSelect: {
+      type: Boolean,
+      default: false
+    },
     outlined: {
       type: Boolean,
       boolean: false
@@ -61,6 +66,10 @@ export default {
     dense: {
       type: Boolean,
       boolean: false
+    },
+    rules: {
+      type: Array,
+      default: () => []
     },
     label: {
       type: String,
@@ -85,6 +94,9 @@ export default {
       getTypeProtocol()
         .then(res => {
           this.protokolTypeOptions = res.data
+          if (this.autoSelect && !this.modelValue && this.protokolTypeOptions.length > 0) {
+            this.setValue(this.protokolTypeOptions[0].id)
+          }
         })
     },
     addType() {

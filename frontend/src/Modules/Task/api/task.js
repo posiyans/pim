@@ -28,7 +28,6 @@ export function fetchTaskStatistic() {
   return request({
     url: '/api/task/statistic',
     method: 'get'
-    // params: query
   })
 }
 

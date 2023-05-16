@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
+import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useCalendar.js'
 import { computed } from 'vue'
 
 export default {

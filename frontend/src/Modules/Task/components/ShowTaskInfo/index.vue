@@ -1,26 +1,46 @@
 <template>
   <div>
-    <div v-if="task" class="container-fluid">
+    <div v-if="task">
       <div class="row items-center q-col-gutter-sm">
         <div class="text-weight-bolder">
           Задача № {{ task.id }}
         </div>
         <q-space />
         <MoveTaskToArchiveBtn v-if="!task.arxiv" :task-id="task.id" @reload="getTask" />
-        <div v-if="!task.arxiv">
+        <div v-if="!task.arxiv && isModerator">
           <q-btn icon="edit" color="primary" flat :to="'/task/edit/' + task.id" />
         </div>
       </div>
 
       <div class="card-body">
         <div>
-          <div><b>Протокол:</b> {{ task.protokol.nomer }}</div>
-          <div><b>От:</b>{{ task.protokol.descriptions.date }}</div>
+          <router-link class="link-type text-black row items-center q-col-gutter-sm hover-opacity-80" :to="'/protocol/show/' + task.protokol.id">
+            <div class="text-weight-bold">
+              Протокол:
+            </div>
+            <div>
+              {{ task.protokol.number }}
+            </div>
+            <div>
+              от
+            </div>
+            <div>
+              {{ task.protokol.descriptions.date }}
+            </div>
+            <div>
+              {{ task.protokol.descriptions.region }}
+            </div>
+          </router-link>
           <div><b>Доклад:</b> {{ task.partition.speaker }}</div>
-          <div><b>Тема:</b> {{ task.partition.text }}</div>
+          <div><b>Тема:</b> {{ task.partition.number }}.{{ task.partition.text }}</div>
         </div>
         <div v-if="task.arxiv" class="text-red text-weight-bolder" v-html="task.arxiv" />
-        <div class="text-primary bg-grey-2 q-pa-md" v-html="textTask" />
+        <div class="row text-primary bg-grey-1 q-pa-md q-col-gutter-xs">
+          <div>
+            {{ task.partition.number }}.{{ task.number }}.
+          </div>
+          <div v-html="task.text" />
+        </div>
         <div>
           Исполнители: {{ task.executor }}
         </div>
@@ -51,9 +71,8 @@
           <div v-for="item in task.executors" :key="item.id">
             <q-btn
               :color="item.done ? 'secondary' : 'negative'"
-              @click="changeStatus(item)"
               :disable="!accessFilter(item.user)"
-              :loading="item.loading"
+              @click="changeStatus(item)"
             >
               <q-icon v-if="item.done" name="task_alt" class="q-pr-sm" />
               {{ item.user.name }}
@@ -64,24 +83,35 @@
 
       <DropDownBlock hide-label="История" show-label="История">
         <div class="q-pa-sm">
-          <div v-html="task.history" />
+          <ShowTaskHistory :task-id="task.id" />
         </div>
       </DropDownBlock>
       <q-card class="">
-        <q-card-section class="q-pb-none">
-          <div class="text-weight-bold">
+        <q-toolbar class="">
+          <q-toolbar-title>
             Отчет
-            <q-checkbox v-model="listQuery.showdeleted" label="Показать удаленные" @update:model-value="getTask" />
-          </div>
-        </q-card-section>
+          </q-toolbar-title>
+          <q-btn v-if="isModerator" flat round dense icon="more_vert">
+            <q-menu>
+              <q-list style="min-width: 100px">
+                <q-item clickable v-close-popup>
+                  <q-checkbox v-model="listQuery.showdeleted" @update:model-value="getTask">Показать удаленные</q-checkbox>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-toolbar>
         <q-card-section>
           <div>
             <div class="bg-blue-1 q-pa-md">
               <div v-for="item in task.report" :key="item.id">
                 <ItemReportMessage :item="item" @reload="getTask" />
               </div>
+              <div v-if="task.report.length === 0" class="q-pa-md text-primary">
+                Нет отчетов
+              </div>
             </div>
-            <SendReportBlock :task-id="$route.params.id" :disable="task.arxiv" class="bg-blue-2" @reload="getTask" />
+            <SendReportBlock :task-id="taskId" :disable="task.arxiv" class="bg-blue-2" @reload="getTask" />
           </div>
         </q-card-section>
       </q-card>
@@ -111,9 +141,11 @@ import SendReportBlock from 'src/Modules/Task/components/SendReportBlock/index.v
 import MoveTaskToArchiveBtn from 'src/Modules/Task/components/MoveTaskToArchiveBtn/index.vue'
 import MoveDateTaskBtn from 'src/Modules/Task/components/MoveDateTaskBtn/index.vue'
 import ShowTime from 'src/components/ShowTime/index.vue'
+import ShowTaskHistory from 'src/Modules/Log/components/ShowTaskHistory/index.vue'
 
 export default {
   components: {
+    ShowTaskHistory,
     ShowTime,
     DropDownBlock,
     MoveTaskToArchiveBtn,
@@ -129,12 +161,9 @@ export default {
   },
   data() {
     return {
+      timer: null,
       access: false,
-      showdeleted: false,
-      time: '',
       task: null,
-      test: 3,
-      files: '',
       listLoading: false,
       listQuery: {
         showdeleted: false,
@@ -146,11 +175,14 @@ export default {
     user() {
       return this.$store.state.user.info
     },
+    userId() {
+      return this.user.id
+    },
     roles() {
       return this.user.roles
     },
-    textTask() {
-      return this.task.number + '. ' + this.task.text
+    isModerator() {
+      return this.roles.includes('moderator')
     }
   },
   mounted() {

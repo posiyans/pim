@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::Post('/auth/login', [\App\Http\Controllers\Auth\LoginController::class, 'index']);
+Route::Post('/auth/create-user', [\App\Http\Controllers\Auth\CreateUserController::class, 'index']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::Get('/my-user', [\App\Modules\User\Controllers\GetMyInfoController::class, 'index']);

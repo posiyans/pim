@@ -8,7 +8,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useSpecialistCalendar.js'
+import { calendar } from 'src/Modules/Calendar/pages/ShowCalendar/components/useCalendar.js'
 
 export default defineComponent({
   setup() {

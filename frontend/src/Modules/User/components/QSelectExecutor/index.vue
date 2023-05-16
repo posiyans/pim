@@ -56,11 +56,6 @@ export default {
       default: 'Исполнитель'
     }
   },
-  data() {
-    return {
-      // allExecutor: []
-    }
-  },
   computed: {
     allExecutor() {
       if (this.$store.state.users.executors) {

@@ -1,7 +1,6 @@
 <template>
   <q-layout view="hHh Lpr lFf">
     <PrimaryHeader />
-
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
