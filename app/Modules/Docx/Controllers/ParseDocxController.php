@@ -75,7 +75,7 @@ class ParseDocxController extends MyController
 //                        dump($partition);
                         if ($task || count($partition['tasks']) == 0) {
                             $task['number'] = $i++;
-                            $task['users'] = [];
+                            $task['users'] = [1];
                             $partition['tasks'][] = $task;
                         } else {
                             $last_key = count($partition['tasks']) - 1;
@@ -121,7 +121,7 @@ class ParseDocxController extends MyController
 
     private function parseDate($value)
     {
-        $ar = explode('.', $value);
+        $ar = explode('.', str_replace(' ', '', $value));
         if (count($ar) > 1) {
             $day = strlen($ar[0]) == 1 ? '0' . $ar[0] : $ar[0];
             $month = strlen($ar[1]) == 1 ? '0' . $ar[1] : $ar[1];

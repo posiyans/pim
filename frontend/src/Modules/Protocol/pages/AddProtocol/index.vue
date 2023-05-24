@@ -406,7 +406,7 @@ export default {
             this.$router.push('/protocol/show/' + response.data.id)
           }, error => {
             this.$q.notify({
-              message: error.response.data.message,
+              message: error.response.data.errors,
               color: 'negative'
             })
           })

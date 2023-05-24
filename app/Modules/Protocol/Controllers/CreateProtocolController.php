@@ -12,6 +12,7 @@ use App\Modules\Task\Models\Task;
 use App\Modules\Task\Models\ViewReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CreateProtocolController extends MyController
@@ -20,7 +21,6 @@ class CreateProtocolController extends MyController
     {
         $this->middleware('only_moderator');
     }
-
 
     /**
      * Display a listing of the resource.
@@ -94,7 +94,8 @@ class CreateProtocolController extends MyController
             } catch (\Exception $e) {
                 DB::rollback();
                 $text = 'При сохранении произошла ошибка, проверте данные протокола. ' . $e->getMessage();
-                return response(['message' => $text], 400);
+                Log::error($text);
+                return response(['errors' => $text], 400);
             }
         }
     }
