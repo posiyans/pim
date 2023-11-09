@@ -76,17 +76,15 @@ export default defineComponent({
     })
     const setList = (val) => {
       list.value = val
-      const queryString = Object.keys(listQuery.value).map(key => key + '=' + listQuery.value[key]).join('&');
+      // const queryString = Object.keys(listQuery.value).map(key => key + '=' + listQuery.value[key]).join('&');
+      router.replace({ name: 'TaskList', query: listQuery.value, replace: true })
       // history.push(null, '', '/task/list?' + queryString)
-      setTimeout(() => {
-        // router.replace({ name: 'TaskList', query: listQuery.value, replace: true })
-        router.replace('/task/list?' + queryString)
-      }, 1500)
-
-      // list.value = val
+      // setTimeout(() => {
+      // router.replace('/task/list?' + queryString)
+      // }, 1500)
     }
     onMounted(() => {
-      console.log('mounted')
+      // console.log('mounted')
     })
     const handleFilter = () => {
       listQuery.value.page = 1

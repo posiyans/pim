@@ -93,7 +93,7 @@ export default {
       this.saveData()
     },
     saveData() {
-      // todo проработать механизм изменения адраса постового ящика
+      // todo проработать механизм изменения адраса почтового ящика
       const data = {
         user_id: this.userId,
         field: this.name,
