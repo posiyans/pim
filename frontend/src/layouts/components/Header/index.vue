@@ -35,10 +35,7 @@ export default {
   },
   methods: {
     drawerToggle() {
-      console.log('drawerToggle')
-      console.log(this.$store.state.header.leftDrawerOpen)
       this.$store.commit('header/toggleLeftDrawer')
-      console.log(this.$store.state.header.leftDrawerOpen)
 
     }
   }

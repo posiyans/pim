@@ -93,16 +93,10 @@ export default {
       return 'otpauth://totp/' + this.user.login + '?issuer=' + window.location.hostname + '&secret=' + this.secret
     }
   },
-  mounted() {
-    console.log(this.$router)
-    console.log(this.$route)
-  },
   methods: {
     changeKey() {
-      console.log('click')
       this.secret = null
       this.dialogVisible = true
-      console.log(this.dialogVisible)
     },
     updateKey() {
       const data = {

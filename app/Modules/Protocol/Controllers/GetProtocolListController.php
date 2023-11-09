@@ -24,7 +24,7 @@ class GetProtocolListController extends MyController
         //$total=Protocol::count();
         $limit = (int)$request->limit;
         $query = Protocol::query()->with('partition.task.viewReport');
-        if (isset($request->archiv) && $request->archiv == 'true') {
+        if ($request->archiv) {
             $query->whereNotNull('arxiv');
         } else {
             $query->whereNull('arxiv');

@@ -54,6 +54,7 @@ class Task extends MyModel
 
     /**
      * отношения с просмотром отчетов
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function viewReport()

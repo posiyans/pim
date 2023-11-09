@@ -59,9 +59,7 @@
 <script>
 
 export default {
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       showCodeForm: false,
@@ -72,8 +70,7 @@ export default {
       },
       loading: false,
       showDialog: false,
-      redirect: undefined,
-      titleSmsDialod: ''
+      redirect: undefined
     }
   },
   computed: {},

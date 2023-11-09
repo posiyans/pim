@@ -19,6 +19,7 @@ const Protocol = {
     },
     {
       path: 'list',
+      name: 'ProtokolList',
       component: () => import('src/Modules/Protocol/pages/ListProtocol/index.vue'),
       meta: {
         title: 'Протоколы',

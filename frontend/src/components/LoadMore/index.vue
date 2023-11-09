@@ -7,146 +7,126 @@
       />
     </div>
     <div v-else>
-      <q-btn
-        v-if="showBtn"
-        class="full-width bg-grey-2 text-grey-8"
-        :loading="listLoading"
-        no-caps
-        :label="loadMore"
-        @click="add"
-      />
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page="currentPage"
-        :limit="pageSize"
-        :autoScroll="autoScroll"
-        @update:page="setPage"
-        @update:limit="setLimit"
-      />
+      <q-btn v-if="showCount" class="full-width bg-grey-2 text-grey-8" :loading="listLoading" label="Показать еще" @click="addItems" />
+      <pagination v-show="total > 0" :total="total" v-model:page="currentPage" v-model:limit="itemLimit" :autoScroll="autoScroll" class="q-pt-sm" />
+      <div v-if="total === 0 && !listLoading" class="q-pa-lg text-center text-h6 text-primary">
+        Пусто
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import Pagination from 'src/components/Pagination/index.vue'
-import { defineComponent, nextTick } from 'vue'
-import { scrollTo } from 'src/utils/scroll-to'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
-  props: {
-    autoScroll: {
-      type: Boolean,
-      default: true
-    },
-    listQuery: { type: Object },
-    func: { type: Function }
-  },
   components: {
     Pagination
   },
-  data() {
-    return {
-      tt: 1,
-      loading: true,
-      total: 0,
-      offset: 0,
-      list: [],
-      showCount: 0,
-      listLoading: false
-    }
+  props: {
+    listQuery: { type: Object },
+    func: { type: Function }
   },
-  computed: {
-    currentPage: {
-      get() {
-        return this.listQuery.page
-      },
-      set(val) {
-        const tmp = Object.assign({}, this.listQuery)
-        tmp.page = val
-        this.$emit('update:listQuery', tmp)
+  setup(props, { emit }) {
+    const loading = ref(true)
+    const loadMore = ref(false)
+    const autoScroll = ref(false)
+    const listLoading = ref(true)
+    const list = ref([])
+    const total = ref(0)
+    const $q = useQuasar()
+    const showCount = computed(() => {
+      if (Math.ceil(total.value / props.listQuery.limit) > currentPage.value) {
+        return true
       }
-    },
-    pageSize: {
-      get() {
-        return this.listQuery.limit
+      return listLoading.value
+    })
+    const itemLimit = computed({
+      get: () => {
+        return props.listQuery.limit
       },
-      set(val) {
-        const tmp = Object.assign({}, this.listQuery)
+      set: (val) => {
+        const tmp = Object.assign({}, props.listQuery)
+        tmp.page = 1
         tmp.limit = val
-        this.$emit('update:listQuery', tmp)
+        emit('update:list-query', tmp)
       }
-    },
-    showBtn() {
-      return this.total > this.showCount
-    },
-    loadMore() {
-      if (this.total > this.showCount) {
-        return 'Показать еще'
+    })
+    const currentPage = computed({
+      get() {
+        return props.listQuery.page
+      },
+      set(val) {
+        const tmp = Object.assign({}, props.listQuery)
+        tmp.page = val
+        emit('update:list-query', tmp)
       }
-      return ''
-    }
-  },
-  mounted() {
-    this.getList()
-  },
-  methods: {
-    setPage(val) {
-      const tmp = Object.assign({}, this.listQuery)
-      tmp.page = val
-      this.$emit('update:listQuery', tmp)
-      nextTick(() => {
-        this.getList()
-      })
-    },
-    setLimit(val) {
-      const tmp = Object.assign({}, this.listQuery)
-      tmp.limit = val
-      tmp.page = 1
-      this.$emit('update:listQuery', tmp)
-      nextTick(() => {
-        this.getList()
-      })
-    },
-    getList() {
-      this.listLoading = true
-      this.func(this.listQuery)
+    })
+    // todo для совместимости со старыми кусками кода
+    watch(
+      props.listQuery,
+      () => {
+        getList()
+      }
+    )
+    watch(
+      () => props.listQuery,
+      () => {
+        getList()
+      }
+    )
+    const getList = () => {
+      listLoading.value = true
+      props.func(props.listQuery)
         .then(response => {
-          this.total = response.data.total || 0
-          this.offset = response.data.offset || 0
-          this.list = response.data.data || response.data
-
-          this.showCount = this.listQuery.page * this.listQuery.limit
-          this.$emit('setList', this.list)
-          this.$emit('setOffset', this.offset)
-          this.$emit('setTotal', this.total)
+          total.value = response.data.total || response.data.meta?.total || 0
+          if (loadMore.value) {
+            loadMore.value = false
+          } else {
+            list.value = []
+          }
+          response.data.data.forEach(val => {
+            list.value.push(val)
+          })
+          emit('setList', list.value)
+          if (autoScroll.value) {
+            // scrollTo(0, 800)
+          }
+          autoScroll.value = true
+        })
+        .catch(er => {
+          $q.notify({
+            message: er.response.data.errors,
+            color: 'negative',
+            position: 'top-right'
+          })
         })
         .finally(() => {
-          this.loading = false
-          this.listLoading = false
-          if (this.autoScroll) {
-            scrollTo(0, 800)
-          }
+          loading.value = false
+          listLoading.value = false
         })
-    },
-    add() {
-      const tmp = Object.assign({}, this.listQuery)
-      tmp.page++
-      this.$emit('update:listQuery', tmp)
-      this.listLoading = true
-      this.func(tmp)
-        .then(response => {
-          this.total = response.data.total
+    }
+    const addItems = () => {
+      loadMore.value = true
+      autoScroll.value = false
+      currentPage.value = currentPage.value + 1
+    }
 
-          response.data.data.forEach(val => {
-            this.list.push(val)
-            this.showCount++
-          })
-          this.$emit('setList', this.list)
-          setTimeout(() => {
-            this.listLoading = false
-          }, 500)
-        })
+    onMounted(() => {
+      getList()
+    })
+
+    return {
+      loading,
+      showCount,
+      listLoading,
+      total,
+      autoScroll,
+      itemLimit,
+      currentPage,
+      addItems
     }
   }
 })

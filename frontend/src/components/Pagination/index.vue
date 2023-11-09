@@ -1,13 +1,13 @@
 <template>
-  <div class="pagination-container">
-    <div class="flex q-gutter-md">
+  <div>
+    <div class="flex q-col-gutter-md">
       <div class="self-center">
         Всего {{ total }}
       </div>
       <div class="self-center page-size-block">
         <q-select
           dense
-          :model-value="limit"
+          v-model="pageSize"
           :options="pageSizes"
           :display-value="`${limit ? limit + ' на странице' : ''}`"
           @update:model-value="handleSizeChange"
@@ -16,7 +16,7 @@
       </div>
       <div class="self-center">
         <q-pagination
-          :model-value="page"
+          v-model="currentPage"
           :max="maxPage"
           :max-pages="6"
           glossy
@@ -32,7 +32,9 @@
 </template>
 
 <script>
+
 export default {
+  name: 'Pagination',
   props: {
     total: {
       required: true,
@@ -51,30 +53,50 @@ export default {
       default() {
         return [5, 10, 20, 30, 50]
       }
+    },
+    autoScroll: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     maxPage() {
       return Math.ceil(this.total / this.limit)
+    },
+    currentPage: {
+      get() {
+        return this.page
+      },
+      set(val) {
+        this.$emit('update:page', val)
+      }
+    },
+    pageSize: {
+      get() {
+        return this.limit
+      },
+      set(val) {
+        this.$emit('update:limit', val)
+      }
     }
   },
   methods: {
     handleSizeChange(val) {
-      this.$emit('update:limit', val)
+      if (this.autoScroll) {
+        // scrollTo(0, 800)
+      }
     },
     handleCurrentChange(val) {
-      this.$emit('update:page', val)
+      this.$emit('pagination')
+      if (this.autoScroll) {
+        // scrollTo(0, 800)
+      }
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.pagination-container {
-  background: #fff;
-  padding: 32px 0;
-}
-
 .page-size-block {
   @media all and (max-width: 500px) {
     display: none;

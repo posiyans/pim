@@ -111,41 +111,7 @@ export default {
           label: 'Исполнение',
           align: 'left'
         },
-      ],
-      listQuery: {
-        page: 1,
-        limit: 20,
-        archiv: false,
-        title: '',
-        type: undefined,
-        sort: '+id',
-        executor: undefined
-      }
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.state.user.info
-    },
-    roles() {
-      return this.user.roles
-    }
-  },
-  mounted() {
-  },
-  methods: {
-    tableRowClassName({ row }) {
-      if (row.execution < 100) {
-        return 'task-red-1'
-      }
-      return ''
-    },
-    setList(val) {
-      this.list = val
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.key++
+      ]
     }
   }
 }
@@ -154,16 +120,6 @@ export default {
 .q-table th, .q-table td {
   padding: 0;
   background-color: inherit;
-}
-
-//table.p-table-task, td {
-//  border: 1px solid #b4b4b4;
-//  border-collapse: separate;
-//  border-spacing: 0;
-//}
-
-tr:hover {
-  //background-color: #f5f7fa !important;
 }
 
 .task-red-1 {

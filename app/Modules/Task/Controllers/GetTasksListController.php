@@ -4,7 +4,8 @@ namespace App\Modules\Task\Controllers;
 
 use App\Http\Controllers\MyController;
 use App\Modules\Task\Models\Task;
-use App\Modules\Task\Models\ViewReport;
+use App\Modules\Task\Repositories\TaskRepository;
+use App\Modules\Task\Resources\TaskResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,65 +15,39 @@ class GetTasksListController extends MyController
     public function index(Request $request)
     {
         $user = Auth::user();
-
+//        $user = User::find(13);
         $query = Task::query();
         $limit = (int)$request->limit;
-        if (isset($request->archiv) && $request->archiv == 'true') {
-            $query->whereNotNull('arxiv');
+        $queryNew = (new TaskRepository())
+            ->archiv($request->archiv);
+
+        if ($user->moderator) {
+            if ($request->executor) {
+                $executors = $request->executor;
+                if (is_string($executors)) {
+                    $executors = [$executors];
+                }
+                $queryNew->executors($executors);
+            }
         } else {
-            $query->whereNull('arxiv');
-        }
-        if (!$user->moderator) {
-            $executor = $user->aliases;
-            array_push($executor, $user->id);
-            $task = ViewReport::where('executor', 1)->whereIn('user_id', $executor)->pluck('task_id')->toArray();
-            $query->whereIn('id', $task);
-        }
-        if ($request->executor) {
-            $executor = $request->executor;
-            $task = ViewReport::where('executor', 1)->where('user_id', $executor)->pluck('task_id')->toArray();
-            $query->whereIn('id', $task);
+            $executors = $user->aliases;
+            array_push($executors, $user->id);
+            if ($request->executor) {
+                $executors = in_array($request->executor, $executors) ? [$request->executor] : $executors;
+            }
+            $queryNew->executors($executors);
         }
         if ($request->today) {
-            $today = date('Y-m-d');
-            $query->where(function ($query) use ($today) {
-                $query->where('data_ispoln', $today)
-                    ->orWhere('data_perenosa', $today);
-            });
+            $queryNew->today();
         }
         if ($request->title) {
-            $find = explode(' ', $request->title);
-            foreach ($find as $value) {
-                $query->whereRaw("(lower(concat_ws(' ',id, text))) like '%" . strtolower($value) . "%'");
-            }
+            $queryNew->find($request->title);
         }
-        $query->orderBy('id', 'desc');
-        if ($request->sort) {
-            if ($request->sort == '+id') {
-                $query->orderBy('id', 'desc')->orderBy('protocol_id', 'desc');
-            } else {
-                $query->orderBy('id', 'asc')->orderBy('protocol_id', 'asc');
-            }
+        if ($request->status) {
+            $queryNew->status($request->status);
         }
-        $tasks = $query->paginate($limit);
-        foreach ($tasks as $task) {
-            $protokol = $task->protokol;
-            $task->protokol = [
-                'number' => $protokol->number
-            ];
-            $last_report = $task->report->last();
-            if ($last_report) {
-                $last_report->files;
-            }
-            $task->last_report = $last_report;
-
-            $task->partition;
-
-
-            $task->execution = $task->getPercentComplete();
-        }
-
-        return response($tasks);
+        $newTask = $queryNew->paginate($request->limit);
+        return TaskResource::collection($newTask)->response()->getData(true);
     }
 
 

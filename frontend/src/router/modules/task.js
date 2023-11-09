@@ -4,6 +4,7 @@ const Tasks = {
   children: [
     {
       path: 'list',
+      name: 'TaskList',
       component: () => import('src/Modules/Task/pages/TasksList/index.vue'),
       meta: {
         title: 'Задачи'

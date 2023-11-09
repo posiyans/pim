@@ -42,7 +42,6 @@ export default {
       if (this.testMail) {
         this.$refs.mailRef.validate()
           .then(() => {
-            console.log('ok')
             const data = {
               mail: this.testMail
             }

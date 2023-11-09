@@ -28,7 +28,7 @@ export default {
         page: 1,
         limit: 100,
         today: true,
-        archiv: false,
+        archiv: '',
         title: '',
         type: undefined,
         sort: '+id',
