@@ -36,13 +36,14 @@ class GetProtocolListController extends MyController
         if ($request->find) {
             $query->where('title', 'like', '%' . $request->find . '%');
         }
-        if ($request->sort) {
-            if ($request->sort == '+id') {
-                $query->orderBy('id', 'desc');
-            } else {
-                $query->orderBy('id', 'asc');
-            }
-        }
+        $query->orderBy('id', 'desc');
+//        if ($request->sort) {
+//            if ($request->sort == '+id') {
+//                $query->orderBy('id', 'asc');
+//            } else {
+//                $query->orderBy('id', 'desc');
+//            }
+//        }
         $protokols = $query->paginate($limit);
         $total = $protokols->total();
         $data = [];

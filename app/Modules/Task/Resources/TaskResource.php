@@ -15,7 +15,7 @@ class TaskResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
-        $data['protokol'] = $this->protokol->number;
+        $data['protokol']['number'] = $this->protokol->number;
         $last_report = $this->report->last();
         if ($last_report) {
             $last_report->files;
