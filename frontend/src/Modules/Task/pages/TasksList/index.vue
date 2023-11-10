@@ -33,7 +33,7 @@
 
 <script>
 /* eslint-disable */
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { fetchList } from 'src/Modules/Task/api/task.js'
 import LoadMore from 'src/components/LoadMore/index.vue'
 import QSelectExecutor from 'src/Modules/User/components/QSelectExecutor/index.vue'
@@ -76,16 +76,8 @@ export default defineComponent({
     })
     const setList = (val) => {
       list.value = val
-      // const queryString = Object.keys(listQuery.value).map(key => key + '=' + listQuery.value[key]).join('&');
-      router.replace({ name: 'TaskList', query: listQuery.value, replace: true })
-      // history.push(null, '', '/task/list?' + queryString)
-      // setTimeout(() => {
-      // router.replace('/task/list?' + queryString)
-      // }, 1500)
+      router.replace({ name: 'TaskList', query: listQuery.value })
     }
-    onMounted(() => {
-      // console.log('mounted')
-    })
     const handleFilter = () => {
       listQuery.value.page = 1
       key.value++

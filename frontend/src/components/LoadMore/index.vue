@@ -1,5 +1,5 @@
 <template>
-  <div class="q-py-md">
+  <div class="">
     <div v-if="loading" class="q-pa-lg text-center">
       <q-spinner-facebook
         color="primary"
@@ -19,7 +19,8 @@
 <script>
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import Pagination from 'src/components/Pagination/index.vue'
-import { useQuasar } from 'quasar'
+import { SessionStorage, useQuasar } from 'quasar'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   components: {
@@ -30,6 +31,8 @@ export default defineComponent({
     func: { type: Function }
   },
   setup(props, { emit }) {
+    const route = useRoute()
+    const addPage = ref(false)
     const loading = ref(true)
     const loadMore = ref(false)
     const autoScroll = ref(false)
@@ -68,18 +71,24 @@ export default defineComponent({
     watch(
       props.listQuery,
       () => {
+        addPage.value = false
         getList()
       }
     )
     watch(
       () => props.listQuery,
       () => {
+        addPage.value = false
         getList()
       }
     )
     const getList = () => {
       listLoading.value = true
-      props.func(props.listQuery)
+      const tmp = Object.assign({}, props.listQuery)
+      if (addPage.value) {
+        tmp.page = tmp.page + addPage.value
+      }
+      props.func(tmp)
         .then(response => {
           total.value = response.data.total || response.data.meta?.total || 0
           if (loadMore.value) {
@@ -90,9 +99,12 @@ export default defineComponent({
           response.data.data.forEach(val => {
             list.value.push(val)
           })
+          const cacheName = 'loadMore' + route.path
+          SessionStorage.set(cacheName, { data: list.value, total: total.value })
           emit('setList', list.value)
+          emit('setTotal', total.value)
           if (autoScroll.value) {
-            // scrollTo(0, 800)
+            scrollTo(0, 0)
           }
           autoScroll.value = true
         })
@@ -111,10 +123,17 @@ export default defineComponent({
     const addItems = () => {
       loadMore.value = true
       autoScroll.value = false
-      currentPage.value = currentPage.value + 1
+      addPage.value = +addPage.value + 1
+      getList()
     }
 
     onMounted(() => {
+      const cacheName = 'loadMore' + route.path
+      if (SessionStorage.has(cacheName)) {
+        const tmp = SessionStorage.getItem(cacheName)
+        emit('setList', tmp.data)
+        total.value = tmp.total
+      }
       getList()
     })
 

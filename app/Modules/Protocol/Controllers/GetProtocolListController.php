@@ -4,6 +4,7 @@ namespace App\Modules\Protocol\Controllers;
 
 use App\Http\Controllers\MyController;
 use App\Modules\Protocol\Models\Protocol;
+use App\Modules\Protocol\Resources\ProtocolResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -45,20 +46,7 @@ class GetProtocolListController extends MyController
 //            }
 //        }
         $protokols = $query->paginate($limit);
-        $total = $protokols->total();
-        $data = [];
-        foreach ($protokols as $protokol) {
-            $item = [];
-            $item['id'] = $protokol->id;
-            $item['title'] = $protokol->title;
-            $item['link'] = $request->limit;
-            $item['type'] = $protokol->type;
-            $item['descriptions'] = $protokol->descriptions;
-            $item['PercentComplete'] = $protokol->getPercentComplete();
-            $data[] = $item;
-        }
-        return response(['total' => $total, 'data' => $data]);
+        return ProtocolResource::collection($protokols)->response()->getData(true);
     }
-
 
 }
