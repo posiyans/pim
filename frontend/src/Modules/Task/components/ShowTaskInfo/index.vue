@@ -200,10 +200,13 @@ export default {
       if (this.roles.includes('moderator')) {
         access = true
       }
+      if (this.user.aliases.includes(user.id)) {
+        access = true
+      }
       return access
     },
     changeStatus(executor) {
-      if (executor.user_id === this.userId || this.roles.includes('moderator')) {
+      if (executor.user_id === this.userId || this.roles.includes('moderator') || this.user.aliases.includes(executor.user_id)) {
         executor.loading = true
         if (executor.done) {
           executor.done = null

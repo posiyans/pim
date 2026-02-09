@@ -33,7 +33,7 @@ class GetUsersExecutorsController extends MyController
                     if ($avtor->id == $user->id) {
                         $item['hide'] = false;
                     }
-                    if (isset($avtor->aliases[$user->id])) {
+                    if (in_array($user->id, $avtor->aliases)) {
                         $item['hide'] = false;
                     }
                 }

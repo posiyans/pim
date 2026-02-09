@@ -18,7 +18,7 @@ class SetTaskIsDoneController extends MyController
         $report = ViewReport::find($id);
         if ($report) {
             $user = Auth::user();
-            if ($report->user_id == $user->id or $user->moderator) {
+            if ($report->user_id == $user->id or $user->moderator or in_array($report->user_id, $user->aliases) ) {
                 $task = $report->task;
                 $now = date("Y-m-d H:i:s");
                 $task_executor = '';
